@@ -1,0 +1,101 @@
+<admintpl file="header" />
+</head>
+<body>
+	<div class="wrap js-check-wrap">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="javascript:void(0);">平台币明细</a></li>
+	
+		</ul>
+			<form class="well form-search" method="post" action="{:U('Platformmoney/detail_log')}">
+
+			<div class="search_type cc mb10">
+
+				<div class="mb10">
+
+					<span class="mr20">
+					      
+						玩家账号：
+						<input type="text" name="username" id="username" value="{$parameter['username']}" style="width:100px;" />
+							&nbsp;&nbsp;	
+							时间：
+   <input type="text" name="start_time" id="start_time" value="{$parameter['start_time']}" class="input length_3 js-date" size="11" style="width:180px;"> 至 
+   <input type="text" name="end_time" id="end_time" value="{$parameter['end_time']}" size="11" class="input length_3 js-date" style="width:180px;">
+   &nbsp;&nbsp;	
+   
+   收支类型:
+   <select name="type">
+   <option value="" selected>全部</option>
+   <option value="1" <if condition="$parameter['type'] eq 1">selected</if>>金币兑换</option>
+   <option value="2" <if condition="$parameter['type'] eq 2">selected</if>>游戏支付</option>
+   <option value="3" <if condition="$parameter['type'] eq 3">selected</if>>金币抽奖</option>
+   <option value="4" <if condition="$parameter['type'] eq 4">selected</if>>后台补发</option>
+     <option value="5" <if condition="$parameter['type'] eq 5">selected</if>>VIP充值</option>
+      <option value="6" <if condition="$parameter['type'] eq 6">selected</if>>手机注册</option>
+      <option value="7" <if condition="$parameter['type'] eq 7">selected</if>>消息附件</option>
+   </select>
+ &nbsp;&nbsp;
+				<input type="submit" class="btn btn-primary" value="搜索" />
+					</span>
+				</div>
+
+			</div>
+
+		</form>
+
+			<table class="table table-hover table-bordered table-list" id="menus-table">
+				<thead>
+					<tr>
+					
+			
+					
+						<th>玩家账号</th>
+                        <th>收支类型</th>
+                        <th>变更</th>
+                        <th>用户余额</th>  
+                        <th>时间</th>
+ 
+                        
+					</tr>
+				</thead>
+				<tbody>
+								<foreach name="list" item="vo">
+
+				<tr>
+<td>{$usernames[$vo['uid']]}</td>
+<td><php>if($vo['type'] == 1){echo '金币兑换';}elseif($vo['type'] == 2){echo '游戏支付';}elseif($vo['type'] == 3){ echo '金币抽奖';}elseif($vo['type'] == 4){ echo '后台补发'; }
+elseif($vo['type'] == 5){echo 'VIP充值';}elseif($vo['type'] == 6){ echo '手机注册';}elseif($vo['type'] == 7){ echo '消息附件';}</php></td>
+<td>{$vo.platform_change}</td>
+<td>{$vo.platform_counts}</td>
+<td>{$vo.create_time|date="Y-m-d H:i:s",###}</td> 
+				</tr>
+
+				</foreach>
+				</tbody>
+
+			</table>
+	
+		</form>
+	</div>
+	
+			<div class="pagination">{$page}</div>
+	<script src="__PUBLIC__/js/common.js"></script>
+	<script>
+		$(document).ready(function() {
+			Wind.css('treeTable');
+			Wind.use('treeTable', function() {
+				$("#menus-table").treeTable({
+					indent : 20
+				});
+			});
+		});
+
+		setInterval(function() {
+			var refersh_time = getCookie('refersh_time_admin_menu_index');
+			if (refersh_time == 1) {
+				reloadPage(window);
+			}
+		}, 1000);
+		setCookie('refersh_time_admin_menu_index', 0);
+	</script>
+</body>
+</html>

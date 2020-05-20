@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="zh_CN" style="overflow: hidden;">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<!-- Set render engine for 360 browser -->
+<meta name="renderer" content="webkit">
+<meta charset="utf-8">
+<title>{:C('BOX_NAME')}SDK管理后台</title>
+
+<meta name="description" content="This is page-header (.page-header &gt; h1)">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="__PUBLIC__/simpleboot/themes/{:C('SP_ADMIN_STYLE')}/theme.min.css" rel="stylesheet">
+<link href="__PUBLIC__/simpleboot/css/simplebootadmin.css" rel="stylesheet">
+<link href="__PUBLIC__/simpleboot/font-awesome/4.4.0/css/font-awesome.min.css?page=index"  rel="stylesheet" type="text/css">
+<!--[if IE 7]>
+	<link rel="stylesheet" href="__PUBLIC__/simpleboot/font-awesome/4.4.0/css/font-awesome-ie7.min.css">
+<![endif]-->
+<link rel="stylesheet" href="__PUBLIC__/simpleboot/themes/{:C('SP_ADMIN_STYLE')}/simplebootadminindex.min.css?">
+<link href="__PUBLIC__/js/artDialog/skins/default.css" rel="stylesheet" />
+<!--[if lte IE 8]>
+	<link rel="stylesheet" href="__PUBLIC__/simpleboot/css/simplebootadminindex-ie.css?" />
+<![endif]-->
+
+	<link rel="stylesheet" href="__PUBLIC__/js/ticker/css/ticker.css"/>
+<style>
+.navbar .nav_shortcuts .btn{margin-top: 5px;}
+.macro-component-tabitem{width:101px;}
+
+/*-----------------导航hack--------------------*/
+.nav-list>li.open{position: relative;}
+.nav-list>li.open .back {display: none;}
+.nav-list>li.open .normal {display: inline-block !important;}
+.nav-list>li.open a {padding-left: 7px;}
+.nav-list>li .submenu>li>a {background: #fff;}
+.nav-list>li .submenu>li a>[class*="fa-"]:first-child{left:20px;}
+.nav-list>li ul.submenu ul.submenu>li a>[class*="fa-"]:first-child{left:30px;}
+/*----------------导航hack--------------------*/
+	/*html,body{*/
+		/*width: 100%;*/
+		/*height: 100%;*/
+	/*}*/
+</style>
+<script>
+//全局变量
+var GV = {
+	HOST:"{$_SERVER['HTTP_HOST']}",
+    ROOT: "__ROOT__/",
+    WEB_ROOT: "__WEB_ROOT__/",
+    JS_ROOT: "public/js/"
+};
+
+
+</script>
+<php>$submenus=$menus;</php>
+
+<php>function getsubmenu($submenus,$is_read_study=0){</php>
+<php>foreach($submenus as $menu){ </php>
+					<li>
+						<php>
+							$menu_name=L($menu['lang']);
+							$menu_name=$menu['lang']==$menu_name?$menu['name']:$menu_name;
+						</php>
+						<php>if(empty($menu['items'])){</php>
+							<a href="javascript:openapp('{$menu.url}','{$menu.id}','{$menu_name}',true);">
+								<i class="fa fa-{$menu.icon|default='desktop'}"></i>
+								<span class="menu-text">
+									{$menu_name}
+								</span>
+							</a>
+						<php>}else{</php>
+						<php>if($menu['name'] == '新手教程' && $is_read_study == 0){</php>
+						<a href="#" class="dropdown-toggle promptNav" id="promptNav">
+							<php>}else{</php>
+							<a href="#" class="dropdown-toggle">
+								<php>}</php>
+								<i class="fa fa-{$menu.icon|default='desktop'} normal"></i>
+								<span class="menu-text normal">
+									{$menu_name}
+								</span>
+								<b class="arrow fa fa-angle-right normal"></b>
+								<i class="fa fa-reply back"></i>
+								<span class="menu-text back">返回</span>
+
+							</a>
+							<ul  class="submenu">
+									<php>getsubmenu1($menu['items'])</php>
+							</ul>
+						<php>}</php>
+
+					</li>
+
+				<php>}</php>
+<php>}</php>
+
+<php>function getsubmenu1($submenus){</php>
+<php>foreach($submenus as $menu){</php>
+					<li>
+						<php>
+							$menu_name=L($menu['lang']);
+							$menu_name=$menu['lang']==$menu_name?$menu['name']:$menu_name;
+						</php>
+						<php>if(empty($menu['items'])){</php>
+							<a href="javascript:openapp('{$menu.url}','{$menu.id}','{$menu_name}',true);">
+								<i class="fa fa-caret-right"></i>
+								<span class="menu-text">
+									{$menu_name}
+								</span>
+							</a>
+						<php>}else{</php>
+							<a href="#" class="dropdown-toggle">
+								<i class="fa fa-caret-right"></i>
+								<span class="menu-text">
+									{$menu_name}
+								</span>
+								<b class="arrow fa fa-angle-right"></b>
+							</a>
+							<ul  class="submenu">
+									<php>getsubmenu2($menu['items'])</php>
+							</ul>
+						<php>}</php>
+
+					</li>
+
+				<php>}</php>
+<php>}</php>
+
+<php>function getsubmenu2($submenus){</php>
+<php>foreach($submenus as $menu){</php>
+					<li>
+						<php>
+							$menu_name=L($menu['lang']);
+							$menu_name=$menu['lang']==$menu_name?$menu['name']:$menu_name;
+						</php>
+
+						<a href="javascript:openapp('{$menu.url}','{$menu.id}','{$menu_name}',true);">
+							&nbsp;<i class="fa fa-angle-double-right"></i>
+							<span class="menu-text">
+								{$menu_name}
+							</span>
+						</a>
+					</li>
+
+				<php>}</php>
+<php>}</php>
+
+
+<if condition="APP_DEBUG">
+<style>
+#think_page_trace_open{left: 0 !important;
+right: initial !important;}			
+</style>
+</if>
+	<!--css样式-->
+	<style>
+		/*导航闪烁*/
+		.promptNav{
+            border: 3px solid #FF0033;
+			-webkit-animation: changeColor 1s infinite;
+			-o-animation: changeColor 1s infinite;
+			animation: changeColor 1s infinite;
+		}
+		@keyframes changeColor {
+			0%{ border: 2px solid #FF0000;}
+			50%{ border: 2px solid #f2f2f2;}
+			100%{ border: 2px solid #FF0000;}
+		}
+		.ticker-wrapper.has-js{ width: 900px; height: 30px; margin: 0; background: #f1f1f1; font-size: 16px; border-radius: 3px;}
+		.ticker-wrapper.has-js .ticker { width: 900px;}
+		.ticker-wrapper.has-js .ticker-content{ margin: 0; padding: 0; height: 30px; line-height: 30px; background: #f1f1f1; color: #FF5722;}
+		.ticker-wrapper.has-js .ticker{ margin: 0; padding: 0; height: 30px; line-height: 30px; background: #f1f1f1;}
+		.ticker-wrapper.has-js .ticker-swipe{ background: #f1f1f1;}
+		.ticker-wrapper.has-js .ticker-swipe span{ background: #f1f1f1; border-bottom: 1px solid #FF5722;}
+
+		.news-nav{ position: fixed; right: 20px; top: 85px; z-index: 10000; width: 310px; height: 34px; line-height: 34px; font-size: 16px; margin-left: 35px; padding: 0 10px 0 30px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; color: #ffffff; background-color: #26a2ff; cursor: pointer; -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; -khtml-user-select: none; user-select: none;}
+		.news-nav:hover{ opacity: .85;}
+		.news-nav-more{ display: inline-block; width: 0; height: 0; border: 6px solid transparent; border-top-color: #ffffff; position: absolute; right: 20px; top: 14px; transition: all .2s;}
+		.news-nav-more-up{ top: 8px; border-top-color: transparent; border-bottom-color: #ffffff;}
+		.news-main{ position: fixed; right: 20px; top: 119px; z-index: 10000; padding-left: 35px; max-height: 82%; background-color: transparent; overflow-y: auto; overflow-x: hidden;}
+		/*滚动条样式*/
+		.news-main::-webkit-scrollbar{ width: 15px; background-color: #F5F5F5;}
+		/*!*定义滚动条轨道 内阴影+圆角*!*/
+		.news-main::-webkit-scrollbar-track{ -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); background-color: #F5F5F5;}
+		/*!*定义滑块 内阴影+圆角*!*/
+		.news-main::-webkit-scrollbar-thumb{ -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.1); background-color: #555;}
+		.news{ display: block; width: 290px; min-height: 60px; background-color: rgb(71, 71, 71); padding: 20px 30px; margin-bottom: 3px; position: relative; left: 0; color: #ffffff;}
+		.rarr{ position: absolute; top: 10px; right: 10px; z-index: 10001; display: none; }
+		.news:hover .rarr{ display: block;}
+		.news .rarr:hover{ cursor: pointer;}
+		.news-title{ font-size: 17px; font-weight: bold;}
+		.news-title:hover{ text-decoration: underline; cursor: pointer;}
+		.news-content{ font-size: 16px; line-height: 20px; overflow : hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical;}
+		.news-type{ font-size: 14px;}
+		.news-color1{ background-color: #FF6666;}
+		.news-color2{ background-color: #FF9966;}
+		.news-color3{ background-color: #99CC99;}
+		.news-color4{ background-color: #6699CC;}
+		.news-color5{ background-color: #CC99CC;}
+		.news-color6{ background-color: #474747;}
+	</style>
+</head>
+<body style="min-width:900px;" screen_capture_injected="true">
+<!--悬浮框-->
+<!--<div id="hint" style="display: none">-->
+	<!--<div style="margin: 10px; color: #FF0033; font-size: 16px;">本系统严禁推广员私拉各种合作渠道和SY99官方玩家，一次警告，二次直接冻结账号并不予结算，请自觉遵守。</div>-->
+<!--</div>-->
+
+	<div id="loading"><i class="loadingicon"></i><span>{:L('LOADING')}</span></div>
+	<div id="right_tools_wrapper">
+		<!--<span id="right_tools_clearcache" title="清除缓存" onclick="javascript:openapp('{:U('admin/setting/clearcache')}','right_tool_clearcache','清除缓存');"><i class="fa fa-trash-o right_tool_icon"></i></span>-->
+		<span id="refresh_wrapper" title="{:L('REFRESH_CURRENT_PAGE')}" ><i class="fa fa-refresh right_tool_icon"></i></span>
+	</div>
+	<div class="navbar">
+		<div class="navbar-inner" style="z-index: 10100;">
+			<div class="container-fluid">
+				<a href="{:U('admin/index/index')}" class="brand"> <small>
+					{:C('BOX_NAME')}SDK管理后台
+				</small>
+				</a>
+				<div class="pull-left nav_shortcuts" >
+					<if condition="$roleid neq 24 and $roleid neq 31">
+					<a class="btn btn-small btn-warning" href="javascript:openapp('{:U('admin/Main/index')}','index','首页');" title="首页">
+						<i class="fa fa-home"></i>
+					</a>
+</if>
+					<if condition="sp_auth_check(sp_get_current_admin_id(),'admin/Game/index')">
+					<a class="btn btn-small btn-success" href="javascript:openapp('{:U('admin/Game/index')}','189','游戏管理');" title="游戏管理">
+						<i class="fa fa-gamepad normal"></i>
+					</a>
+					</if>
+					
+					<if condition="sp_auth_check(sp_get_current_admin_id(),'admin/Notice/index')">
+					<a class="btn btn-small btn-info" href="javascript:openapp('{:U('admin/Notice/index')}','191','公告列表');" title="公告列表">
+						<i class="fa fa-bullhorn normal"></i>
+					</a>
+					</if>
+
+					<if condition="sp_auth_check(sp_get_current_admin_id(),'admin/setting/clearcache')">
+					<a class="btn btn-small btn-danger" href="javascript:openapp('{:U('admin/setting/clearcache')}','index_clearcache','{:L('ADMIN_SETTING_CLEARCACHE')}');" title="{:L('ADMIN_SETTING_CLEARCACHE')}">
+						<i class="fa fa-trash-o"></i>
+					</a>
+					</if>
+
+					<if condition="sp_auth_check(sp_get_current_admin_id(),'admin/Package/index')">
+					<a class="btn btn-small" href="javascript:openapp('{:U('admin/Package/index')}','196','礼包列表');" title="礼包列表">
+						<i class="fa fa-desktop normal"></i>
+					</a>
+					</if>
+
+						<if condition="sp_auth_check(sp_get_current_admin_id(),'admin/WorkOrder/add')">
+						<a class="btn btn-small btn-success" href="javascript:openapp('{:U('admin/WorkOrder/add')}','435','渠道工单');" title="渠道工单">
+							<i class="fa normal">渠道工单</i>
+						</a>
+					</if>
+
+				</div>
+				<ul class="nav simplewind-nav pull-right">
+					<li class="light-blue">
+						<a data-toggle="dropdown" href="#" class="dropdown-toggle">
+    						<if condition="$admin['avatar']">
+								<img class="nav-user-photo" width="30" height="30" src="{:sp_get_user_avatar_url($admin['avatar'])}" alt="{$admin.user_login}">
+							<else />
+								<img class="nav-user-photo" width="30" height="30" src="__TMPL__Public/assets/images/logo-18.png" alt="{$admin.user_login}">
+							</if>
+							<span class="user-info">
+								{:L('WELCOME_USER',array('username'=>empty($admin['user_nicename'])?$admin['user_login']:$admin['user_nicename']))}
+							</span>
+							<i class="fa fa-caret-down"></i>
+						</a>
+						<ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-closer">
+							<if condition="sp_auth_check(sp_get_current_admin_id(),'admin/setting/site')">
+								<li><a href="javascript:openapp('{:U('setting/site')}','index_site','{:L('ADMIN_SETTING_SITE')}');"><i class="fa fa-cog"></i> {:L('ADMIN_SETTING_SITE')}</a></li>
+							</if>
+							<if condition="sp_auth_check(sp_get_current_admin_id(),'admin/user/userinfo')">
+								<li><a href="javascript:openapp('{:U('user/userinfo')}','index_userinfo','{:L('ADMIN_USER_USERINFO')}');"><i class="fa fa-user"></i> {:L('ADMIN_USER_USERINFO')}</a></li>
+							</if>
+							<if condition="sp_auth_check(sp_get_current_admin_id(),'admin/setting/password')">
+								<li><a href="javascript:openapp('{:U('setting/password')}','index_password','{:L('ADMIN_SETTING_PASSWORD')}');"><i class="fa fa-lock"></i> {:L('ADMIN_SETTING_PASSWORD')}</a></li>
+							</if>
+							<li><a href="{:U('Public/logout')}"><i class="fa fa-sign-out"></i> {:L('LOGOUT')}</a></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class="main-container container-fluid">
+		<div class="sidebar" id="sidebar">
+			<!-- <div class="sidebar-shortcuts" id="sidebar-shortcuts">
+			</div> -->
+			<div id="nav_wraper">
+			<ul class="nav nav-list">
+				{:getsubmenu($submenus,$is_read_study)}
+
+			</div>
+			
+		</div>
+
+		<div class="main-content">
+			<div class="news-nav">
+				<span>未读消息</span>(<span class="news-sum">0</span>)
+				<i class="news-nav-more"></i>
+			</div>
+			<div class="news-main">
+				<div class="news-content" id="newsContent">
+					<!--<div class="news">-->
+					<!--<div class="rarr">&rarr;</div>-->
+					<!--<div class="news-title">您有一条新消息</div>-->
+					<!--<div class="news-content">国庆放假通知国庆放假通知国庆放假通知国庆放假通知国庆放假通知国庆放假通知国庆放假通知国庆放假通知国庆放假通知国庆放假通知国庆放假通知国庆放假通知国庆放假通知国庆放假通知</div>-->
+					<!--<div class="news-type"><span>14:52</span><span>&nbsp;·&nbsp;发车</span></div>-->
+					<!--</div>-->
+				</div>
+			</div>
+			<div class="breadcrumbs" id="breadcrumbs">
+				<a id="task-pre" class="task-changebt">←</a>
+				<div id="task-content">
+				<ul class="macro-component-tab" id="task-content-inner">
+					<if condition="$roleid neq 24 and $roleid neq 31">
+					<li class="macro-component-tabitem noclose" app-id="0" app-url="{:U('main/index')}" app-name="首页">
+						<span class="macro-tabs-item-text">{:L('HOME')}</span>
+					</li>
+
+						</if>
+				</ul>
+				<div style="clear:both;"></div>
+				</div>
+				<a id="task-next" class="task-changebt">→</a>
+			</div>
+			<div class="page-content" id="content">
+				<!--跑马灯-->
+				<div id="tickerBox" style="display: none; margin: 5px;">
+					<ul id="jsNews" class="js-hidden">
+						<!--<li class="news-item">This is the 1st latest news item.</li>-->
+					</ul>
+				</div>
+				<iframe src="{:U('Main/index')}" style="width:100%;height: 100%;" frameborder="0" id="appiframe-0" class="appiframe"></iframe>
+			</div>
+		</div>
+	</div>
+	<script src="__PUBLIC__/js/jquery.js"></script>
+<script src='__PUBLIC__/js/jquery.easing.min.js'></script>
+	<script src="__PUBLIC__/js/wind.js"></script>
+	<script src="__PUBLIC__/simpleboot/bootstrap/js/bootstrap.min.js"></script>
+	<script>
+	var ismenumin = $("#sidebar").hasClass("menu-min");
+	$(".nav-list").on( "click",function(event) {
+		var closest_a = $(event.target).closest("a");
+		if (!closest_a || closest_a.length == 0) {
+			return
+		}
+		if (!closest_a.hasClass("dropdown-toggle")) {
+			if (ismenumin && "click" == "tap" && closest_a.get(0).parentNode.parentNode == this) {
+				var closest_a_menu_text = closest_a.find(".menu-text").get(0);
+				if (event.target != closest_a_menu_text && !$.contains(closest_a_menu_text, event.target)) {
+					return false
+				}
+			}
+			return
+		}
+		var closest_a_next = closest_a.next().get(0);
+		if (!$(closest_a_next).is(":visible")) {
+			var closest_ul = $(closest_a_next.parentNode).closest("ul");
+			if (ismenumin && closest_ul.hasClass("nav-list")) {
+				return
+			}
+			closest_ul.find("> .open > .submenu").each(function() {
+						if (this != closest_a_next && !$(this.parentNode).hasClass("active")) {
+							$(this).slideUp(150).parent().removeClass("open")
+						}
+			});
+		}
+		if (ismenumin && $(closest_a_next.parentNode.parentNode).hasClass("nav-list")) {
+			return false;
+		}
+		$(closest_a_next).slideToggle(150).parent().toggleClass("open");
+		return false;
+	});
+	</script>
+	<script src="__PUBLIC__/js/common.js"></script>
+	<script src="__TMPL__Public/assets/js/index.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<php>
+$roleid = getRoleId(session('ADMIN_ID'));
+</php>
+<php>if($roleid == 4 || $roleid == 15){</php>
+<script type="text/javascript">
+//    layer.open({
+//        title: ['温馨提示', 'font-size:18px; padding-left: 165px;'],
+//        type: 1,
+//        skin: 'layui-layer-molv', //加上边框
+//        area: ['400px', '150px'], //宽高
+//        offset: ['85px', '65%'], //top, left
+////                offset: 'rt',
+//        shade: 0,
+//        content: $('#hint'),
+//        closeBtn: 1, //关闭按钮
+//        anim: 2,
+////                btnAlign: 'c',
+//        shadeClose: false, //开启遮罩关闭
+////                btn: ['知道了'],
+//        yes: function(index, layero){
+//            layer.close(index)
+//        }
+//    });
+</script>
+<php>}</php>
+<script src="__PUBLIC__/js/ticker/js/jquery.ticker.js"></script>
+	<script type="text/javascript">
+		function getNotice() {
+            $.ajax({
+                type: 'get',
+                url: '/index.php?g=api&m=LoopNotice&a=notice_list',
+                //成功时执行的回调
+                success: function(datas){
+                    if(datas.status == 1){
+                        if(datas.data.length > 0){
+                            $('#tickerBox').show();
+                            var data = datas.data;
+                            var loopTimes = 0;
+                            var maxNumber = 0;
+                            var pauseOnItemsArr = [];
+                            for(var i = 0; i < data.length; i++){
+                                if(data[i].loop_times > 99){
+                                    data[i].loop_times = 99;
+                                }
+                                if(data[i].loop_times > maxNumber){
+                                    maxNumber = Number(data[i].loop_times)
+                                }
+                                loopTimes += Number(data[i].loop_times);//次数
+                                data[i].loop_interval = Number(data[i].loop_interval);
+                                data[i].content = '<li class="news-item">'+ data[i].content +'</li>'
+                            }
+//                    console.log(maxNumber,loopTimes)
+                            for(; maxNumber > 0; maxNumber--){
+                                for(var i = 0; i < data.length; i++){
+                                    if(data[i].loop_times > 0){
+                                        pauseOnItemsArr.unshift(data[i].loop_interval);
+                                        data[i].loop_times--;
+                                        $('#jsNews').append(data[i].content);
+                                    }
+                                }
+                            }
+//					console.log(pauseOnItemsArr)
+                            $('#jsNews').ticker({
+                                speed: 0.05,           // 速度
+                                ajaxFeed: false,       // 填充的jQuery新闻
+                                feedUrl: false,        // 供稿网址
+                                // 必须在同一个域中
+                                feedType: 'xml',       // 目前格式XML
+                                htmlFeed: true,        // 填充的jQuery新闻播报通过HTML
+                                debugMode: true,       // 显示在控制台中一些有用的错误或警报
+
+                                controls: false,        // 是否或不显示的jQuery新闻北京时间控制
+                                titleText: '',   // 要删除的标题设置为空String
+                                displayType: 'reveal', // 显示类型 'reveal' or 'fade'
+                                direction: 'ltr',       // Ticker direction - current options are 'ltr' or 'rtl'
+                                pauseOnItems: pauseOnItemsArr,    // 暂停前的新闻项目被取代（数组）
+                                fadeInSpeed: 600,      // 淡入淡出的速度动画
+                                fadeOutSpeed: 300,      // 速度淡出动画
+                                loopNumber: loopTimes	//播放次数
+                            });
+                        } else {
+                            $('#tickerBox').hide();
+                        }
+                    }
+                    if(datas.status == 0){
+                        console.log(datas.msg)
+                    }
+                },
+                error: function(err){
+                    console.log(err);
+                }
+            });
+        }
+
+        //判断是否出现滚动条
+        function isScroll() {
+            $('.news-sum').html($('#newsContent>.news').length);
+            var newsMain = document.getElementsByClassName("news-main")[0];
+//            console.log(newsMain.offsetHeight);
+//            console.log(newsMain.scrollHeight);
+//            console.log(newsMain.clientHeight);
+            if(newsMain.scrollHeight > newsMain.clientHeight){
+//                console.log("垂直滚动条");
+                $('.news-nav').css('width','325px');
+            } else {
+//                console.log("没有滚动条");
+                $('.news-nav').css('width','310px');
+            }
+        }
+
+        function addNews(data){
+            var news = $('<div class="news '+data.typeColor+'" style="left:350px;" data-link="'+ data.link +'"><div class="rarr">&rarr;</div><div class="news-title">新消息(点击此处进行处理)</div><div class="news-content">'+data.message+'</div><div class="news-type"><span>'+ data.create_time +'</span><span>&nbsp;·&nbsp;'+ data.type +'</span></div></div>');
+            $(news).animate({
+                left: '0px'
+            },{
+                duration: 500,
+                easing: 'easeOutBack'	//swing,linear
+//                complete: callback
+            });
+            $('#newsContent').append(news);
+            isScroll();
+            //新消息30s后消失
+//            setTimeout(function () {
+//				$(news).animate({
+//                    left: '350px'
+//                },{
+//                    duration: 500,
+//                    easing: 'swing',	//swing,linear
+//                    complete: function () {
+//                        $(this).remove();
+//                    }
+//                });
+//            }, 30000);
+        }
+
+        function formatTime(time) {
+            var time = new Date(time * 1000);
+            var month=time.getMonth()+1;
+            if(month < 10) month = '0' + month;
+            var date=time.getDate();
+            if(date < 10) date = '0' + date;
+            var hour=time.getHours();
+            if(hour < 10) hour = '0' + hour;
+            var minute=time.getMinutes();
+            if(minute < 10) minute = '0' + minute;
+            var second = time.getSeconds();
+            if(second < 10) second = '0' + second;
+            return month+"-"+date+" "+hour+":"+minute+":"+second;
+        }
+
+        function getMessage() {
+            $.ajax({
+                type: 'get',
+                url: '/index.php?g=api&m=question&a=message_push',
+                success: function(datas){
+//                    var datas = {
+//                        "data": {
+//                            "type": 5,
+//                            "id": "30",
+//                            "message": "游戏问答功能有需要处理的新消息",
+//                            "link": "/Api/Consult/index",
+//                            "create_time": 1539768811
+//                        },
+//                        "msg": "",
+//                        "status": 1
+//                    }
+//                    console.log(datas);
+                    if(datas.status == 1){
+                        var data = datas.data;
+                        data.create_time = formatTime(data.create_time);
+                        //消息类型 1 发车 2 账号买卖  3 玩家工单 4 渠道工单 5游戏问答
+                        if(data.type == 1){
+                            data.type = '发车';
+                            data.typeColor = 'news-color1';
+                        } else if(data.type == 2){
+                            data.type = '账号买卖';
+                            data.typeColor = 'news-color2';
+                        } else if(data.type == 3){
+                            data.type = '玩家工单';
+                            data.typeColor = 'news-color3';
+                        } else if(data.type == 4){
+                            data.type = '渠道工单';
+                            data.typeColor = 'news-color4';
+                        } else if(data.type == 5){
+                            data.type = '游戏问答';
+                            data.typeColor = 'news-color5';
+                        }
+                        addNews(datas.data);
+                    }
+                },
+                error: function(err){
+                    console.log(err);
+                }
+            });
+        }
+
+        //消息处理
+        $('#newsContent').on('click','.news',function(event){
+            var _this = $(this);
+            var _target = $(event.target);
+            if(_target.is('.rarr')){
+                $(this).animate({
+                    left: '370px',
+                    opacity: 0.2
+                },{
+                    duration: 500,
+                    easing: 'swing',	//swing,linear
+                    complete: function () {
+                        $(this).remove();
+                        isScroll();
+                    }
+                });
+            } else if (_target.is('.news-title')){
+                $('#appiframe-0').attr('src', _this.data("link"));
+                $(this).animate({
+                    left: '370px',
+                    opacity: 0.2
+                },{
+                    duration: 500,
+                    easing: 'swing',	//swing,linear
+                    complete: function () {
+                        $(this).remove();
+                        isScroll();
+                    }
+                });
+            }
+        });
+		//消息面板开关
+        var newsToggle = true;
+        $('.news-nav').on('click', function() {
+            $('.news-main').stop(true, true);
+            if(newsToggle){
+                newsToggle = false;
+                $('.news-main').slideUp();
+                $('.news-nav-more').addClass('news-nav-more-up');
+            } else {
+                newsToggle = true;
+                $('.news-main').slideDown();
+                $('.news-nav-more').removeClass('news-nav-more-up');
+            }
+        });
+//        setInterval(getMessage, 5000);
+	</script>
+</body>
+</html>

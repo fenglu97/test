@@ -1,0 +1,8 @@
+data/runtime/
+data/conf/db.php
+data/log/
+data/paylogs/
+data/upload/
+.idea
+nginx.htaccess
+.history

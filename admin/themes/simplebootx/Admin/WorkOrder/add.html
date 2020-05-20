@@ -1,0 +1,241 @@
+<admintpl file="header"/>
+<link rel="stylesheet" href="__PUBLIC__/js/switch/bootstrap-switch.css">
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/chosen.css">
+<style>
+    .switch{margin-left:20px}
+</style>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+
+    <ul class="nav nav-tabs">
+        <li><a href="{:U('channel_index')}">工单列表</a></li>
+        <li class="active"><a href="javascript:void(0);">提交工单</a></li>
+    </ul>
+    <form class="form-horizontal js-ajax-forms" action="" method="post" enctype="multipart/form-data">
+        <fieldset>
+            <div class="control-group">
+                <label class="control-label">标题<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <input type="text" style="width:400px" maxlength="20" name="title" placeholder="输入标题"/>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">问题类型<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <select name="type">
+                        <foreach name="type" item="vo">
+                            <option value="{$vo.id}">{$vo.name}</option>
+                        </foreach>
+                    </select>
+                </div>
+            </div>
+
+
+
+            <div class="control-group">
+                <label class="control-label">内容<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <textarea name="desc" rows="2" cols="20" id="desc" class="inputtext" style="height: 100px; width: 500px;"></textarea>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">图片</label>
+                <div class="controls">
+                    <p><input type="file" name="imgs[]" accept="image/gif,image/jpeg,image/jpg,image/png"/></p>
+                    <p><input type="file" name="imgs[]" accept="image/gif,image/jpeg,image/jpg,image/png"/></p>
+                    <p><input type="file" name="imgs[]" accept="image/gif,image/jpeg,image/jpg,image/png"/></p>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">请选择游戏<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <select id="appid" name="appid" id="select_1" required class="chosen-select" validate="required:true" style="width:220px;" tabindex="1">
+                        <option value="">请选择</option>
+                        {:get_game_list('',1,'all')}
+                    </select>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">游戏账号<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <input type="text" style="width:400px" maxlength="20" name="username" placeholder="游戏账号"/>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">游戏角色名<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <input type="text" style="width:400px" maxlength="20" name="role_name" placeholder="游戏角色名"/>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">游戏区服<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <input type="text" style="width:400px" maxlength="20" name="server_name" placeholder="游戏区服"/>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">玩家ID</label>
+                <div class="controls">
+                    <input type="text" style="width:400px" maxlength="32" name="yf_uid" placeholder="玩家ID"/>
+                </div>
+            </div>
+            <input type="hidden" name="question_type" value="{$question_type}">
+        </fieldset>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary js-ajax-submit">提交</button>
+            <a class="btn" href="javascript:history.back(-1);">{:L('BACK')}</a>
+        </div>
+    </form>
+</div>
+<script src="__PUBLIC__/js/jquery19.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script src="__PUBLIC__/js/switch/bootstrap.min.js"></script>
+<script src="__PUBLIC__/js/switch/bootstrap-switch.js"></script>
+<script src="__PUBLIC__/js/chosen/chosen.jquery.js" type="text/javascript"></script>
+<script src="__PUBLIC__/js/common.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $('input[name=username]').blur(function(){
+            var appid = $("#appid").val();
+            var username = $("input[name='username']").val();
+            var role_name = $("input[name='role_name']").val();
+            var server_name = $("input[name='server_name']").val();
+            var yf_uid = $("input[name='yf_uid']").val();
+
+            if(appid!='' && username !='')
+            {
+                if(role_name =='' && server_name =='' && yf_uid == '')
+                {
+                    $.get("{:U('api/question/user_data')}&appid="+appid+"&username="+username, function(data){
+                        $("input[name='role_name']").val(data.role_name);
+                        $("input[name='server_name']").val(data.server_name);
+                        $("input[name='yf_uid']").val(data.yf_uid);
+                    },'json');
+                }
+            }
+
+        })
+
+        var config = {
+            '.chosen-select'           : {},
+            '.chosen-select-deselect'  : {allow_single_deselect:true},
+            '.chosen-select-no-single' : {disable_search_threshold:10},
+            '.chosen-select-no-results': {no_results_text:'没有匹配的结果'},
+            '.chosen-select-width'     : {width:"95%"}
+        }
+        for (var selector in config) {
+            $(selector).chosen(config[selector]);
+        }
+
+        Wind.use('validate', 'ajaxForm', 'artDialog', function () {
+            var form = $('form.js-ajax-forms');
+
+            //表单验证开始
+            form.validate({
+                ignore: ":hidden:not(select)",
+                //是否在获取焦点时验证
+                onfocusout: false,
+                //是否在敲击键盘时验证
+                onkeyup: false,
+                //当鼠标掉级时验证
+                onclick: false,
+                //验证错误
+                showErrors: function (errorMap, errorArr) {
+                    //errorMap {'name':'错误信息'}
+                    //errorArr [{'message':'错误信息',element:({})}]
+                    try {
+                        $(errorArr[0].element).focus();
+                        art.dialog({
+                            id: 'error',
+                            icon: 'error',
+                            lock: true,
+                            fixed: true,
+                            background: "#CCCCCC",
+                            opacity: 0,
+                            content: errorArr[0].message,
+                            cancelVal: '确定',
+                            cancel: function () {
+                                $(errorArr[0].element).focus();
+                            }
+                        });
+                    } catch (err) {
+
+                    }
+                },
+
+                //验证规则
+                rules: {
+                    'title': {required: true},
+                    'desc': {required: true},
+                    'appid': {required: true},
+
+                },
+                //验证未通过提示消息
+                messages: {
+                    'title': {required: '请输入标题'},
+                    'desc': {required: '请输入内容'},
+                    'appid': {required: '请选择游戏'},
+                },
+                //给未通过验证的元素加效果,闪烁等
+                highlight: false,
+                //是否在获取焦点时验证
+                onfocusout: false,
+                //验证通过，提交表单
+                submitHandler: function (forms) {
+                    var index = layer.load(2,{shade:0.2});
+
+                    $(forms).ajaxSubmit({
+                        url: form.attr('action'), //按钮上是否自定义提交地址(多按钮情况)
+                        dataType: 'json',
+                        beforeSubmit: function (arr, $form, options) {
+                        },
+                        success: function (data, statusText, xhr, $form) {
+                            layer.close(index);
+                            if (data.status) {
+                                setCookie("refersh_time", 1);
+                                //添加成功
+                                Wind.use("artDialog", function () {
+                                    art.dialog({
+                                        id: "succeed",
+                                        icon: "succeed",
+                                        fixed: true,
+                                        lock: true,
+                                        background: "#CCCCCC",
+                                        opacity: 0,
+                                        content: data.info,
+                                        button: [{
+                                            name: '继续{:isset($info['id'])?'编辑':'添加'}？',
+                                            callback: function () {
+                                                reloadPage(window);
+                                                return true;
+                                            },
+                                            focus: true
+                                        }, {
+                                            name: '返回列表',
+                                            callback: function () {
+                                                location.href = "index.php?g=admin&m=WorkOrder&a=channel_index";
+                                                return true;
+                                            }
+                                        }]
+                                    });
+                                });
+                            } else {
+                                layer.alert(data.info);
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    })
+</script>
+</body>
+</html>

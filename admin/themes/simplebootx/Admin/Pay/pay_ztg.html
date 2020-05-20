@@ -1,0 +1,139 @@
+<admintpl file="header"/>
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/chosen.css">
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/docsupport/prism.css">
+<style type="text/css" media="all">
+    /* fix rtl for demo */
+    .chosen-rtl .chosen-drop {
+        left: -9000px;
+    }
+
+    th {
+        width: 50px;
+    }
+
+    .expander {
+        background-image: url(./public/js/treeTable/images/toggle-expand-dark.png);
+        background-position: left center;
+        background-repeat: no-repeat;
+        cursor: pointer;
+        padding: 0;
+        zoom: 1;
+        margin-left: -20px;
+    }
+
+    .collapsed {
+        background-image: url(./public/js/treeTable/images/toggle-collapse-dark.png);
+        background-position: left center;
+        background-repeat: no-repeat;
+        cursor: pointer;
+        padding: 0;
+        zoom: 1;
+        margin-left: -20px;
+    }
+</style>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="javascript:;">对账统计</a></li>
+    </ul>
+    <form class="well form-search" method="post" action="{:U('pay_ztg')}">
+        <div class="search_type cc mb10">
+            <div class="mb10">
+					<span class="mr20">渠道名称：
+					<select name="cid" id="cid" class="chosen-select appid" style="width:180px;" tabindex="1">
+                          <option value="">所有渠道</option>
+                          {$channel_list}
+                    </select>&nbsp;&nbsp;
+						游戏名称：
+                    <select name="appid" id="appid" class="chosen-select appid" style="width:180px;" tabindex="1">
+                        <option value="--">所有游戏</option>
+                        {$game_list}
+                    </select>
+                    时间：
+                    <input type="text" name="start_time" id="start_time" value="{$start_time}" class="input length_3 js-date" size="11" style="width:180px;" max="{$max}"> 至
+                    <input type="text" name="end_time" id="end_time" value="{$end_time}" size="11" class="input length_3 js-date" style="width:180px;" max="{$max}">
+					<input type="submit" class="btn btn-primary" value="搜索"/>
+					</span>
+            </div>
+        </div>
+    </form>
+    <table class="table table-hover table-bordered table-list">
+
+        <thead>
+
+        <tr>
+            <th>渠道名称</th>
+            <th>游戏名称</th>
+            <th>总订单金额</th>
+            <th>总实际收入</th>
+            <th>等级奖金</th>
+        </tr>
+        <tr>
+            <th style="font-size:20px;" colspan="2">合计</th>
+            <th style="font-size:20px;">{:sprintf('%.2f',$totalMoney)}</th>
+            <th style="font-size:20px;">{:sprintf('%.2f',$totalGetMoney)}</th>
+            <th style="font-size:20px;">{:sprintf('%.2f',$totalLevelBonus)}</th>
+        </tr>
+        </thead>
+        <foreach name="data" item="vo">
+            <tr>
+                <th <if condition="$vo['child']"> class="table_parent expander"</if> key="{$vo['id']}" style="padding-left:20px;">{$vo['name']}</th>
+                <th>{$game}</th>
+                <th>{:sprintf('%.2f',$vo['money'])}</th>
+                <th>{:sprintf('%.2f',$vo['getmoney'])}</th>
+                <th>{:sprintf('%.2f',$vo['level_bonus'])}</th>
+
+            </tr>
+            <foreach name="vo['child']" item="v">
+                <tr class="child_{$vo['id']}" style="display:none;">
+                    <td style="padding-left: 40px;">&nbsp;└{$v['name']}</td>
+                    <td>{$game}</td>
+                    <td>{:sprintf('%.2f',$v['money'])}</td>
+                    <td>{:sprintf('%.2f',$v['getmoney'])}</td>
+                    <td>{:sprintf('%.2f',$v['level_bonus'])}</td>
+                </tr>
+            </foreach>
+        </foreach>
+    </table>
+</div>
+<script src="__PUBLIC__/js/chosen/chosen.jquery.js" type="text/javascript"></script>
+<script src="__PUBLIC__/js/chosen/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    var config = {
+        '.chosen-select': {},
+        '.chosen-select-deselect': {allow_single_deselect: true},
+        '.chosen-select-no-single': {disable_search_threshold: 10},
+        '.chosen-select-no-results': {no_results_text: '没有匹配的结果'},
+        '.chosen-select-width': {width: "95%"}
+    }
+    for (var selector in config) {
+        $(selector).chosen(config[selector]);
+    }
+</script>
+<script src="__ROOT__/public/js/common.js?"></script>
+<script>
+    $(function () {
+        $("#selected_cid").change(function () {
+            $("#cid_form").submit();
+        });
+        $('.table_parent').click(function () {
+            if ($(this).attr('class').indexOf('expander') > 0) {
+                $(this).removeClass('expander');
+                $(this).addClass('collapsed');
+                key = $(this).attr('key');
+                $('.child_' + key).show();
+            }
+            else {
+                $(this).removeClass('collapsed');
+                $(this).addClass('expander');
+                key = $(this).attr('key');
+                $('.child_' + key).hide();
+            }
+        })
+    });
+</script>
+
+</body>
+
+</html>

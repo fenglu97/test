@@ -1,0 +1,65 @@
+.size_12px{ font-size: 12px;}
+.strong{ font-weight: bold;}
+.color_red{ color: #ff0000;}
+.color_blue{ color: #409EFF;}
+.color_green{ color: #009688;}
+.layui-laydate-content .laydate-day-mark::after { background-color: transparent;}
+
+.activity1,.activity2,.activity3{ display: block; margin: 2px 5%!important; position: relative; line-height: 27px; font-size: 16px; border: 1px solid #000000;}
+.activity1{ background-color: #ffffff;}
+.activity2{ background-color: #ffffff;}
+.activity3{ background-color: #ffffff;}
+.activity1 p{ color: #ffffff; background-color: #009688;}
+.activity2 p{ color: #ffffff; background-color: #409EFF;}
+.activity3 p{ color: #ffffff; background-color: #FF9999;}
+.activity{ display: block; margin: 2px 5%!important; position: relative; line-height: 27px; font-size: 16px; border: 1px solid #000000;}
+.activity .activity-color1{ color: #ffffff; background-color: #009688;}
+.activity .activity-color2{ color: #ffffff; background-color: #409EFF;}
+.activity .activity-color3{ color: #ffffff; background-color: #FF9999;}
+
+.layui-this .activity1,.layui-this .activity2,.layui-this .activity3{ color: #ffffff;}
+.layui-this .activity1::after,.layui-this .activity2::after,.layui-this .activity3::after{ background-color: #ffffff;}
+
+.layui-layer .layui-layer-content{ padding: 20px; color: #2c3e50; font-size: 14px; line-height: 32px;}
+
+#calendar #layui-laydate1{ width:100%; min-height: 390px; font-size: 16px;}
+#calendar #layui-laydate1 .layui-laydate-main{width:100%; min-height: 390px;}
+#calendar #layui-laydate1 .layui-laydate-main .layui-laydate-content{width:100%; min-height: 390px;}
+#calendar #layui-laydate1 .layui-laydate-main .layui-laydate-content table{width:100%; min-height: 390px;}
+
+.notice{ margin-bottom: 10px; *zoom:1; min-width: 1280px;}
+.notice:after {content:" "; display:block; height:0; visibility:hidden; clear:both; }
+.notice_left{ float: left; width: 45%; margin-right: 10%;}
+.notice_right{ float: left; max-width: 45%;}
+.notice_right .ps{ padding: 0; margin: 0 0 10px 0; font-size: 14px;}
+.notice_dl{ margin: 0 0 16px; font-size: 14px; line-height: 20px;}
+.notice_dl dt,.notice_dl dd{ margin: 0 0 10px;}
+.notice_dl dd{ font-weight: normal;}
+#commonActivity{
+    width: 45%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    display: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,.12);
+    background-color: #FFFFFF;
+}
+#commonActivityTitle{
+    padding: 10px;
+    font-weight: bold;
+    background-color: #01AAED;
+    color: #ffffff;
+}
+#commonActivityContent{
+    padding: 10px;
+    border: 1px solid #e6e6e6;
+}
+#commonActivityContent p{
+    margin: 0 0 10px;
+}
+
+
+.notice_labels{ margin-bottom: 5px;}
+.notice_labels:after{  content: "."; display: block; width: 0; height: 0; clear: both; visibility: hidden;}
+.notice_label{ float: left; margin-right: 5px; margin-bottom: 5px;}
+.notice_label .layui-form{ width: 200px;}
+.layui-form-select dl dd.layui-this { background-color: #1E9FFF}

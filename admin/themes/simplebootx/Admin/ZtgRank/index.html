@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>排行榜</title>
+    <!--<link rel="stylesheet" href="__PUBLIC__/simpleboot/themes/flat/theme.min.css"/>-->
+    <link rel="stylesheet" href="__TMPL__Public/assets/css/x_public20180813.css"/>
+    <style>
+        .menu_tab .menu_tab_head{
+            font-weight: bold;
+        }
+        .menu_tab .menu_tab_head .menu_tab_tab tr{
+            border-bottom: none;
+        }
+        .menu_tab .menu_tab_tab{
+            width: 100%;
+            font-size: 14px;
+            /*height: 30px;*/
+            border-collapse:collapse;
+            table-layout:fixed;
+            /*padding: 1px 8px;*/
+            /*vertical-align: middle;*/
+            line-height: 26px;
+        }
+        .menu_tab .menu_tab_tab tr{
+            display: block;
+            height: 50px;
+            padding: 10px 0;
+            border-bottom: 1px solid #cccccc;
+            overflow: hidden;
+            position: relative;
+        }
+        .menu_tab .menu_tab_tab tr td{
+            display: inline-block;
+            border: none;
+            vertical-align: middle;
+            line-height: 26px;
+        }
+        .menu_tab .menu_tab_tab tr td .icon_new{
+            display: block;
+            width: 30px;
+            height: 30px;
+            background: url("__TMPL__Public/assets/images/p_new.png") no-repeat;
+            background-size: 100% 100%;
+            position: absolute;
+            top: 0;
+            right: 0;
+            z-index: 1000;
+        }
+        .menu_tab .menu_tab_body td{
+            vertical-align: top;
+        }
+        .menu_tab .menu_tab_tab tr td .icon_man{
+            width:30px;height:30px;vertical-align: middle;margin: 0 5px;float:left;
+        }
+        #searchScope{
+            width: 150px;
+            padding: 0;
+        }
+        .layui-layer-content{
+            padding: 10px;
+            line-height: 26px;
+        }
+        #layerView{ height: 100%; position: relative; font-size: 14px;}
+        #layerViewContent,#layerViewScreen{ width: 100%; height: 100%;}
+        #layerViewScreen{
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: transparent;
+        }
+        #layerEdit{ height: 100%; font-size: 14px; position: relative;}
+        .layerEditText{ width: 778px; height: 90%; margin: 0; padding: 0; outline: none; resize: none; border: 1px solid #cccccc;}
+        #layerEditLen{ position: absolute; left: 0; bottom: 0; z-index: 198910140;}
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="top" <if condition="$is_tg eq 0">style="display:none;"</if>>
+        <div class="top_title">
+            欢迎亲爱的<span class="color_orange">{$channel_name}</span>同学回家，您于<span class="color_orange">{$effective|date="Y-m-d",###}</span>入职本公司，已入职<span class="color_orange">{$work_day}</span>天！您当前等级为<span class="color_orange">{$tg_data['level_name']}</span>，感谢您为共同梦想辛劳付出！
+        </div>
+        <div class="top_list clear">
+            <div class="tl_note" style="width: 14%;">
+                <div class="tl_note_left">
+                    <div>本月流水：<span class="color_orange strong">￥{:sprintf("%.2f",$tg_data['money'])}</span></div>
+                    <div>提成比例：<span class="color_orange strong">{$tg_data['ratio']}</span></div>
+                    <div>提成金额：<span class="color_orange strong">￥{:sprintf("%.2f",$tg_data['commision'])}</span></div>
+                    <div>等级奖金：<span class="color_orange strong">￥{:sprintf("%.2f",$tg_data['level_bonus'])}</span></div>
+                </div>
+                <div class="tl_note_right">
+                    <div class="icon_explain showExplain2">
+                        <div class="explain_triangle"></div>
+                        <div class="explain_cont clear">
+                            <div class="fl" style="width: 48%;">
+                                <p>每月前十名充值流水提成方案：</p>
+                                <p>3000为保底最低业绩要求，所以起始3000流水为业绩考核，不参与提成：</p>
+                                <p>3001-7999  提成总流水的10%（减去保底3000，下同）</p>
+                                <p>当月流水超过8000  提成总流水的12%</p>
+                                <p>当月流水超过15000  提成总流水的15%</p>
+                                <p>当月流水超过20000  提成总流水的18%</p>
+                                <p>当月流水超过25000  提成总流水的21%</p>
+                                <p>当月流水超过30000  提成总流水的25%</p>
+                                <p>当月流水超过35000  提成总流水的30%</p>
+                                <p>当月流水超过50000  提成总流水的40%</p>
+                                <p>当月流水超过70000  提成总流水的50%</p>
+                            </div>
+                            <div class="fr" style="width: 48%;">
+                                <p>前十名之后所有人提成方案：</p>
+                                <p>3000为保底最低业绩要求，所以起始3000流水为业绩考核，不参与提成：</p>
+                                <p>3001-8999  提成总流水的4%（减去保底3000，下同）</p>
+                                <p>当月流水超过9000  提成总流水的6%</p>
+                                <p>当月流水超过15000  提成总流水的8%</p>
+                                <p>当月流水超过20000  提成总流水的10%</p>
+                                <p>当月流水超过25000  提成总流水的12%</p>
+                                <p>当月流水超过30000  提成总流水的15%</p>
+                                <p>当月流水超过40000  提成总流水的18%</p>
+                                <p>当月流水超过50000  提成总流水的24%</p>
+                                <p>当月流水超过60000  提成总流水的30%</p>
+                                <p>当月流水超过80000  提成总流水的36%</p>
+                                <p>当月流水超过100000  提成总流水的42%</p>
+                                <p>当月流水超过120000  提成总流水的50%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tl_note" style="width: 16%;">
+                <div class="tl_note_left">
+                    <div>昨日充值：<span class="color_orange strong">￥{$yesterday_inpour}</span></div>
+                    <div>今日充值：<span class="color_orange strong">￥{$today_inpour}</span></div>
+                </div>
+                <div class="tl_note_right">
+                    <div class="icon_explain showExplain1" data-explain="本月推广总业绩，不同业绩对应不同提成比例。"></div>
+                </div>
+            </div>
+            <div class="tl_note" style="width: 17%;">
+                <div class="tl_note_left">
+                    <div>昨日推广奖金：<span class="color_orange strong">￥{$yesterday_tg_bonus}</span></div>
+                    <div>今日推广奖金：<span class="color_orange strong">￥{$today_tg_bonus}</span></div>
+                </div>
+                <div class="tl_note_right">
+                    <div class="icon_explain showExplain1" data-explain="推广人数奖励，每日推广目标为7个合格玩家，超过一个奖金5元，每日上限50元！"></div>
+                </div>
+            </div>
+            <div class="tl_note" style="width: 19%;">
+                <div class="tl_note_left">
+                    <div>本月绩效有效注册数：<span class="color_orange strong">{$month_valid_users}</span></div>
+                    <div>今日绩效有效注册数：<span class="color_orange strong">{$today_valid_users}</span></div>
+                </div>
+                <div class="tl_note_right">
+                    <div class="icon_explain showExplain1" data-explain="按月工作日，去除同IP和设备号。"></div>
+                </div>
+            </div>
+            <div class="tl_note" style="width: 19%;">
+                <div class="tl_note_left">
+                    <div>本月注册绩效扣除金额：<span class="color_orange strong">￥{$month_performance_deduct}</span></div>
+                    <div>今日有效注册扣除金额：<span class="color_orange strong">￥{$today_performance_deduct}</span></div>
+                </div>
+                <div class="tl_note_right">
+                    <div class="icon_explain showExplain1" data-explain="根据公司每日注册要求计算，少一个扣10元。"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+        <div class="clear">
+            <div class="menu">
+                <div class="menu_title clear">
+                    <div class="fl strong">排行榜</div>
+                    <div class="fr">
+                        <span class="fl">选择月份：</span>
+                        <div class="fl">
+                            <div class="layui-input-inline">
+                                <input type="text" class="layui-input" id="datePicker" placeholder="">
+                            </div>
+                        </div>
+                        <span class="fl" style="margin-left: 10px;">显示名次：</span>
+                        <div class="fl">
+                            <select name="city" id="searchScope" lay-verify="required" class="layui-input layui-unselect">
+                                <!--<option value=""></option>-->
+                                <option value="10" selected>前10名</option>
+                                <!--<option value="50">前50名</option>-->
+                                <!--<option value="100">前100名</option>-->
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <table class="menu_tab menu_tabimg" cellpadding="0" cellspacing="0" border="0">
+                    <thead>
+                    <tr>
+                        <!--<td width="5%" align="center">推广奖金排行榜</td>-->
+                        <td width="5%" align="center">战斗力排行榜</td>
+                        <td width="5%" align="center">小组排行榜</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="menu_tab_head">
+                        <!--<td align="center">-->
+                            <!--<table class="menu_tab_tab" cellpadding="0" cellspacing="0" border="0">-->
+                                <!--<tr>-->
+                                    <!--<td class="tab_width20" align="center" style="padding: 13px 0;">名次</td>-->
+                                    <!--<td class="tab_width27" align="center">姓名</td>-->
+                                    <!--&lt;!&ndash;<td class="tab_width3" align="center">等级</td>&ndash;&gt;-->
+                                    <!--<td class="tab_width25" align="center">推广奖金</td>-->
+                                    <!--<td class="tab_width20" align="center">推广心得</td>-->
+                                <!--</tr>-->
+                            <!--</table>-->
+                        <!--</td>-->
+                        <td align="center">
+                            <table class="menu_tab_tab" cellpadding="0" cellspacing="0" border="0">
+                                <tr>
+                                    <td align="center" class="tab_width15" style="padding: 13px 0;">名次</td>
+                                    <td align="center" class="tab_width27">姓名</td>
+                                    <td align="center" class="tab_width10">等级</td>
+                                    <td align="center" class="tab_width20">充值总额</td>
+                                    <td align="center" class="tab_width10">所在军团</td>
+                                    <td align="center" class="tab_width10">提高充值经验</td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td align="center">
+                            <table class="menu_tab_tab" cellpadding="0" cellspacing="0" border="0">
+                                <tr>
+                                    <td align="center" class="tab_width20" style="padding: 13px 0;">名次</td>
+                                    <td align="center" class="tab_width20">组名</td>
+                                    <!--<td align="center" class="tab_width3">等级</td>-->
+                                    <td align="center" class="tab_width22">充值总额</td>
+                                    <td align="center" class="tab_width15">所在军团</td>
+                                    <td align="center" class="tab_width15">管理心得</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr class="menu_tab_body">
+                        <!--<td align="center" id="tgBonusRank"></td>-->
+                        <td align="center" id="tgRank"></td>
+                        <td align="center" id="tgGroupRank"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div id="layerView" style="display: none">
+        <div id="layerViewContent"></div>
+        <div id="layerViewScreen"></div>
+    </div>
+    <div id="layerEdit" style="display: none">
+        <textarea name="layerEditText" id="layerEditText" class="layerEditText"></textarea>
+        <div id="layerEditLen">0/1000</div>
+    </div>
+    <!--<div id="rule" style="display: none;padding:20px">-->
+        <!--<div class="fl" style="width: 48%;">-->
+            <!--<p>每月前十名充值流水提成方案：</p>-->
+            <!--<p>3000为保底最低业绩要求，所以起始3000流水为业绩考核，不参与提成：</p>-->
+            <!--<p>3001-7999  提成总流水的10%（减去保底3000，下同）</p>-->
+            <!--<p>当月流水超过8000  提成总流水的12%</p>-->
+            <!--<p>当月流水超过15000  提成总流水的15%</p>-->
+            <!--<p>当月流水超过20000  提成总流水的18%</p>-->
+            <!--<p>当月流水超过25000  提成总流水的21%</p>-->
+            <!--<p>当月流水超过30000  提成总流水的25%</p>-->
+            <!--<p>当月流水超过35000  提成总流水的30%</p>-->
+            <!--<p>当月流水超过50000  提成总流水的40%</p>-->
+            <!--<p>当月流水超过70000  提成总流水的50%</p>-->
+        <!--</div>-->
+        <!--<div class="fr" style="width: 48%;">-->
+            <!--<p>前十名之后所有人提成方案：</p>-->
+            <!--<p>3000为保底最低业绩要求，所以起始3000流水为业绩考核，不参与提成：</p>-->
+            <!--<p>3001-8999  提成总流水的4%（减去保底3000，下同）</p>-->
+            <!--<p>当月流水超过9000  提成总流水的6%</p>-->
+            <!--<p>当月流水超过15000  提成总流水的8%</p>-->
+            <!--<p>当月流水超过20000  提成总流水的10%</p>-->
+            <!--<p>当月流水超过25000  提成总流水的12%</p>-->
+            <!--<p>当月流水超过30000  提成总流水的15%</p>-->
+            <!--<p>当月流水超过40000  提成总流水的18%</p>-->
+            <!--<p>当月流水超过50000  提成总流水的24%</p>-->
+            <!--<p>当月流水超过60000  提成总流水的30%</p>-->
+            <!--<p>当月流水超过80000  提成总流水的36%</p>-->
+            <!--<p>当月流水超过100000  提成总流水的42%</p>-->
+            <!--<p>当月流水超过120000  提成总流水的50%</p>-->
+        <!--</div>-->
+        <!--<div style="width: 100%; clear: both;text-align:center;margin: 0;padding: 0; margin-top: 10px; color: black; font-weight: bold" id="comission"></div>-->
+    <!--</div>-->
+
+    <script src="__PUBLIC__/js/jquery.js"></script>
+    <script src="__PUBLIC__/js/layer/layer.js"></script>
+    <script src="__PUBLIC__/js/laydate/laydate.js"></script>
+    <script src="__TMPL__Public/assets/js/template.js"></script>
+    <script type="text/html" id="rank1">
+        <table class="menu_tab_tab" cellpadding="0" cellspacing="0" border="0">
+            {{each data as v i}}
+            <tr style="color: {{v.level_color}}">
+                <td align="center" class="tab_width20">
+                    {{if i == 0}}
+                    <span class="glory bg_color_1">冠军</span>
+                    {{else if i == 1}}
+                    <span class="glory bg_color_2">亚军</span>
+                    {{else if i == 2}}
+                    <span class="glory bg_color_3">季军</span>
+                    {{else}}
+                    <span class="glory">第{{ i+1 }}名</span>
+                    {{/if}}
+                </td>
+                <td align="center" class="tab_width27"><img class="icon_man" alt="" src="__TMPL__Public/assets/images/icon_man.png"/>{{ v.channel_name }}</td>
+                <td align="center" class="tab_width25">{{ v.money }}</td>
+                <td align="center" class="tab_width20">
+                    {{if v.edit_enbaled == 0}}
+                    <span class="btn_view" onclick="showRankGain(1, '{{v.channel}}')">查看</span>
+                    {{else if v.edit_enbaled == 1}}
+                    <div class="btn_edit" onclick="editRankGain(1, '{{v.channel}}')">编辑</div>
+                    {{/if}}
+                    {{if v.is_new == 1}}
+                    <i class="icon_new"></i>
+                    {{/if}}
+                </td>
+            </tr>
+            {{/each}}
+        </table>
+    </script>
+    <script type="text/html" id="rank2">
+        <table class="menu_tab_tab" cellpadding="0" cellspacing="0" border="0">
+            {{each data as v i}}
+            <tr style="color: {{v.level_color}}">
+                <td align="center" class="tab_width15">
+                    {{if i == 0}}
+                    <span class="glory bg_color_1">冠军</span>
+                    {{else if i == 1}}
+                    <span class="glory bg_color_2">亚军</span>
+                    {{else if i == 2}}
+                    <span class="glory bg_color_3">季军</span>
+                    {{else}}
+                    <span class="glory">第{{ i+1 }}名</span>
+                    {{/if}}
+                </td>
+                <td align="" class="tab_width27"><img class="icon_man" alt="" src="__TMPL__Public/assets/images/icon_man.png"/>{{ v.channel_name }}</td>
+                <td align="center" class="tab_width10">{{ v.level_name }}</td>
+                <td align="center" class="tab_width20">{{ v.money }}</td>
+                <td align="center" class="tab_width10">{{ v.legion_name }}</td>
+                <td align="center" class="tab_width10">
+                    {{if v.edit_enbaled == 0}}
+                    <span class="btn_view" onclick="showRankGain(2, '{{v.channel}}')">查看</span>
+                    {{else if v.edit_enbaled == 1}}
+                    <div class="btn_edit" onclick="editRankGain(2, '{{v.channel}}')">编辑</div>
+                    {{/if}}
+                    {{if v.is_new == 1}}
+                    <i class="icon_new"></i>
+                    {{/if}}
+                </td>
+            </tr>
+            {{/each}}
+        </table>
+    </script>
+    <script type="text/html" id="rank3">
+        <table class="menu_tab_tab" cellpadding="0" cellspacing="0" border="0">
+            {{each data as v i}}
+            <tr style="color: {{v.level_color}}">
+                <td align="center" class="tab_width20">
+                    {{if i == 0}}
+                    <span class="glory bg_color_1">冠军</span>
+                    {{else if i == 1}}
+                    <span class="glory bg_color_2">亚军</span>
+                    {{else if i == 2}}
+                    <span class="glory bg_color_3">季军</span>
+                    {{else}}
+                    <span class="glory">第{{ i+1 }}名</span>
+                    {{/if}}
+                </td>
+                <td align="" class="tab_width20"><img class="icon_man" alt="" src="__TMPL__Public/assets/images/icon_man.png"/>{{ v.channel_name }}</td>
+                <td align="center" class="tab_width22">{{ v.money }}</td>
+                <td align="center" class="tab_width15">{{ v.legion_name }}</td>
+                <td align="center" class="tab_width15">
+                    {{if v.edit_enbaled == 0}}
+                    <span class="btn_view" onclick="showRankGain(3, '{{v.channel}}')">查看</span>
+                    {{else if v.edit_enbaled == 1}}
+                    <div class="btn_edit" onclick="editRankGain(3, '{{v.channel}}')">编辑</div>
+                    {{/if}}
+                    {{if v.is_new == 1}}
+                    <i class="icon_new"></i>
+                    {{/if}}
+                </td>
+            </tr>
+            {{/each}}
+        </table>
+    </script>
+    <script>
+//    laydate.path = '__PUBLIC__/js/laydate/laydate.js'; //laydate.js 所在目录
+//        $('.layerShow').click(function(){
+//            layer.open({
+//                title: '结算规则',
+//                type: 1,
+//                skin: 'layui-layer-molv', //加上边框
+//                area: ['800px', 'auto'], //宽高
+//                content: $('#rule'),
+//                closeBtn: 0, //不显示关闭按钮
+//                anim: 2,
+//                btnAlign: 'c',
+//                shadeClose: false, //开启遮罩关闭
+//                btn: ['知道了'],
+//                yes: function(index, layero){
+//                    layer.close(index)
+//                }
+//            });
+//        });
+$('.showExplain1').hover(
+    function () {
+        $(this).addClass('icon_explain_on');
+    },
+    function () {
+        $(this).removeClass('icon_explain_on');
+    }
+);
+    $('.showExplain2').hover(
+        function () {
+            $(this).children().show();
+        },
+        function () {
+            $(this).children().hide();
+        }
+    );
+
+    function formatDate(time){
+        var date = new Date(time);
+        var year = date.getFullYear(),
+            month = date.getMonth() + 1,//月份是从0开始的
+            day = date.getDate();
+        var newTime = year + '-' +
+            month + '-' +
+            day;
+        return newTime;
+    }
+        function formatDate(time){
+            var date = new Date(time);
+            var year = date.getFullYear(),
+                month = date.getMonth() + 1,//月份是从0开始的
+                day = date.getDate();
+            var newTime = year + '-' +
+                month + '-' +
+                day;
+            return newTime;
+        }
+        //            console.log(window.location.href)
+        //            console.log(window.location.search)
+        var dates = '',
+            times = '';
+        var url = window.location.search;
+        (function () {
+            if (url.indexOf("?") != -1) {  //判断是否有参数
+                var str = url.substr(1); //从第一个字符开始 因为第0个是?号 获取所有除问号的所有符串
+                var strArr = str.split("&");
+                for(var i=0; i < strArr.length; i++){
+                    var strArrOnly = strArr[i].split("=");
+                    if(strArrOnly[0] == 'date'){
+                        dates = strArrOnly[1];
+                    }
+                }
+            }
+        })();
+        //年月选择器
+        laydate.render({
+            elem: '#datePicker'
+            ,type: 'month'
+            ,value: dates || new Date()
+            ,min: '2016-1-1'
+            ,max: formatDate(new Date().getTime())	//格式：'2017-1-1'	'2017-8-11 12:30:00'	'09:30:00'
+            ,done: function(value, date, endDate){	    //控件选择完毕后的回调
+        //                    console.log(value); //得到日期生成的值，如：2017-08-18
+        //                    console.log(date); //得到日期时间对象：{year: 2017, month: 8, date: 18, hours: 0, minutes: 0, seconds: 0}
+        //                    console.log(endDate); //得结束的日期时间对象，开启范围选择（range: true）才会返回。对象成员同上。
+                if(url.indexOf("?") != -1){
+                    if(dates){
+                        window.location.href = url.replace(dates, value);
+                    } else {
+                        window.location.href = url + '&date=' + value;
+                    }
+                } else {
+                    window.location.href = url + '?date=' + value;
+                }
+            }
+        });
+        //每次范围
+        $('#searchScope').on('change',function () {
+            var selected = $(this).children('option:selected').val();
+            console.log(selected);
+        });
+        //编辑心得 禁止粘贴文本
+//        document.onpaste = function(event){
+//            var e = event || window.event;
+//            var target = e.target || e.srcElement;
+//            if(target.className == 'layui-layer-input'){
+//                return false;
+//            }
+//        };
+        $('#layerEditText').on('keyup', function (event) {
+            console.log(this.value)
+            var value = this.value;
+            if(value.length <= 1000){
+                $('#layerEditLen').html(value.length + '/1000');
+            } else {
+                this.value = value.slice(0, 1000);
+            }
+        });
+        (function () {
+            if(!dates){
+                var date,year,month;
+                date = new Date();
+                year = date.getFullYear();
+                month = date.getMonth() + 1;
+                if(month < 10){
+                    month = '0' + month.toString();
+                }
+                times = year + '-' + month;
+            } else {
+                times = dates;
+            }
+        })();
+        $.ajax({
+            type: "get",
+            url: "/index.php?g=api&m=ztg&a=rank",
+            data: {
+                time: times,  //时间 例如：2018-07
+                rank_counts: 10 //排行榜个数 默认为10个
+            },
+            dataType: "json",
+            success: function (datas) {
+                if(datas.status == 1){
+//                    console.log(datas)
+//                    var tg_bonus_rank = datas.data.tg_bonus_rank;   //推广奖金排行榜
+                    var tg_rank = datas.data.tg_rank;   //战斗力排行榜
+                    var tg_group_rank = datas.data.tg_group_rank;   //小组排行榜
+//                    var tg_bonus_rank_html = template('rank1',{"data":tg_bonus_rank});
+                    var tg_rank_html = template('rank2',{"data":tg_rank});
+                    var tg_group_rank_html = template('rank3',{"data":tg_group_rank});
+                    //添加到页面
+//                    $('#tgBonusRank').html(tg_bonus_rank_html);
+                    $('#tgRank').html(tg_rank_html);
+                    $('#tgGroupRank').html(tg_group_rank_html);
+                }
+                if(datas.status == 0){  //请求失败
+                    console.log(datas.msg);
+                }
+            },
+            error: function (msg) {
+                console.log(msg);
+            }
+        });
+//        查看排行榜心得
+        function showRankGain(Type, channelID) {
+            $.ajax({
+                type: "get",
+                url: "/index.php?g=api&m=ztg&a=show_rank_gain",
+                data: {
+                    time: times,  //时间 例如：2018-07
+                    type: Type, //心得类型 1推广心得 2 提高充值经验 3 管理心得
+                    channel: channelID  //渠道ID
+                },
+                dataType: "json",
+                success: function (datas) {
+                    if(datas.status == 1){
+                        $('#layerViewContent').html(datas.data);
+                        layer.open({
+                            title: '推广心得',
+                            type: 1,
+                            skin: 'layui-layer-molv', //加上边框
+                            area: ['800px', '400px'], //宽高
+                            resize: false,
+                            move: false,
+                            content: $('#layerView'),
+//                            content: datas.data,
+                            closeBtn: 0, //不显示关闭按钮
+                            anim: 2,
+                            btnAlign: 'c',
+                            shadeClose: false, //开启遮罩关闭
+                            btn: ['关闭'],
+                            yes: function(index, layero){
+                                layer.close(index)
+                            }
+                        });
+                    }
+                    if(datas.status == 0){  //请求失败
+                        console.log(datas.msg);
+                    }
+                },
+                error: function (msg) {
+                    console.log(msg);
+                }
+            });
+        }
+//        修改排行榜心得
+        function editRankGain(Type, channelID) {
+            $.ajax({
+                type: "get",
+                url: "/index.php?g=api&m=ztg&a=show_rank_gain",
+                data: {
+                    time: times,  //时间 例如：2018-07
+                    type: Type, //心得类型 1推广心得 2 提高充值经验 3 管理心得
+                    channel: channelID  //渠道ID
+                },
+                dataType: "json",
+                success: function (datas) {
+                    if(datas.status == 1){
+                        $('#layerEditText').val(datas.data);
+                        $('#layerEditLen').html(datas.data.length + '/1000');
+                        layer.open({
+                            title: '请编辑：',
+                            type: 1,
+                            skin: 'layui-layer-molv', //加上边框
+                            area: ['800px', '450px'], //宽高
+                            resize: false,
+                            move: false,
+                            content: $('#layerEdit'),
+//                            content: datas.data,
+                            closeBtn: 0, //不显示关闭按钮
+                            anim: 2,
+                            btnAlign: 'c',
+                            shadeClose: false, //开启遮罩关闭
+                            btn: ['确认','取消'],
+                            yes: function(index, layero){
+                                var value = $('#layerEditText').val();
+                                if(value){
+                                    $.ajax({
+                                        type: "post",
+                                        url: "/index.php?g=api&m=ztg&a=edit_rank_gain",
+                                        data: {
+                                            time: times,  //时间 例如：2018-07
+                                            type: Type, //心得类型 1推广心得 2 提高充值经验 3 管理心得
+                                            channel: channelID,  //渠道ID
+                                            content: value  //心得内容
+                                        },
+                                        dataType: "json",
+                                        success: function (datas) {
+                                            if(datas.status == 1){
+    //                                            console.log('修改心得内容成功')
+                                                layer.open({
+                                                    content: '编辑成功'
+                                                });
+                                            }
+                                            if(datas.status == 0){
+                                                layer.open({
+                                                    content: datas.msg
+                                                });
+                                            }
+                                            layer.close(index);
+                                        },
+                                        error: function (msg) {
+                                            console.log(msg);
+                                        }
+                                    });
+                                }
+//                                layer.close(index)
+                            },
+                            btn2: function(index, layero){
+//                                alert('取消')
+                                layer.close(index)
+                            }
+                        });
+//                        layer.prompt({
+//                            formType: 2,
+//                            value: datas.data,
+//                            title: '请编辑：',
+//                            area: ['800px', '350px'] //自定义文本域宽高
+//                        }, function(value, index, elem){
+//                            if(value){
+//                                $.ajax({
+//                                    type: "get",
+//                                    url: "/index.php?g=api&m=ztg&a=edit_rank_gain",
+//                                    data: {
+//                                        time: times,  //时间 例如：2018-07
+//                                        type: Type, //心得类型 1推广心得 2 提高充值经验 3 管理心得
+//                                        channel: channelID,  //渠道ID
+//                                        content: value  //心得内容
+//                                    },
+//                                    dataType: "json",
+//                                    success: function (datas) {
+//                                        if(datas.status == 1){
+////                                            console.log('修改心得内容成功')
+//                                        }
+//                                        if(datas.status == 0){
+//                                            console.log(datas.msg);
+//                                        }
+//                                        layer.close(index);
+//                                    },
+//                                    error: function (msg) {
+//                                        console.log(msg);
+//                                    }
+//                                });
+//                            }
+//                        });
+                    }
+                    if(datas.status == 0){  //请求失败
+                        console.log(datas.msg);
+                    }
+                },
+                error: function (msg) {
+                    console.log(msg);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

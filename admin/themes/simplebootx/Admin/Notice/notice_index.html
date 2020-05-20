@@ -1,0 +1,154 @@
+<admintpl file="header" />
+<style>
+    .home_info li em {
+        float: left;
+        width: 120px;
+        font-style: normal;
+    }
+    li {
+        list-style: none;
+    }
+    .a-top:hover{color:#da534f;text-decoration:none}
+    .a-new:hover{color:#008D68;text-decoration:none}
+    .a-activity:hover{color:#008D68;text-decoration:none}
+    .top{
+        background-color: rgba(146, 166, 171, 0.13);
+        border-color: #d9534f;
+        padding: 5px 5px 5px 15px;
+        border-left: 4px solid #d9534f;
+    }
+    .new{
+        background-color: rgba(146, 166, 171, 0.13);
+        border-color: #008D68;
+        padding: 5px 5px 5px 15px;
+        border-left: 4px solid #008D68;
+    }
+    .activity{
+        background-color: rgba(146, 166, 171, 0.13);
+        border-color: #008D68;
+        padding: 5px 5px 5px 15px;
+        border-left: 4px solid #008D68;
+    }
+    h4{
+        font-size: 20px;
+        margin: 0px 0px 20px 0px;
+    }
+    .a-top{color:#d9534f;}
+    .a-new{color:#008D68;}
+    .tips{
+        min-height: 20px;
+        padding: 19px;
+        margin-bottom: 20px;
+        background-color: #dbf6d3;
+        border: 1px solid #b3d4a5;
+        border-radius: 4px;
+        color: #569745;
+    }
+    .close{
+        border: 0;
+        background: 0 0;
+        padding: 0;
+        font-size: 20px;
+        line-height: 1;
+        float: right;
+        font-weight: 700;
+        opacity: 0.4;
+    }
+</style>
+</head>
+<body>
+<div class="wrap">
+    <div class="well">
+        <h4>置顶公告</h4>
+        <div id="top">
+            <foreach name="top" item="vo">
+                <p class="top">
+                    <a href="javascript:void(0);" class="a-top view">【{$vo.title}】</a>：
+                    <span class="content">{$vo.content}</span>
+                    <input type="hidden" class="time" value="{$vo.add_time|date='Y-m-d H:i',###}" />
+                    <input type="hidden" class="user" value="{$vo.user}" />
+                </p>
+            </foreach>
+        </div>
+        <p><button class="btn btn-primary more" data-top="1">查看更多</button></p>
+    </div>
+
+    <div class="well">
+        <h4>最新公告</h4>
+        <div id="new">
+            <foreach name="new" item="vo">
+                <p class="new">
+                    【{$vo.add_time|date='Y-m-d H:i',###}】
+                    <a href="javascript:void(0);" class="a-new view">【{$vo.title}】</a>：
+                    <span class="content">{$vo.content}</span>
+                    <input type="hidden" class="time" value="{$vo.add_time|date='Y-m-d H:i',###}" />
+                    <input type="hidden" class="user" value="{$vo.user}" />
+                </p>
+            </foreach>
+        </div>
+        <p><button class="btn btn-primary more" data-top="0">查看更多</button></p>
+    </div>
+
+</div>
+<script src="__PUBLIC__/js/common.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script type="text/javascript">
+
+    $(function() {
+
+        $('.view').live('click', function () {
+            var title = $(this).html();
+            var time = $(this).siblings('.time').val();
+            var user = $(this).siblings('.user').val();
+            var html = '<h3 style="text-align: center;font-size: 20px">' + title + '</h3>';
+            var content = $(this).siblings('.content').html();
+
+            html += '<p style="text-align: center">' + time + '</p>';
+            html += '<p style="padding: 0 15px;">' + content + '</p>';
+            html += '<p style="text-align: right;padding: 0 15px;">发布人：' + user + '</p>';
+            layer.open({
+                type: 1,
+                skin: 'layui-layer-molv', //加上边框
+                area: ['700px', '500px'], //宽高
+                content: html,
+                closeBtn: 0, //不显示关闭按钮
+                anim: 2,
+                shadeClose: true //开启遮罩关闭
+            });
+        });
+
+
+        $('.more').click(function () {
+            var type = $(this).attr('data-top'), count, notice;
+            var url = "{:U('getNotice')}";
+            if (type == 1) {
+                count = $('.top').length;
+                notce = 'top';
+            } else{
+                count = $('.new').length;
+                notce = 'new';
+            }
+            $.post(url, {count: count, top: type}, function (res) {
+                if (res.status == 1 && res.info.length > 0) {
+                    var html = '';
+                    for (var i = 0; i < res.info.length; i++) {
+                        html += "<p class='" + notce + "'>";
+                        if (type == 0) {
+                            html += "【" + res.info[i].add_time + "】 ";
+                        }
+                        html += '<a href="javascript:void(0);" class="a-' + notce + ' view">【' + res.info[i].title + '】</a>：';
+                        html += '<span class="content">' + res.info[i].content + '</span>';
+                        html += '<input type="hidden" class="time" value="' + res.info[i].add_time + '" />';
+                        html += '<input type="hidden" class="user" value="' + res.info[i].user + '" />';
+                    }
+                    $('#' + notce).append(html);
+                } else {
+                    layer.alert('暂无更多信息', {icon: 5});
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
+

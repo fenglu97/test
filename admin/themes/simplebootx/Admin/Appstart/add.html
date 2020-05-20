@@ -1,0 +1,169 @@
+<admintpl file="header"/>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:U('index')}">盒子启动页</a></li>
+        <li class="active"><a href="javascript:void(0);">添加启动页</a></li>
+    </ul>
+    <form class="form-horizontal js-ajax-forms" action="" method="post">
+        <fieldset>
+            <div class="control-group">
+                <label class="control-label">渠道<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <select name="channel" <if condition="$data['id']">disabled=""</if>>
+                        {:get_channel_list($data['channel'])}
+                    </select>
+                    <!--<if condition="$data['id']">-->
+                        <!--<input class="channel" type="text" name="channel" <if condition="$data['channel']">readonly</if> value="{$data['channel']}" >-->
+                    <!--<else/>-->
+                        <!--<input class="channel" type="text" name="channel" <if condition="$cid neq 0">readonly</if> value="{$cid}" >-->
+                    <!--</if>-->
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label"><p>安卓启动页<b style="color:#ee5f5b">*</b></p><p>(最佳大小1080*1920)</p></label>
+                <div class="controls">
+                    <input type="hidden" name="android_img" id="android" value="{$data.android_img}">
+                    <a href="javascript:upload_one_image('图片上传','#android');">
+                        <if condition="$data['android_img']">
+                            <img src="{$android_url}" id="android-preview" width="135" style="cursor: hand" />
+                            <else/>
+                            <img src="__TMPL__Public/assets/images/default-thumbnail.png" id="android-preview" width="135" style="cursor: hand" />
+                        </if>
+                    </a>
+                    <input type="button" class="btn btn-small" onclick="$('#android-preview').attr('src','__TMPL__Public/assets/images/default-thumbnail.png');$('#android').val('');return false;" value="取消图片">
+
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label"><p>苹果启动页<b style="color:#ee5f5b">*</b></p><p>(最佳大小1080*1920)</p></label>
+                <div class="controls">
+                    <input type="hidden" name="ios_img" id="ios" value="{$data.ios_img}">
+                    <a href="javascript:upload_one_image('图片上传','#ios');">
+                        <if condition="$data['ios_img']">
+                            <img src="{$ios_url}" id="ios-preview" width="135" style="cursor: hand" />
+                        <else/>
+                            <img src="__TMPL__Public/assets/images/default-thumbnail.png" id="ios-preview" width="135" style="cursor: hand" />
+                        </if>
+                    </a>
+                    <input type="button" class="btn btn-small" onclick="$('#ios-preview').attr('src','__TMPL__Public/assets/images/default-thumbnail.png');$('#ios').val('');return false;" value="取消图片">
+                    <if condition="$data['id']">
+                    <input type="hidden" name="channel" value="{$data['channel']}">
+                        </if>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">安卓跳转链接</label>
+                <div class="controls">
+                  <input type="text" name="android_link" value="{$data['android_link']}" style="width:300px">
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">IOS跳转链接</label>
+                <div class="controls">
+                    <input type="text" name="ios_link" value="{$data['ios_link']}" style="width:300px">
+                </div>
+            </div>
+
+        </fieldset>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary js-ajax-submit">提交</button>
+            <a class="btn" href="javascript:history.back(-1);">{:L('BACK')}</a>
+        </div>
+        <input name="id" value="{$data.id}" type="hidden" />
+    </form>
+</div>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script src="__PUBLIC__/js/common.js"></script>
+<script type="text/javascript">
+    $(function(){
+        Wind.use('validate', 'ajaxForm', 'artDialog', function () {
+            var form = $('form.js-ajax-forms');
+            //表单验证开始
+            form.validate({
+                //是否在获取焦点时验证
+                onfocusout: false,
+                //是否在敲击键盘时验证
+                onkeyup: false,
+                //当鼠标掉级时验证
+                onclick: false,
+                //验证错误
+                showErrors: function (errorMap, errorArr) {
+                    //errorMap {'name':'错误信息'}
+                    //errorArr [{'message':'错误信息',element:({})}]
+                    try {
+                        $(errorArr[0].element).focus();
+                        art.dialog({
+                            id: 'error',
+                            icon: 'error',
+                            lock: true,
+                            fixed: true,
+                            background: "#CCCCCC",
+                            opacity: 0,
+                            content: errorArr[0].message,
+                            cancelVal: '确定',
+                            cancel: function () {
+                                $(errorArr[0].element).focus();
+                            }
+                        });
+                    } catch (err) {
+
+                    }
+                },
+                //验证规则
+                rules: {
+                    'channel': {required: true,min:1},
+                },
+                //验证未通过提示消息
+                messages: {
+                    'channel': {required: '请输入渠道','min':'请输入渠道'}
+                },
+                //给未通过验证的元素加效果,闪烁等
+                highlight: false,
+                //是否在获取焦点时验证
+                onfocusout: false,
+                //验证通过，提交表单
+                submitHandler: function (forms) {
+                    $(forms).ajaxSubmit({
+                        url: form.attr('action'), //按钮上是否自定义提交地址(多按钮情况)
+                        dataType: 'json',
+                        beforeSubmit: function (arr, $form, options) {
+
+                        },
+                        success: function (data, statusText, xhr, $form) {
+                            if (data.status) {
+                                setCookie("refersh_time", 1);
+                                //添加成功
+                                Wind.use("artDialog", function () {
+                                    art.dialog({
+                                        id: "succeed",
+                                        icon: "succeed",
+                                        fixed: true,
+                                        lock: true,
+                                        background: "#CCCCCC",
+                                        opacity: 0,
+                                        content: data.info,
+                                        button: [{
+                                            name: '确定',
+                                            callback: function () {
+                                                location.href = "index.php?g=admin&m=appstart&a=index";
+                                                return true;
+                                            }
+                                        }]
+                                    });
+                                });
+                            } else {
+                                layer.alert(data.info);
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    })
+</script>
+</body>
+</html>

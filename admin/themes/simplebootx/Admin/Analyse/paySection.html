@@ -1,0 +1,57 @@
+<admintpl file="header"/>
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/chosen.css">
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/docsupport/prism.css">
+<style type="text/css" media="all">
+    .chosen-rtl .chosen-drop {  left: -9000px;  }
+    th {  width: 80px;  }
+</style>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="javascript:;">充值排行</a></li>
+    </ul>
+    <form class="well form-search" method="post" action="">
+        <div class="search_type cc mb10">
+            <div class="mb10">
+                <span class="mr20">
+                    游戏名称：
+                    <select name="gid" id="gameid" class="chosen-select gameid" style="width:180px;" tabindex="1">
+                        <option value="0">所有游戏</option>
+                        {:get_game_list($gid)}
+                    </select>&nbsp;&nbsp;
+                    其他区间：
+                    <input style="width: 100px" type="number" name="first" value="{$first}" />至
+                    <input style="width: 100px" type="number" name="last" value="{$last}" />&nbsp;&nbsp;
+                时间：
+                    <input type="text" name="start" id="start_time" value="{$start}" class="input length_3 js-date" size="11" style="width:180px;"> 至
+                    <input type="text" name="end" id="end_time" value="{$end}" size="11" class="input length_3 js-date" style="width:180px;">
+                    <input type="submit" class="btn btn-primary" value="搜索"/>
+                </span>
+            </div>
+        </div>
+    </form>
+    <script src="__PUBLIC__/js/chosen/chosen.jquery.js" type="text/javascript"></script>
+    <script src="__PUBLIC__/js/chosen/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
+    <table class="table table-hover table-bordered table-list">
+        <thead>
+        <tr>
+            <th>档位</th>
+            <th>充值人数</th>
+            <th>占总充值人数百分比</th>
+        </tr>
+        </thead>
+        <foreach name="data" item="val">
+            <tr>
+                <td>{$val.level}</td>
+                <td>{$val.count|default=0}</td>
+                <td>{$val.parent}%</td>
+            </tr>
+        </foreach>
+    </table>
+</div>
+<script src="__ROOT__/public/js/common.js?"></script>
+<script>
+</script>
+</body>
+</html>

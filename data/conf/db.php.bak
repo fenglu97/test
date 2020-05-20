@@ -1,0 +1,19 @@
+<?php
+/**
+ * 配置文件
+ */
+return array(
+    'DB_TYPE' => 'mysql',
+    'DB_HOST' => '127.0.0.1',
+    'DB_NAME' => 'lg_sdk',
+    'DB_USER' => 'lg_user',
+    'DB_PWD' => 'yyIsq2WyPEC6nOye',
+    'DB_PORT' => '3306',
+    'DB_PREFIX' => 'bt_',
+    '185DB'=>'mysql://lg_user:yyIsq2WyPEC6nOye@127.0.0.1:3306/lg_box#utf8',
+    'SUPER_SIGN' => 'mysql://lg_user:yyIsq2WyPEC6nOye@127.0.0.1:3306/super_sign#utf8',
+    //密钥
+    "AUTHCODE" => 'mY4yuXlmi7pKmOs1CF',
+    //cookies
+    "COOKIE_PREFIX" => 'oCxZ5W_',
+);

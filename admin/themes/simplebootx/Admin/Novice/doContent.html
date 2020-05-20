@@ -1,0 +1,41 @@
+<admintpl file="header"/>
+<link rel="stylesheet" href="__PUBLIC__/js/switch/bootstrap-switch.css">
+<style>
+    .switch{margin-left:20px}
+</style>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:U('content')}">内容列表</a></li>
+        <li class="active"><a href="javascript:void(0);">内容编辑</a></li>
+    </ul>
+    <form class="form-horizontal js-ajax-forms" action="" method="post">
+        <fieldset>
+            <div class="control-group">
+                <label class="control-label">内容<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <textarea name="content" id="content">{$data.value}</textarea>
+                </div>
+            </div>
+        </fieldset>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary js-ajax-submit">提交</button>
+            <a class="btn" href="javascript:history.back(-1);">{:L('BACK')}</a>
+        </div>
+        <input name="id" value="{$data.id}" type="hidden" />
+    </form>
+</div>
+<script src="__PUBLIC__/js/common.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/ueditor/ueditor.all.min.js"></script>
+<script type="text/javascript">
+    var editorURL = GV.WEB_ROOT;
+    editorcontent = new baidu.editor.ui.Editor({initialFrameHeight :400,initialFrameWidth:1000});
+    editorcontent.render('content');
+    $(function(){
+
+    })
+</script>
+</body>
+</html>

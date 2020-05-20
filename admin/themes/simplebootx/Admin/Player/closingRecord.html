@@ -1,0 +1,57 @@
+<admintpl file="header" />
+</head>
+<body>
+	<div class="wrap js-check-wrap">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="{:U('player/closingRecord',array('uid'=>$uid))}">封号记录</a></li>
+			<li><a href="{:U('player/closingAccount',array('uid'=>$uid))}">封号添加</a></li>
+		</ul>
+		<table class="table table-hover table-bordered">
+			<thead>
+				<tr>
+					<th width="50">ID</th>
+					<th>{:L('USERNAME')}</th>
+					<th>{:L('PLAYER_REMARK')}</th>
+					<th>{:L('CREATE_TIME')}</th>
+					<th>{:L('END_TIME')}</th>
+					<th>操作帐号</th>
+					<th>角色</th>
+					<th width="120">{:L('ACTIONS')}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<foreach name="data" item="vo">
+				<tr>
+					<td>{$vo.id}</td>
+					<td>{$vo.username}</td>
+					<td>{$vo.remark}</td>
+					<td>{:date('Y-m-d H:i',$vo['create_time'])}</td>
+					<td>{:date('Y-m-d H:i',$vo['end_time'])}</td>
+
+					<php>
+						if($vo['operator']==1){
+							$temp['username']='admin';
+							$temp['rolename']='超级管理员';
+						}else{
+						$temp=M('users')
+								->join('__ROLE_USER__ ON __USERS__.id = __ROLE_USER__.user_id')
+								->join('__ROLE__ ON __ROLE__.id = __ROLE_USER__.role_id')
+								->field('bt_users.user_login as username,bt_role.name as rolename')->where(array("bt_users.id"=>$vo['operator']))->find();
+						}
+					</php>
+
+					<td>{$temp['username']}</td>
+					<td>{$temp['rolename']}</td>
+
+					<td>
+						<a href="{:U('player/closingAccount',array('id'=>$vo['id'],'uid'=>$uid))}">{:L('PLAYER_UPDATE')}</a>
+					</td>
+				</tr>
+				</foreach>
+			</tbody>
+		</table>
+		<div class="pagination">{$page}</div>
+	</div>
+	<script src="__PUBLIC__/js/common.js"></script>
+</body>
+</html>

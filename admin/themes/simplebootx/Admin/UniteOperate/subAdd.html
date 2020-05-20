@@ -1,0 +1,228 @@
+<admintpl file="header"/>
+<link rel="stylesheet" href="__PUBLIC__/js/switch/bootstrap-switch.css">
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/chosen.css">
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/docsupport/prism.css">
+<link rel="stylesheet" href="__PUBLIC__/js/uploadifive/uploadifive.css">
+<style>
+    .switch{margin-left:20px}
+</style>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:U('subIndex')}">安卓分包列表</a></li>
+        <li class="active"><a href="javascript:void(0);">新增安卓分包</a></li>
+    </ul>
+    <form class="form-horizontal js-ajax-forms" action="" method="post" enctype="multipart/form-data">
+        <fieldset>
+            <div class="control-group">
+                <label class="control-label">游戏<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <select class="chosen-select appid" name="appid">
+                        <option value="0">选择游戏</option>
+                        {$gameList}
+                    </select>
+                    <span style="color:#da534f;display: none" class="notice"></span>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">渠道商<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <select class="chosen-select masterid" name="masterid">
+                        <option value="0">选择渠道商</option>
+                        <foreach name="cdata" item="v">
+                            <option value="{$v.cid}">{$channel[$v['cid']]}</option>
+                        </foreach>
+                    </select>
+                    <span style="color:#da534f;display: none" class="again_sub"></span>
+                </div>
+            </div>
+
+            <div class="control-group float checkboxs">
+                <label class="control-label">屏幕显示</label>
+                <div class="switch" data-on="primary" data-on-label="横屏" data-off-label="竖屏" data-off="info">
+                    <input type="checkbox" checked name="orientation"/>
+                </div>
+            </div>
+
+            <div class="control-group flag">
+                <label class="control-label">包名<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <input type="text"  name="packname" class="packname" value=""/>
+                </div>
+            </div>
+        </fieldset>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary js-ajax-submit">提交</button>
+            <a class="btn" href="javascript:history.back(-1);">{:L('BACK')}</a>
+        </div>
+        <input name="mastertag" class="mastertag" value="" type="hidden" />
+        <input name="again_sub" class="again_sub" value="" type="hidden" />
+    </form>
+</div>
+<script src="__PUBLIC__/js/jquery19.js"></script>
+<script src="__PUBLIC__/js/switch/bootstrap.min.js"></script>
+<script src="__PUBLIC__/js/switch/bootstrap-switch.js"></script>
+<script src="__PUBLIC__/js/common.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script src="__PUBLIC__/js/chosen/chosen.jquery.js" type="text/javascript"></script>
+<script src="__PUBLIC__/js/chosen/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
+<script src="__PUBLIC__/js/uploadifive/jquery.uploadifive.js"></script>
+<script type="text/javascript">
+    var config = {
+        '.chosen-select'           : {},
+        '.chosen-select-deselect'  : {allow_single_deselect:true},
+        '.chosen-select-no-single' : {disable_search_threshold:10},
+        '.chosen-select-no-results': {no_results_text:'没有匹配的结果'},
+        '.chosen-select-width'     : {width:"95%"}
+    }
+    for (var selector in config) {
+        $(selector).chosen(config[selector]);
+    }
+    //获得参数内切换按钮的值
+    function getCheckVal(obj){
+        if(obj.is(':checked')){
+            obj.parents().siblings('.default').val('true')
+        }else{
+            obj.parents().siblings('.default').val('false')
+        }
+    }
+    $(function(){
+
+        //选择游戏
+        $('.appid').change(function(){
+            getPackName($(this).val(),$('.masterid').val());
+        });
+        $('.masterid').change(function(){
+            var cid = $(this).val();
+            if(cid > 0){
+                $('.append').remove();
+                $.post("{:U('getParams')}",{cid:cid},function(res){
+                    if(res.status == 1){
+                        $('.flag').after(res.info);
+                        $(".appendswitch").bootstrapSwitch();
+                    }else{
+                        layer.alert(res.info)
+                    }
+                });
+            }
+            getPackName($('.appid').val(),$(this).val());
+        });
+        function getPackName(appid,cid){
+            if(appid > 0 && cid > 0){
+                $.post("{:U('getPackName')}",{appid:appid,cid:cid},function(res){
+                    if(res.status == 1){
+                        $('.packname').val(res.info.str);
+                        $('.mastertag').val(res.info.tag);
+                        $('.again_sub').val(res.info.again_sub);
+                        if(res.info.notice){
+                            $('.notice').html('').append('备注：'+res.info.notice).show();
+                        }
+                        if(res.info.again_sub == 1){
+                            $('.again_sub').html('该渠道需要渠道再次分包才可正常运行').show();
+                        }else{
+                            $('.again_sub').html('').hide();
+                        }
+                    }else{
+                        layer.alert(res.info);
+                    }
+                })
+            }
+        }
+
+        Wind.use('validate', 'ajaxForm', 'artDialog', function () {
+            var form = $('form.js-ajax-forms');
+            //表单验证开始
+            form.validate({
+                //是否在获取焦点时验证
+                onfocusout: false,
+                //是否在敲击键盘时验证
+                onkeyup: false,
+                //当鼠标掉级时验证
+                onclick: false,
+                //验证错误
+                showErrors: function (errorMap, errorArr) {
+                    //errorMap {'name':'错误信息'}
+                    //errorArr [{'message':'错误信息',element:({})}]
+                    try {
+                        $(errorArr[0].element).focus();
+                        art.dialog({
+                            id: 'error',
+                            icon: 'error',
+                            lock: true,
+                            fixed: true,
+                            background: "#CCCCCC",
+                            opacity: 0,
+                            content: errorArr[0].message,
+                            cancelVal: '确定',
+                            cancel: function () {
+                                $(errorArr[0].element).focus();
+                            }
+                        });
+                    } catch (err) {
+
+                    }
+                },
+                //验证规则
+                rules: {
+                },
+                //验证未通过提示消息
+                messages: {
+                },
+                //给未通过验证的元素加效果,闪烁等
+                highlight: false,
+                //是否在获取焦点时验证
+                onfocusout: false,
+                //验证通过，提交表单
+                submitHandler: function (forms) {
+                    var index = layer.load({
+                        shade: [0.5,'black'] //0.1透明度的白色背景
+                    });
+                    $(forms).ajaxSubmit({
+                        url: form.attr('action'), //按钮上是否自定义提交地址(多按钮情况)
+                        dataType: 'json',
+                        beforeSubmit: function (arr, $form, options) {
+
+                        },
+                        success: function (data, statusText, xhr, $form) {
+                            layer.close(index);
+                            if (data.status) {
+                                setCookie("refersh_time", 1);
+                                //添加成功
+                                Wind.use("artDialog", function () {
+                                    art.dialog({
+                                        id: "succeed",
+                                        icon: "succeed",
+                                        fixed: true,
+                                        lock: true,
+                                        background: "#CCCCCC",
+                                        opacity: 0,
+                                        content: data.info,
+                                        button: [{
+                                            name: '继续添加',
+                                            callback: function () {
+                                                reloadPage(window);
+                                                return true;
+                                            },
+                                            focus: true
+                                        }, {
+                                            name: '返回列表',
+                                            callback: function () {
+                                                location.href = "index.php?g=admin&m=UniteOperate&a=subIndex";
+                                                return true;
+                                            }
+                                        }]
+                                    });
+                                });
+                            } else {
+                                layer.alert(data.info,{icon:5});
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    })
+</script>
+</body>
+</html>

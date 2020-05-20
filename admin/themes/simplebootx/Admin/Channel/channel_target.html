@@ -1,0 +1,137 @@
+<admintpl file="header" />
+<style>
+    input{ maring:0 0 0 0;height:20px;width:100px; }
+</style>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#">团队业绩设定</a></li>
+    </ul>
+    <table class="table table-hover table-bordered table-list" id="menus-table">
+        <thead>
+        <tr>
+            <th>地区</th>
+            <th>团队名称</th>
+            <th>上月业绩设定</th>
+            <th>上月业绩完成</th>
+            <th>完成率</th>
+            <th>当月绩效设定</th>
+            <th>本周注册设定</th>
+            <th>本周绩效设定</th>
+        </tr>
+        </thead>
+        <tbody>
+        <foreach name="list" item="vo">
+
+            <tr>
+                <td>{$vo.legion_name}</td>
+                <td>{$vo.name}</td>
+                <td>{$vo.lastmonth_target}</td>
+                <td>{$vo.lastmonth_money}</td>
+                <td>{:sprintf('%.2f',$vo['lastmonth_money']/$vo['lastmonth_target']*100)}%</td>
+                <td class="target" data-channel="{$vo.id}" data-target="{$vo.current_target}">{$vo.current_target}</td>
+                <td class="week_register" data-channel="{$vo.id}" data-target="{$vo.thisweek_register}">{$vo.thisweek_register}</td>
+                <td class="week_target" data-channel="{$vo.id}" data-target="{$vo.thisweek_money}">{$vo.thisweek_money}</td>
+            </tr>
+
+        </foreach>
+        </tbody>
+    </table>
+
+    </form>
+</div>
+
+<div class="pagination">{$page}</div>
+<script src="__PUBLIC__/js/common.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.target').click(function(){
+            $(this).unbind();
+            $(this).html('');
+            var target = $(this).attr('data-target');
+            var channel = $(this).attr('data-channel');
+            var html = '<input class="edit_target'+channel+'" type="text" name="money" data-channel="'+channel+'"  value="'+target+'">';
+            $(this).html(html);
+            $(this.edit_target)
+            $('.edit_target'+channel).focus();
+            $('.edit_target'+channel).blur(function(){
+                
+                if($(this).val() != target)
+                {
+                    $.get('{:U("edit_channel_target")}',{channel:channel,target:$(this).val()},function(data){
+                        location.href="{:U('channel_target')}";
+                    },'json')
+                }
+                else
+                {
+                   $(this).parent().html(target);
+                    location.href="{:U('channel_target')}";
+                }
+            });
+
+
+        })
+
+        $('.week_register').click(function(){
+            $(this).unbind();
+            $(this).html('');
+            var target = $(this).attr('data-target');
+            var channel = $(this).attr('data-channel');
+            var html = '<input class="edit_week_register'+channel+'" type="text" name="money" data-channel="'+channel+'"  value="'+target+'">';
+            $(this).html(html);
+            $(this.edit_target)
+            $('.edit_week_register'+channel).focus();
+            $('.edit_week_register'+channel).blur(function(){
+
+                if($(this).val() != target)
+                {
+                    $.get('{:U("edit_channel_target")}',{channel:channel,target:$(this).val(),type:2},function(data){
+                        location.href="{:U('channel_target')}";
+                    },'json')
+                }
+                else
+                {
+                    $(this).parent().html(target);
+                    location.href="{:U('channel_target')}";
+                }
+            });
+
+
+        })
+
+        $('.week_target').click(function(){
+            $(this).unbind();
+            $(this).html('');
+            var target = $(this).attr('data-target');
+            var channel = $(this).attr('data-channel');
+            var html = '<input class="edit_week_target'+channel+'" type="text" name="money" data-channel="'+channel+'"  value="'+target+'">';
+            $(this).html(html);
+            $(this.edit_target)
+            $('.edit_week_target'+channel).focus();
+            $('.edit_week_target'+channel).blur(function(){
+
+                if($(this).val() != target)
+                {
+                    $.get('{:U("edit_channel_target")}',{channel:channel,target:$(this).val(),type:3},function(data){
+                        window.location.reload();
+                        location.href="{:U('channel_target')}";
+                    },'json')
+                }
+                else
+                {
+                    $(this).parent().html(target);
+                    location.href="{:U('channel_target')}";
+                }
+            });
+
+
+        })
+
+
+
+    });
+
+</script>
+</body>
+</html>

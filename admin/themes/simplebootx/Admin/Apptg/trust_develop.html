@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>如何信任开发者</title>
+    <link rel="stylesheet" href="__TMPL__Public/assets/css/reset.css"/>
+    <style>
+        .news_bg{ background: #eee;}
+        .news_header{ width: 100%; overflow: hidden; background: #fff;}
+        .w1200{ width: 1200px; margin: 0 auto;}
+        .header { height: 88px; line-height: 88px; vertical-align: middle;}
+        .news_main{ position: relative; background: #fff; margin-top: 20px; box-shadow: 0 0 5px rgba(0,0,0,0.1); padding: 40px;}
+        p.news_title { color: #9c9c9c; border-bottom: 2px solid #e8e8e8; padding-bottom: 5px; margin-bottom: 20px;}
+        p.news_title a{ color: #9c9c9c;}
+        p.news_title a:hover{ color: red;}
+        .news_box h2 { color: #333; text-align: center; font-size: x-large; font-weight: bold; margin-bottom: 15px;}
+        .news_box h6 { font-size: 14px; padding: 0; margin: 20px 0; font-weight: normal;color: #ff0000;text-align: left;}
+        .news_box img{ max-width: 100%; width: 300px; margin-right: 50px;}
+    </style>
+</head>
+<body>
+<div class="news_bg">
+    <div class="news_header">
+        <div class="w1200 header" <if condition="$itg eq 1">style="display:none;"</if>>
+            <img src="__TMPL__Public/assets/images/login-logo.png">
+        </div>
+    </div>
+    <div class="w1200 news_main">
+        <p class="news_title">
+            <a href="/index.php?g=admin&m=index&a=index">首页</a>&gt;
+            <a href="javascript:void(0);">常见问题</a>
+        </p>
+        <div class="news_box">
+            <h2>如何信任开发者</h2>
+            <p><strong><span style="font-size: large;">&nbsp;在手机桌面点【设置】——【通用】——【描述文件/设备管理】找到对应的文件，点击当前文件，选择信任当前文件</span></strong></p>
+            <div style="margin: 0 20px;">
+                <h6>1.记住证书名（红框内）</h6><img src="__TMPL__Public/assets/images/ios-img01.png">
+                <h6>2.在【设置】-&gt;【通用】-&gt;【描述文件与设置管理】找到对应证书</h6><img src="__TMPL__Public/assets/images/ios-img02.png">
+                <h6>3.信任证书（红框内）</h6><img src="__TMPL__Public/assets/images/ios-img03.png"><img src="__TMPL__Public/assets/images/ios-img04.png">
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

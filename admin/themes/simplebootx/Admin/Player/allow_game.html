@@ -1,0 +1,57 @@
+<admintpl file="header" />
+</head>
+<body>
+	<div class="wrap js-check-wrap">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="{:U('Player/allow_game',array('uid'=>I('get.uid',0,'intval')))}">允许玩家进入游戏</a></li>
+        </ul>
+        <form  method="post" action="">
+            <div class="table_full">
+                <table class="table table-bordered">
+                    <tbody>
+                        <p style="font-weight:bold;font-size:20px;">选择游戏
+                            &nbsp;&nbsp;<input type="button" value="全选" class="select_all_game">
+                            &nbsp;&nbsp;<input type="button" value="反选" class="reverse_select_game">
+                        </p>
+                        <span>(没有选择代表所有游戏都能进入)</span>
+                        <foreach name="games" item="vo" key="k">
+                            <tr>
+                                <td style='padding-left:30px;'>
+                                    <p style="font-weight:bold;">{$k}</p>
+                                    <foreach name="vo" item="v">
+                                        <span class="check_item" style="width: 12%;display: inline-block;"><input type='checkbox' name='game_ids[]' value='{$v.id}' level='0'
+                                            <?php  if(in_array($v['id'],$playerGame)){ echo 'checked'; } ?>
+                                            >{$v.game_name}
+                                        </span>
+                                    </foreach>
+                                </td>
+                            </tr>
+                        </foreach>
+                    </tbody>
+                </table>
+            </div>
+            <div class="form-actions">
+				<button type="submit" class="btn btn-primary js-ajax-submit">保存</button>
+				<a class="btn" href="javascript:history.back(-1);">{:L('BACK')}</a>
+			</div>
+        </form>
+    </div>
+    
+<script src="__PUBLIC__/js/common.js"></script>
+<script>
+    $(".select_all_game").click(function(){
+        $("input[name='game_ids[]']").attr("checked","true");
+    });
+
+    $('.reverse_select_game').click(function(){
+        $("input[name='game_ids[]']").each(function(){
+            if($(this).attr("checked")){
+                $(this).removeAttr("checked");
+            }else{
+                $(this).attr("checked","true");
+            }
+        })
+    });
+</script>
+</body>
+</html>

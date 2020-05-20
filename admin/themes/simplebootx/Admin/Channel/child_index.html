@@ -1,0 +1,113 @@
+<admintpl file="header" />
+</head>
+<body>
+	<div class="wrap js-check-wrap">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="{:U('Channel/index')}">所有渠道</a></li>
+			<li><a href="{:U('Channel/add')}">添加渠道</a></li>
+	
+		</ul>
+			<form class="well form-search" method="post" action="{:U('Channel/index')}">
+
+			<div class="search_type cc mb10">
+
+				<div class="mb10">
+
+					<span class="mr20">
+					
+						渠道名称： 
+<input type="text" name="name" style="width: 100px;" value="{$parameter['name']}" placeholder="请输入渠道名称">
+
+&nbsp;&nbsp;
+						渠道ID： 
+<input type="text" name="id" style="width: 100px;" value="{$parameter['id']}" placeholder="请输入渠道ID">
+						
+&nbsp;&nbsp;
+					模板类型：
+<select name="template_id" style="width:200px;">
+	<option value="">请选择模板类型</option>
+	<foreach name="channel_template_lists" item="vo">
+		<option value="{$vo.id}" <if condition="$parameter['template_id'] eq $vo['id']">selected</if> >{$vo.name}</option>
+	</foreach>
+</select>
+
+&nbsp;&nbsp;
+						渠道类型： 
+<label><input type="radio" name="type"  value="0" <if condition="$parameter['type'] eq 0">checked</if>>一级渠道</label>
+&nbsp;
+<label><input type="radio" name="type"  value="1" <if condition="$parameter['type'] eq 1">checked</if>>子渠道</label>
+&nbsp;&nbsp;
+						<input type="submit" class="btn btn-primary" value="搜索" />
+
+					</span>
+
+				</div>
+
+			</div>
+
+		</form>
+
+			<table class="table table-hover table-bordered table-list" id="menus-table">
+				<thead>
+					<tr>
+					
+						<th width="100">ID</th>
+					
+						<th>渠道名称</th>
+						<th>渠道分成</th>
+					    <th>创建时间</th>
+						<th width="180">{:L('ACTIONS')}</th>
+					</tr>
+				</thead>
+				<tbody>
+				<foreach name="list" item="vo">
+					<tr>
+					<td>{$vo.id}</td>
+					<td>{$vo.name}</td>
+					<td>{$vo.gain_sharing}</td>
+					<td>{$vo.create_time|date='Y-m-d H:i:s',###}</td>
+					<td>
+					<if condition="$vo['parent'] eq 0"><a href="{:U('Channel/add',array('parentid'=>$vo['id']))}">添加子渠道</a><else /> 
+					<font color="#cccccc">添加子渠道</font></if>|
+					 <a href="{:U('Channel/edit',array('id'=>$vo['id']))}">编辑</a> | 
+					 <a class="js-ajax-delete" href="{:U('Channel/del',array('id'=>$vo['id']))}">删除</a> </td>
+					</tr>	</foreach>
+				</tbody>
+				<tfoot>
+					<tr>
+				
+					
+						<th width="50">ID</th>
+		<th>渠道名称</th>
+						<th>渠道分成</th>
+					    <th>创建时间</th>
+						<th width="180">{:L('ACTIONS')}</th>
+					</tr>
+				</tfoot>
+			</table>
+	
+		</form>
+	</div>
+	
+			<div class="pagination">{$page}</div>
+	<script src="__PUBLIC__/js/common.js"></script>
+	<script>
+		$(document).ready(function() {
+			Wind.css('treeTable');
+			Wind.use('treeTable', function() {
+				$("#menus-table").treeTable({
+					indent : 20
+				});
+			});
+		});
+
+		setInterval(function() {
+			var refersh_time = getCookie('refersh_time_admin_menu_index');
+			if (refersh_time == 1) {
+				reloadPage(window);
+			}
+		}, 1000);
+		setCookie('refersh_time_admin_menu_index', 0);
+	</script>
+</body>
+</html>

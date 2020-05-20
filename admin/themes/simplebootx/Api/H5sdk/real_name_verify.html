@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>实名认证</title>
+    <link rel="stylesheet" href="__TMPL__Public/assets/css/reset.css"/>
+    <link rel="stylesheet" href="__TMPL__Public/assets/css/new_public.css"/>
+</head>
+<body>
+<div class="wrap">
+    <div class="toast is-placemiddle" style="padding: 10px; display: none;">
+        <span class="toast-text" style="padding-top: 0;">提示信息</span>
+    </div>
+    <div class="header">
+        <div class="header-button header-left"></div>
+        <div class="header-title">实名认证</div>
+        <div class="header-button header-right">
+            <a href="javascript:;" id="shtx" style="color: #409EFF">游客模式</a>
+        </div>
+    </div>
+    <div class="main">
+
+        <div class="form" style="margin-top: 15px">
+            <form>
+                <div class="form-item">
+                    <div class="form-item-content">
+                        <label class="form-item-label">
+                            <i class="icon-card-name"></i>
+                        </label>
+                        <input class="form-item-input" type="text" name="id_card_name" placeholder="真实名字">
+                        <i class="icon-clear"></i>
+                    </div>
+                </div>
+
+                <div class="form-item">
+                    <div class="form-item-content">
+                        <label class="form-item-label">
+                            <i class="icon-card"></i>
+                        </label>
+                        <input class="form-item-input" type="text" name="id_card" placeholder="身份证号码">
+                        <i class="icon-clear"></i>
+                    </div>
+                </div>
+                <div class="wxts" style="border: none;margin: -15px 0 10px">
+                    <p><span>温馨提示：</span>根据相关规定，需要填写实名认证信息。</p>
+                </div>
+                <div class="form-item">
+                    <i class="icon-radio icon-radio-checked"></i>
+                    <span>&nbsp;我已经阅读并同意</span>
+                    <a class="a" href="/api/H5sdk/user_hide.html">《隐私协议》</a>
+                </div>
+                
+                <div class="form-item">
+                    <button class="button button-primary is-round submit" type="button">提交</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+<script charset="utf-8" type="text/javascript" defer="defer">
+    document.write('<script src="__PUBLIC__/js/jquery.js?v='+(new Date()).getTime()+'"><\/script>');
+</script>
+<script charset="utf-8" type="text/javascript" defer="defer">
+    document.write('<script src="__PUBLIC__/js/md5.js?v='+(new Date()).getTime()+'"><\/script>');
+</script>
+<script charset="utf-8" type="text/javascript" defer="defer">
+    document.write('<script src="__PUBLIC__/js/layer/layer.js?v='+(new Date()).getTime()+'"><\/script>');
+</script>
+<script charset="utf-8" type="text/javascript" defer="defer">
+    document.write('<script src="__TMPL__Public/assets/js/base64.js?v='+(new Date()).getTime()+'"><\/script>');
+</script>
+<script charset="utf-8" type="text/javascript">
+    document.write('<script src="__TMPL__Public/assets/js/osvalue.js?v='+(new Date()).getTime()+'"><\/script>');
+</script>
+<script>
+    $(function () {
+        if(Api.config.system === 2){
+            window.appIosCallback = function (data) {
+                var iosInfo = JSON.parse(Base64.decode(data));
+                Api.config.iosInfo = JSON.parse(Base64.decode(data));
+                Api.config.appid = iosInfo.getAppId;
+                Api.config.appkey = iosInfo.getAppKey;
+                Api.config.channel = iosInfo.getChannel;
+                Api.config.maker = iosInfo.getMaker;
+                Api.config.mobile_model = iosInfo.getMobileModel;
+                Api.config.machine_code = iosInfo.getMachineCode;
+                Api.config.system_version = iosInfo.getVersionName;
+                Api.config.getAdLinkUrl = iosInfo.getAdLinkUrl;
+                Api.config.getAdImageUrl = iosInfo.getAdImageUrl;
+                Api.config.isDisplayAd = iosInfo.isDisplayAd;
+                Api.config.isRegisterEnabled = iosInfo.isRegisterEnabled;
+                Api.config.isNameAuthEnabled = iosInfo.isNameAuthEnabled;
+                Api.config.isPlatformMoneyEnabled = iosInfo.isPlatformMoneyEnabled;
+                Api.config.isBindMobileEnabled = iosInfo.isBindMobileEnabled;
+                Api.config.getDiscount = iosInfo.getDiscount;
+            };
+            window.webkit.messageHandlers.wz_callOC.postMessage({
+                method : 'getAppInfo'
+            });
+        }
+        function toast(msg){
+            msg = msg || '提示';
+            $('.toast').children('.toast-text').html(msg);
+            $('.toast').fadeIn();
+            var toastTimer =  setTimeout(function () {
+                $('.toast').fadeOut();
+                clearTimeout(toastTimer);
+            }, 3000);
+        }
+
+        // 获取URL 参数
+        function getQueryVariable(variable)
+        {
+            var query = window.location.search.substring(1);
+            var vars = query.split("&");
+            for (var i=0;i<vars.length;i++) {
+                var pair = vars[i].split("=");
+                if(pair[0] == variable){return pair[1];}
+            }
+            return(false);
+        }
+
+        $('.form-item-content>input').on('input', function () {
+            if(this.value.length > 0){
+                $(this).parent().children('.icon-clear').show();
+            } else {
+                $(this).parent().children('.icon-clear').hide();
+            }
+        });
+
+        $('.icon-clear').on('click', function () {
+            $(this).parent().children('input').val('');
+            $(this).hide();
+        });
+
+        $('.icon-radio').on('click', function () {
+            $(this).toggleClass('icon-radio-checked');
+        });
+        var userdata = JSON.parse(Api.util.cookie.get('185_userdata'));
+
+        var app_uid      = getQueryVariable("app_uid");
+        var appid        = getQueryVariable("appid");
+        var machine_code = getQueryVariable("machine_code");
+        var appkey       = getQueryVariable("appkey");
+
+        if(userdata) {
+            $('#shtx').on('click',function () {
+                layer.msg('实名制未完成，进入游客模式，为了保证你的账户安全，请尽快实名',{time:2000},function() {
+                    useAccount({
+                        app_uid: app_uid,
+                        appid: appid,
+                        machine_code: machine_code,
+                        appkey: appkey
+                    });
+                })
+            })
+        }
+
+
+        $('.submit').on('click', function () {
+            var cardname = $('input[name="id_card_name"]').val();
+            var card = $('input[name="id_card"]').val();
+            var radioState = $('.icon-radio').hasClass('icon-radio-checked');
+            var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/; // 身份证号码正则表达式  15位或者18位，15位为全数字，18位前17位为数字，最后一位可能是数字或字符X
+
+            if(!cardname){
+                toast('真是姓名不能为空');
+                return
+            }
+
+            if(!card){
+                toast('身份证号码不能为空');
+                return
+            }
+
+            if(!reg.test(card)) {
+                toast('身份证号码不合法');
+                return;
+            }
+
+            submitForm({
+                id_card_name: cardname,
+                id_card: card,
+                appid: appid,
+                appkey: appkey
+            });
+        });
+
+        var submitFormFlag = true;
+
+        // 实名验证信息 提交
+        function submitForm(vals) {
+            if(!submitFormFlag){
+                return
+            }
+            submitFormFlag = false;
+            var options = {
+                uid: userdata.uid,
+                real_name: vals.id_card_name,
+                id_card: vals.id_card,
+                appid: vals.appid,
+            };
+            options.sign = Api.util.getSign(options, vals.appkey);
+
+            $.ajax({
+                url: Api.config.host + '/index.php?g=api&m=user&a=id_auth',
+                type: 'post',
+                data: options,
+                success: function (res) {
+                    if(res.status === 1){
+                        useAccount({
+                            app_uid: app_uid,
+                            appid: appid,
+                            machine_code: machine_code,
+                            appkey: appkey
+                        });
+                    } else if(res.msg){
+                        toast(res.msg);
+                    }
+                    submitFormFlag = true;
+                },
+                error: function (err) {
+                    submitFormFlag = true;
+                    console.log(err);
+                }
+            })
+        }
+
+        // 进入游戏
+        var useAccountFlag = true;
+        function useAccount(vals) {
+            // alert(appuid+ '进入游戏');
+            if(!useAccountFlag){
+                return
+            }
+            useAccountFlag = false;
+            var options = {
+                uid: userdata.uid,
+                app_uid: vals.app_uid,
+                token: userdata.token,
+                appid: vals.appid, //渠道ID
+                system: Api.config.system, //系统
+                machine_code: vals.machine_code, //设备号
+            };
+            options.sign = Api.util.getSign(options, vals.appkey);
+            options.real_name_verify = 0; // 是否需要实名验证，1为需要，0为不需要
+            $.ajax({
+                url: Api.config.host + '/index.php?g=api&m=user&a=check_switch_user',
+                type: 'post',
+                data: options,
+                success: function (res) {
+                    if(res.status === 1){
+                        var data = res.data;
+                        Api.config.onLoginSucceed(data.app_uid, data.token, data.uid);
+                    }else if(res.msg){
+                        Api.config.onLoginError(res.msg);
+                        toast(res.msg);
+                    }
+                    useAccountFlag = true;
+                },
+                error: function (err) {
+                    useAccountFlag = true;
+                    console.log(err);
+                }
+            })
+        }
+    })
+</script>
+
+</body>
+</html>
+

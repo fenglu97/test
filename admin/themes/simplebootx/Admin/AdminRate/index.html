@@ -1,0 +1,81 @@
+<admintpl file="header" />
+
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="javascript:void(0);">管理员评分记录</a></li>
+    </ul>
+    <form class="well form-search" method="post" action="{:U('index')}">
+
+        管理员:
+        <input type="text" name="admin_user"  style="width: 150px;" value="{$admin_user}" placeholder="">
+        评分人:
+        <input type="text" name="rate_admin_user" style="width: 150px;" value="{$rate_admin_user}" placeholder="">
+        事件类型:
+        <select name="type">
+            <option value="">全部</option>
+            <option value="1" <if condition="$type eq 1">selected</if>>渠道工单</option>
+            <option value="2" <if condition="$type eq 2">selected</if>>玩家工单</option>
+            </select>
+
+        时间:
+        <input type="text" name="start_time" class="js-date date start" value="{$start_time}" style="width: 180px;" max="{$max}" autocomplete="off">-
+        <input type="text" name="end_time" class="js-date date end" value="{$end_time}" style="width: 180px;" max="{$max}" autocomplete="off">
+        <input type="submit" class="btn btn-primary" value="搜索" />
+
+    </form>
+    <form class="js-ajax-form" method="post">
+
+        <table class="table table-hover table-bordered">
+            <thead>
+            <tr>
+                <th>管理员</th>
+                <th>评分人</th>
+                <th>评分事件</th>
+                <th>事件详情</th>
+                <th>评分</th>
+                <th width="50%">原因</th>
+                <th>创建时间</th>
+            </tr>
+            </thead>
+            <tbody>
+            <foreach name="data" item="vo">
+                <tr>
+<td>{$admin_users[$vo['admin_id']]}</td>
+<td><if condition="$vo['type'] eq 1">{$admin_users[$vo['rate_admin_id']]}<else/>{$player_users[$vo['rate_uid']]}</if></td>
+<td><if condition="$vo['type'] eq 1">渠道工单<else/>玩家工单</if></td>
+<td><if condition="$vo['type'] eq 1"><a href="{:U('WorkOrder/channel_details',array('id'=>$vo['event_id']))}" /><else/>
+    <a href="{:U('WorkOrder/details',array('id'=>$vo['event_id']))}" /></if>详情</td>
+<td><div class="star{$vo.rate}"></div></td>
+<td>{$vo.reason}</td>
+<td>{$vo.create_time|date="Y-m-d H:i:s",###}</td>
+                </tr>
+            </foreach>
+            </tbody>
+        </table>
+        <div class="pagination">{$page}</div>
+    </form>
+</div>
+<script src="__PUBLIC__/js/common.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script src="__PUBLIC__/js/datePicker/datePicker.js"></script>
+<script src="__PUBLIC__/js/raty/jquery.raty.js"></script>
+
+<script type="text/javascript">
+    $('.star0').raty({ readOnly: true, score: 0 });
+    $('.star1').raty({ readOnly: true, score: 1 });
+    $('.star2').raty({ readOnly: true, score: 2 });
+    $('.star3').raty({ readOnly: true, score: 3 });
+    $('.star4').raty({ readOnly: true, score: 4 });
+    $('.star5').raty({ readOnly: true, score: 5 });
+    $(function(){
+        var dateTimeInput = $("input.date");
+        dateTimeInput.datePicker({
+            time: false
+        });
+
+    })
+</script>
+</body>
+</html>

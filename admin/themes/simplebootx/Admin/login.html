@@ -1,0 +1,512 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>{:C('BOX_NAME')}SDK {:L('ADMIN_CENTER')}</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1,IE=edge"/>
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="robots" content="noindex,nofollow">
+    <link href="__TMPL__Public/assets/css/admin_login.css" rel="stylesheet"/>
+    <style>
+        #login_btn_wraper {
+            text-align: center;
+        }
+
+        #login_btn_wraper .tips_success {
+            color: #fff;
+        }
+
+        #login_btn_wraper .tips_error {
+            color: #DFC05D;
+            display: inline-block;
+        }
+
+        #login_btn_wraper button:focus {
+            outline: none;
+        }
+
+        .username {
+            width: 301px;
+            height: 50px;
+            margin-left: 13px;
+            margin-top: 13px;
+            border-radius: 10px;
+            border: 1px #bfc0c1 solid;
+            font-size: 15px;
+        }
+
+        .password {
+            width: 301px;
+            height: 50px;
+            margin-left: 13px;
+            margin-top: 13px;
+            border-radius: 10px;
+            border: 1px #bfc0c1 solid;
+        }
+
+        .verify {
+            width: 120px;
+            height: 44px;
+            margin-left: 13px;
+            margin-top: 13px;
+            border: 1px #bfc0c1 solid;
+            border-radius: 10px;
+        }
+
+        input {
+            border: none;
+            margin: inherit;
+            padding-left: 8px;
+            font-size: 18px;
+            font-color: #bfc0c1;
+            outline: none;
+        }
+
+        em {
+            display: inline-block;
+            width: 33px;
+            height: 32px;
+            vertical-align: middle;
+            margin-left: 10px;
+            margin-top: 5px;
+        }
+
+        span {
+            display: inline-block;
+            vertical-align: middle;
+
+        }
+
+        .size_50 {
+            font-size: 50px;
+        }
+
+        .login {
+            width: 100%;
+            height: 285px;
+            background-color: white;
+            border-radius: 10px;
+            padding-top: 12px
+        }
+
+        .verify_img {
+            width: 163px;
+            height: 44px;
+            cursor: pointer;
+            display: inline;
+            vertical-align: middle;
+            margin-bottom: 1%;
+
+        }
+
+
+        .code-form {
+            width: 380px;
+            padding: 50px 0 20px;
+        }
+
+        .form-item {
+            margin-bottom: 15px;
+            clear: both;
+            overflow: hidden;
+        }
+
+        .label {
+            float: left;
+            display: block;
+            padding: 9px 15px;
+            width: 20%;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 20px;
+            text-align: right;
+        }
+
+        .input-inline {
+            float: left;
+            width: 60%;
+            border-radius: 2px;
+            border: 1px #bfc0c1 solid;
+            overflow: hidden;
+        }
+
+        .input {
+            display: block;
+            width: 98%;
+            padding-left: 2%;
+            height: 38px;
+            line-height: 38px \9;
+            background-color: #fff;
+            font-size: 14px;
+            border: none;
+        }
+
+        .input-inline-code .input {
+            float: left;
+            display: inline-block;
+            width: 50%;
+        }
+
+        .input-inline-code .btn-code {
+            float: right;
+            display: inline-block;
+            width: 45%;
+            font-size: 12px;
+            height: 40px;
+            line-height: 40px;
+            cursor: pointer;
+            color: #ffffff;
+            background-color: #2e8ded;
+            padding: 0;
+        }
+
+        @media screen and (max-width: 760px) {
+            html, body {
+                width: 100%;
+                height: 100%;
+            }
+
+            .wrap {
+                width: 80%;
+                border-radius: 10px;
+                overflow: hidden;
+                margin: 10px auto 0;
+            }
+
+            .login {
+                height: 230px;
+                padding: 1rem 0;
+            }
+
+            .l_title {
+                font-size: 1.5rem;
+            }
+
+            .size_50 {
+                font-size: 2rem;
+            }
+
+            .login ul {
+                background: #fff;
+                border: none;
+                box-shadow: 1px 1px 1px #ccc inset;
+                border-radius: 3px;
+                margin: 0 auto 15px;
+                width: 80%;
+                overflow: hidden;
+            }
+
+            .login .input {
+                width: 80%;
+                padding: 5px;
+                vertical-align: middle;
+                border: 0 none;
+                background: transparent;
+                font-size: 18px;
+            }
+
+            .btn {
+                width: 90%;
+                height: 3rem;
+                padding: 0;
+                margin: 0;
+            }
+
+            .username {
+                margin-left: 13px;
+                margin-top: 13px;
+                border-radius: 10px;
+                border: 1px #bfc0c1 solid;
+                font-size: 15px;
+            }
+
+            .password {
+                margin-left: 13px;
+                margin-top: 13px;
+                border-radius: 10px;
+                border: 1px #bfc0c1 solid;
+            }
+
+            .username, .password, .code {
+                width: 90%;
+                position: relative;
+                height: 2.6rem;
+                line-height: 2.6rem;
+                margin: 0 auto 1rem;
+                padding: 0;
+            }
+
+            .username input, .password input {
+                width: 76%;
+                height: 2.6rem;
+                line-height: 2.6rem;
+                margin: 0;
+                padding: 0;
+                margin-left: 2.6rem;
+            }
+
+            .verify {
+                width: 47%;
+                height: 2.6rem;
+                line-height: 2.6rem;
+                margin: 0;
+                padding: 0;
+                border: 1px #bfc0c1 solid;
+                border-radius: 10px;
+            }
+
+            em {
+                display: inline-block;
+                width: 1.2rem;
+                height: 1.2rem;
+                vertical-align: middle;
+                margin: 0;
+                padding: 0;
+                position: absolute;
+                top: .7rem;
+                left: .7rem;
+            }
+
+            .verify_img {
+                width: 47%;
+                height: 2.6rem;
+                line-height: 2.6rem;
+                cursor: pointer;
+                display: inline;
+                vertical-align: middle;
+                margin-bottom: 1%;
+            }
+        }
+
+    </style>
+    <script>
+        if (window.parent !== window.self) {
+            document.write = '';
+            window.parent.location.href = window.self.location.href;
+            setTimeout(function () {
+                document.body.innerHTML = '';
+            }, 0);
+        }
+    </script>
+
+</head>
+<body>
+<div class="wrap">
+    <h1><a class="l_title"><span class="size_50">{:C('BOX_NAME')}SDK</span>&nbsp<span>管理后台</span></a></h1>
+    <div class="login">
+        <form method="post" name="login" id="loginform" action="{:U('public/dologin')}" autoComplete="off"
+              class="js-ajax-form">
+            <div class="username">
+                <em class="user_btn"></em>
+                <input name="username" type="text" placeholder="请输入用户名" title="请输入用户名"
+                       value="{:cookie('admin_username')}" data-rule-required="true" data-msg-required=""/>
+            </div>
+            <div class="password">
+                <em class="pass_btn"></em>
+                <input name="password" type="password" placeholder="{:L('PASSWORD')}" title="{:L('PASSWORD')}"
+                       data-rule-required="true" data-msg-required=""/>
+            </div>
+            <div class="code">
+                <input type="text" class="verify" name="verify" placeholder="{:L('ENTER_VERIFY_CODE')}"/>
+                {:sp_verifycode_img('length=4&font_size=20&use_noise=1&use_curve=0','title="点击获取"')}
+
+            </div>
+
+
+            <div id="login_btn_wraper">
+                <button id="submitBtn" type="button" name="submit" class="btn js-ajax-submit"
+                        data-loadingmsg="{:L('LOADING')}">{:L('LOGIN')}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<div id="verifyUser" style="display: none;">
+    <form class="code-form">
+        <!--<div class="form-item">-->
+        <!--<label class="label">用户名</label>-->
+        <!--<div class="input-inline">-->
+        <!--<input type="text" name="username" disabled="disabled" required="" placeholder="请输入用户名" class="input">-->
+        <!--</div>-->
+        <!--</div>-->
+        <div class="form-item">
+            <label class="label">手机号</label>
+            <div class="input-inline">
+                <input type="text" name="mobile" id="mobile" placeholder="请输入手机号" class="input">
+            </div>
+        </div>
+        <div class="form-item">
+            <label class="label">验证码</label>
+            <div class="input-inline input-inline-code">
+                <input type="text" name="code" id="code" placeholder="请输入验证码" class="input">
+                <input type="button" value="获取验证码" class="btn-code">
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    var GV = {
+        ROOT: "__ROOT__/",
+        WEB_ROOT: "__WEB_ROOT__/",
+        JS_ROOT: "public/js/"
+    };
+</script>
+<script src="__PUBLIC__/js/wind.js"></script>
+<script src="__PUBLIC__/js/jquery.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/common.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script>
+    ;(function () {
+        document.getElementById('js-admin-name').focus();
+    })();
+</script>
+<script>
+    $(function () {
+        $('#submitBtn').on('click', function () {
+            var layerLoad = layer.load(2, {
+                time: 15 * 1000,
+                shade: [0.3, '#000000']
+            });
+            $.ajax({
+                type: 'post',
+                url: "{:U('public/dologin')}",
+                data: $('#loginform').serialize(),
+                success: function (datas) {
+                    $('.verify_img').click();//更新验证码
+                    layer.close(layerLoad);
+                    if (datas.status == 1) {
+                        window.location.href = datas.url;
+                    } else {
+                        if (datas.info == 'mobile_verify is on') {
+                            layer.open({
+                                title: ['短信验证', 'font-size:18px;'],
+                                type: 1,
+                                skin: 'demo-class',
+                                area: ['auto', 'auto'], //宽高
+                                content: $('#verifyUser'),
+//                                closeBtn: 0, //不显示关闭按钮
+                                anim: 2,
+                                btnAlign: 'c',
+                                shadeClose: false, //开启遮罩关闭
+                                btn: ['确定'],
+                                yes: function (index, layero) {
+                                    var reg = /^1[0-9]{10}$/;
+                                    if (!reg.test($('#mobile').val())) {
+                                        layer.msg('请填写正确的手机号');
+                                        $('#mobile').focus();
+                                    } else if ($('#code').val().length != 6) {
+                                        layer.msg('请填写正确的验证码');
+                                        $('#code').focus();
+                                    } else {
+                                        //验证码登录验证
+                                        $.ajax({
+                                            type: 'post',
+                                            url: "{:U('public/dologin')}",
+                                            data: {
+                                                type: 2,
+                                                username: $(".username input[name='username']").val(),
+                                                mobile: $('#mobile').val(),
+                                                code: $('#code').val()
+                                            },
+                                            success: function (datas) {
+                                                if (datas.status == 1) {
+                                                    window.location.href = datas.url;
+                                                    layer.close(index);
+                                                } else {
+                                                    layer.msg(datas.info);
+                                                }
+                                            },
+                                            error: function (err) {
+                                                console.log(err);
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+                        } else {
+                            layer.msg(datas.info);
+                        }
+                    }
+                },
+                error: function (err) {
+                    layer.close(layerLoad);
+                    console.log(err);
+                }
+            });
+        });
+
+        $(document).keyup(function(event){
+            if(event.keyCode == 13) {
+                $('#submitBtn').trigger('click');
+            }
+        })
+
+        var codeManage = {
+            flag: false,
+            timer: null,
+            time: 60
+        };
+        $('.btn-code').on('click', function () {
+            var that = $(this);
+            var reg = /^1[0-9]{10}$/;
+            if (reg.test($('#mobile').val())) {
+                if (!codeManage.flag) {
+                    codeManage.flag = true;
+                    var layerLoad = layer.load(2, {
+                        time: 15 * 1000,
+                        shade: [0.3, '#000000']
+                    });
+
+                    //获取验证码
+                    $.ajax({
+                        type: 'post',
+                        url: "{:U('api/userbox/send_message')}",
+                        data: {
+                            username: $(".username input[name='username']").val(),
+                            mobile: $('#mobile').val(),
+                            type: 5,
+                            client: 1
+                        },
+                        success: function (datas) {
+                            layer.close(layerLoad);
+                            console.log(datas);
+                            if (datas.status == 1) {
+                                codeManage.timer = setInterval(function () {
+                                    if (codeManage.time <= 0) {
+                                        codeManage.flag = false;
+                                        codeManage.time = 60;
+                                        that.css('backgroundColor', '#2e8ded');
+                                        that.val('获取验证码');
+                                        clearInterval(codeManage.timer);
+                                    } else {
+                                        that.css('backgroundColor', '#c2c6d2');
+                                        that.val(codeManage.time + '秒后重新获取');
+                                        //#9094a0
+                                        codeManage.time--;
+                                    }
+                                }, 1000);
+                                layer.msg(datas.msg);
+                            } else {
+                                codeManage.flag = false;
+                                layer.msg(datas.msg);
+                            }
+                        },
+                        error: function (err) {
+                            codeManage.flag = false;
+                            layer.close(layerLoad);
+                            console.log(err);
+                        }
+                    });
+                }
+            } else {
+                layer.msg('请填写正确的手机号');
+                $('#mobile').focus();
+            }
+        });
+
+
+    });
+</script>
+</body>
+</html>

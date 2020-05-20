@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>V计划</title>
+    <link rel="stylesheet" href="__TMPL__Public/assets/css/x_public.css"/>
+    <style>
+        body{ font-size: 12px;}
+        .usermess{ background-color: #fff0e5;}
+        .usermess_left{
+            width: 18%;
+            height: 120px;
+            border-right: 1px dashed #362e2b;
+        }
+        .usermess_left .usermess_left_userlogo{
+            width: 40%;
+            height: 100%;
+            position: relative;
+        }
+        .usermess_left .usermess_left_userlogo .icon_man{
+            display: inline-block;
+            width: 0;
+            height: 0;
+            margin: 0;
+            padding: 40%;
+            background: url("__TMPL__Public/assets/images/icon_man.png") no-repeat;
+            background-size: 100% 100%;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate3d(-50%,-50%,0);
+        }
+        .usermess_left .usermess_left_userlogo .grade {
+            display: inline-block;
+            font-size: 12px;
+            height: 20px;
+            line-height: 20px;
+            padding: 0 10px;
+            border-radius: 6px;
+            color: #ffffff;
+            background-color: #FF5722;
+            position: absolute;
+            top: 10%;
+            right: 10%;
+        }
+        .usermess_left .usermess_left_hey{
+            width: 60%;
+            height: 100%;
+            display: table;
+        }
+        .usermess_left .usermess_left_hey p{
+            font: 14px/20px "Microsoft Yahei","宋体";
+            display: table-cell;
+            vertical-align: middle;
+        }
+        .usermess_right{
+            width: 80%;
+            margin-left: 1%;
+        }
+        .usermess_right ul{
+            padding: 10px 0;
+            overflow: hidden;
+        }
+        .usermess_right ul li{
+            float: left;
+            width: 30%;
+            height: 32px;
+            line-height: 32px;
+            overflow: hidden;
+            margin: 10px 3% 10px 0;
+        }
+        .usermess_right ul li img{
+            width: 26px;
+            height: 26px;
+            margin-top: 5px;
+            margin-right: 10px;
+        }
+        .usermess_right ul li b{
+            color: #faa531;
+            font-size: 15px;
+            margin-left: 10px;
+        }
+        .tab{
+            padding: 50px;
+        }
+        .tab .tab_left{
+            border: 1px solid #ccc;
+            border-bottom: none;
+        }
+        .tab .tab_left .tab_left_titi{
+            width: 100%;
+            border-bottom: 1px solid #ccc;
+        }
+        .tab .tab_left .tab_left_titi img{
+            width: 100%;
+            height: 121px;
+        }
+        .tab .tab_left .tab_left_titi_mid{
+            overflow: hidden;
+            height: 60px;
+            border-bottom: 1px solid #ccc;
+        }
+        .tab .tab_left .tab_left_titi_mid .tab_left_titi_midle{
+            width: 11%;
+            float: left;
+            border-right: 1px solid #ccc;
+            line-height: 17px;
+            padding: 10px;
+            font-weight: bold;
+            font-size: 12px;
+            background: #edeadd;
+        }
+        .tab .tab_left .tab_left_titi_mid .tab_left_titi_midri{
+            background: #fffcf7;
+        }
+        .tab .tab_left .tab_left_titi_mid .tab_left_titi_midri p{
+            height: 60px;
+            line-height: 60px;
+            text-align: center;
+        }
+        .tab .tab_left .tab_left_titi_mid .tab_left_titi_midri .tab_left_titi_midrip1{
+            border-bottom: 1px solid #ccc;
+        }
+
+        .tab .tab_right{
+            border-bottom: none;
+            border-left: none;
+            border-top: 1px solid #ccc;
+            border-right: none;
+        }
+        .tab .tab_right ul{
+            overflow: hidden;
+            width: 100%;
+        }
+        .tab .tab_right ul li{
+            float: left;
+            width: 6.25%;
+            height: 60px;
+            line-height: 60px;
+            text-align: center;
+            /*display: table;*/
+            overflow: hidden;
+            /*border-right: 1px solid #ccc;*/
+            border-bottom: 1px solid #ccc;
+        }
+        .tab .tab_right ul li .tab_right_li{
+            border-right: 1px solid #ccc;
+            /*border-bottom: 1px solid #ccc;*/
+        }
+        .tab .tab_right ul li .tab_right_li img{
+            width: 60px;
+            height: 60px;
+            vertical-align: top;
+        }
+        .tab .tab_right .tab_right_ladder1 li{
+            height: 60px;
+            line-height: 60px;
+            background: #fffbed;
+        }
+        .tab .tab_right .tab_right_ladder2 li{
+            height: 29px;
+            line-height: 29px;
+            background: #fffbed;
+        }
+    </style>
+</head>
+<body>
+<div class="usermess clear">
+    <div class="usermess_left fl clear">
+        <div class="usermess_left_userlogo fl">
+            <i class="icon_man"></i>
+            <span class="grade">{$data.level_name}</span>
+        </div>
+        <div class="usermess_left_hey fl">
+            <p style="color:{$data['color']}">
+                Hi!亲爱的{$channel.name}同学
+                <br>
+                Happy working day!
+            </p>
+            <p></p>
+        </div>
+    </div>
+    <div class="usermess_right fl">
+        <ul>
+            <li>
+                <img src="__TMPL__Public/assets/images/v_icon_banner.png" alt="" class="fl">
+                <span class="fl">所在小组:</span>
+                <b class="fl" style="color:{$data['color']}">{$channel.up}</b>
+            </li>
+            <li>
+                <img src="__TMPL__Public/assets/images/v_icon_gold.png" alt="" class="fl">
+                <span class="fl">本月排名:</span>
+                <b class="fl" style="color:{$data['color']}">{$data.rank}</b>
+            </li>
+            <li>
+                <img src="__TMPL__Public/assets/images/v_icon_bell.png" alt="" class="fl">
+                <span class="fl">您本月军衔等级:</span>
+                <b class="fl" style="color:{$data['color']}">{$data.level_name}</b>
+            </li>
+            <li>
+                <img src="__TMPL__Public/assets/images/v_icon_banner.png" alt="" class="fl">
+                <span class="fl">所在军团:</span>
+                <b class="fl" style="color:{$data['color']}">{$group.name}</b>
+            </li>
+            <li style="width: 40%">
+                <img src="__TMPL__Public/assets/images/v_icon_gold.png" alt="" class="fl">
+                <span class="fl">{$group.data}</span>
+
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="tab clear">
+    <div class="fl" style="width: 15%; background: #fffcf7;">
+        <div class="tab_left">
+            <div class="tab_left_titi">
+                <img src="__TMPL__Public/assets/images/v_icon_00.jpg" alt="">
+            </div>
+            <div class="tab_left_titi_mid">
+                <div class="tab_left_titi_midle" style="height: 41px;">业绩要求</div>
+                <div class="tab_left_titi_midri">
+                    <p class="tab_left_titi_midrip1">等级奖金</p>
+                    <!--<p>第二阶梯</p>-->
+                </div>
+            </div>
+            <div class="tab_left_titi_mid">
+                <div class="tab_left_titi_midle" style="height: 41px;">福利体系</div>
+                <div class="tab_left_titi_midri">
+                    <p class="tab_left_titi_midrip1">带薪休假天数</p>
+                    <!--<p>迟到卷</p>-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="fr" style="width: 85%;">
+        <div class="tab_right">
+            <ul style="background: #edeadd;">
+                <li><div class="tab_right_li"><img src="__TMPL__Public/assets/images/v_icon_01.gif"></div></li>
+                <li><div class="tab_right_li"><img src="__TMPL__Public/assets/images/v_icon_02.gif"></div></li>
+                <li><div class="tab_right_li"><img src="__TMPL__Public/assets/images/v_icon_03.gif"></div></li>
+                <li><div class="tab_right_li"><img src="__TMPL__Public/assets/images/v_icon_04.gif"></div></li>
+                <li><div class="tab_right_li"><img src="__TMPL__Public/assets/images/v_icon_05.gif"></div></li>
+                <li><div class="tab_right_li"><img src="__TMPL__Public/assets/images/v_icon_06.gif"></div></li>
+                <li><div class="tab_right_li"><img src="__TMPL__Public/assets/images/v_icon_07.gif"></div></li>
+                <li><div class="tab_right_li"><img src="__TMPL__Public/assets/images/v_icon_08.gif"></div></li>
+                <li><div class="tab_right_li"><img src="__TMPL__Public/assets/images/v_icon_09.gif"></div></li>
+                <li><div class="tab_right_li"><img src="__TMPL__Public/assets/images/v_icon_10.gif"></div></li>
+                <li><div class="tab_right_li"><img src="__TMPL__Public/assets/images/v_icon_11.gif"></div></li>
+                <li><div class="tab_right_li"><img src="__TMPL__Public/assets/images/v_icon_12.gif"></div></li>
+                <li><div class="tab_right_li"><img src="__TMPL__Public/assets/images/v_icon_13.gif"></div></li>
+                <li><div class="tab_right_li"><img src="__TMPL__Public/assets/images/v_icon_14.gif"></div></li>
+                <li><div class="tab_right_li"><img src="__TMPL__Public/assets/images/v_icon_15.gif"></div></li>
+                <li><div class="tab_right_li"><img src="__TMPL__Public/assets/images/v_icon_16.gif"></div></li>
+            </ul>
+            <ul class="tab_right_ladder1">
+                <foreach name="conf['stage']" item="v">
+                    <li><div class="tab_right_li">{$v.mark}</div></li>
+                </foreach>
+            </ul>
+            <ul>
+                <foreach name="conf['stage']" item="v">
+                    <li><div class="tab_right_li">{$v.bonus}</div></li>
+                </foreach>
+            </ul>
+            <!--<ul>-->
+            <!--<foreach name="conf['last10']" item="v">-->
+            <!--<li><div class="tab_right_li">{$v.money}</div></li>-->
+            <!--</foreach>-->
+            <!--</ul>-->
+            <ul>
+                <foreach name="conf['stage']" item="v">
+                    <li><div class="tab_right_li">{$v.hols}</div></li>
+                </foreach>
+            </ul>
+            <!--<ul>-->
+            <!--<li><div class="tab_right_li">/</div></li>-->
+            <!--<li><div class="tab_right_li">/</div></li>-->
+            <!--<li><div class="tab_right_li">/</div></li>-->
+            <!--<li><div class="tab_right_li">/</div></li>-->
+            <!--<li><div class="tab_right_li">/</div></li>-->
+            <!--<li><div class="tab_right_li">/</div></li>-->
+            <!--<li><div class="tab_right_li">/</div></li>-->
+            <!--<li><div class="tab_right_li">/</div></li>-->
+            <!--<li><div class="tab_right_li">1</div></li>-->
+            <!--<li><div class="tab_right_li">1</div></li>-->
+            <!--<li><div class="tab_right_li">1</div></li>-->
+            <!--<li><div class="tab_right_li">1</div></li>-->
+            <!--<li><div class="tab_right_li">2</div></li>-->
+            <!--<li><div class="tab_right_li">2</div></li>-->
+            <!--<li><div class="tab_right_li">2</div></li>-->
+            <!--<li><div class="tab_right_li">2</div></li>-->
+            <!--</ul>-->
+        </div>
+
+    </div>
+    <div class="" style="border: 1px solid #ccc;height: 30px;margin-top: 244px;line-height: 30px;font-size: 15px;padding: 0 0 0 6px;font-weight: bold;">
+        奖金单月计算；迟到卷、休假卷次月享受，不累计，不同阶梯不叠加
+    </div>
+</div>
+
+</body>
+</html>

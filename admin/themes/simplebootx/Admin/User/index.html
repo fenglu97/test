@@ -1,0 +1,207 @@
+<admintpl file="header" />
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/chosen.css">
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/docsupport/prism.css">
+<style>
+.my-skin .layui-layer-title {
+	background: #009f95;
+	color: #fff;
+	border: none;
+}
+.my-skin .layui-layer-btn .layui-layer-btn0 {
+	color: white;
+	background: rgb(238, 95, 91);
+	border-color: rgb(255, 255, 255);
+}
+.my-skin .layui-layer-btn .layui-layer-btn1 {
+	color: white;
+	background: rgb(238, 95, 91);
+}
+</style>
+</head>
+<body>
+	<div class="wrap js-check-wrap">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="{:U('user/index')}">{:L('ADMIN_USER_INDEX')}</a></li>
+			<li><a href="{:U('user/add')}">{:L('ADMIN_USER_ADD')}</a></li>
+		</ul>
+        <form class="well form-search" method="post" action="{:U('User/index')}">
+            用户名:
+            <input type="text" name="user_login" style="width: 100px;" value="{:I('request.user_login/s','')}" placeholder="请输入{:L('USERNAME')}">
+            邮箱:
+            <input type="text" name="user_email" style="width: 100px;" value="{:I('request.user_email/s','')}" placeholder="请输入{:L('EMAIL')}">
+			手机号:
+			<input type="text" name="mobile" style="width: 120px;" value="{$mobile}" placeholder="请输入手机号">
+            角色：
+             <select name="role_id" style="width:150px;">
+             <option value="" >请选择</option>
+            <foreach name="roles" item="vo" key="k">
+            <option value="{$k}" <if condition="$k eq $role_id" >selected</if> >{$vo.name}</option>
+            </foreach>
+            </select>
+			渠道名称：
+			<select name="channel" id="channel"  class="chosen-select" style="width:180px;" tabindex="1">
+				<option value="">所有渠道</option>
+				{:get_channel_list($channel)}
+			</select>&nbsp;&nbsp;
+            <input type="submit" class="btn btn-primary" value="搜索" />
+            <a class="btn btn-danger" href="{:U('User/index')}">清空</a>
+        </form>
+		<table class="table table-hover table-bordered">
+			<thead>
+				<tr>
+					<th width="50">ID</th>
+					<th>{:L('USERNAME')}</th>
+					<th>角色名称</th>
+					<th>手机号</th>
+					<th>{:L('LAST_LOGIN_IP')}</th>
+					<th>{:L('LAST_LOGIN_TIME')}</th>
+					<th>{:L('EMAIL')}</th>
+					<th>{:L('STATUS')}</th>
+					<th width="120">{:L('ACTIONS')}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<php>$user_statuses=array("0"=>L('USER_STATUS_BLOCKED'),"1"=>L('USER_STATUS_ACTIVATED'),"2"=>L('USER_STATUS_UNVERIFIED'));</php>
+				<foreach name="users" item="vo">
+				<tr>
+					<td>{$vo.id}</td>
+					<td><if condition="$vo['user_url']"><a href="{$vo.user_url}" target="_blank" title="{$vo.signature}">{$vo.user_login}</a><else />{$vo.user_login}</if></td>
+					<td>{$roles[$vo['role_id']]['name']}</td>
+					<td>{$vo.mobile}</td>
+					<td>{$vo.last_login_ip}</td>
+					<td>
+						<if condition="$vo['last_login_time'] eq 0">
+							{:L('USER_HAVENOT_LOGIN')}
+						<else />
+							{$vo.last_login_time}
+						</if>
+					</td>
+					<td>{$vo.user_email}</td>
+					<td>{$user_statuses[$vo['user_status']]}</td>
+					<td>
+						<if condition="$vo['id'] eq 1 || $vo['id'] eq sp_get_current_admin_id()">
+						<font color="#cccccc">{:L('EDIT')}</font> | <font color="#cccccc">{:L('DELETE')}</font> |
+							<if condition="$vo['user_status'] eq 1">
+								<font color="#cccccc">{:L('BLOCK_USER')}</font>
+							<else />
+								<font color="#cccccc">{:L('ACTIVATE_USER')}</font>
+							</if>
+						<else />
+							<a href='{:U("user/edit",array("id"=>$vo["id"]))}'>{:L('EDIT')}</a> |
+							<if condition="$vo['role_id'] neq 1 && $roles[$vo['role_id']]['display_userrights']  eq 1 ">
+							<a href='{:U("user/edit_userrights",array("id"=>$vo["id"]))}'>数据权限</a> |
+							</if>
+							<if condition="$vo['user_status'] eq 1">
+								<if condition="$vo['role_id'] eq 15">
+								<a href="javascript:void(0)" data-uid="{$vo.id}" data-channel="{$vo.channel_id}" class="block">{:L('BLOCK_USER')}</a> |
+									<else />
+									<a href="{:U('user/ban',array('id'=>$vo['id']))}" class="js-ajax-dialog-btn" data-msg="{:L('BLOCK_USER_CONFIRM_MESSAGE')}">{:L('BLOCK_USER')}</a> |
+								</if>
+							<else />
+								<a href="{:U('user/cancelban',array('id'=>$vo['id']))}" class="js-ajax-dialog-btn" data-msg="{:L('ACTIVATE_USER_CONFIRM_MESSAGE')}">{:L('ACTIVATE_USER')}</a> | 
+							</if>
+							<a class="js-ajax-delete" href="{:U('user/delete',array('id'=>$vo['id']))}">{:L('DELETE')}</a>
+						</if>
+						<if condition="$vo['role_id'] eq $tg_role_id">
+						  |<a class="" href="{:U('user/promoter_uid_list',array('id'=>$vo['id']))}">推广玩家列表</a>
+						</if>
+					</td>
+				</tr>
+				</foreach>
+			</tbody>
+		</table>
+		<div class="pagination">{$page}</div>
+	</div>
+	<script src="__PUBLIC__/js/common.js"></script>
+	<script src="__PUBLIC__/js/layer/layer.js"></script>
+	<script src="__PUBLIC__/js/chosen/chosen.jquery.js" type="text/javascript"></script>
+	<script src="__PUBLIC__/js/chosen/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		var config = {
+			'.chosen-select'           : {},
+			'.chosen-select-deselect'  : {allow_single_deselect:true},
+			'.chosen-select-no-single' : {disable_search_threshold:10},
+			'.chosen-select-no-results': {no_results_text:'没有匹配的结果'},
+			'.chosen-select-width'     : {width:"95%"}
+		}
+		for (var selector in config) {
+			$(selector).chosen(config[selector]);
+		}
+		$('body').on('click','.block',function(){
+
+			uid = $(this).attr('data-uid');
+			admin_channel = $(this).attr('data-channel');
+			layer.open({
+				title:'拉黑',
+				type: 1,
+				skin: 'my-skin', //加上边框
+				area: ['300px', 'auto'], //宽高
+				content: '',
+				closeBtn: 1, //不显示关闭按钮
+				anim: 2,
+				shadeClose: true, //开启遮罩关闭
+				btn: ['仅拉黑','拉黑并转移渠道数据'] //按钮
+				, yes :function(){
+					layer.confirm('确定要拉黑账号吗？', {
+						btn: ['确定','我再想想'] //按钮
+					}, function(){
+						$.get("{:U('ban')}&id="+uid,function(res){
+							if(res.status == 1){
+								location.reload();
+							}else{
+								layer.alert(res.info)
+							}
+						})
+					}, function(){
+						layer.close();
+					});
+
+
+				},btn2 :function(){
+					if(!admin_channel)
+					{
+						layer.alert('该账号未绑定渠道，不能转移数据');
+						return false;
+					}
+					channel_html = "{:get_channel_list('',2)}";
+					var html = '<div style="width:200px;margin:20px 0px 0px 50px">' +
+							'<select name="cid" id="cid"  class="chosen-select" style="width:180px;" tabindex="1">'+channel_html+'</select>' +
+							'</div>';
+					layer.open({
+						title:'转移渠道数据',
+						type: 1,
+						skin: 'layui-layer-molv', //样式类名
+						area: ['300px', 'auto'], //宽高
+						closeBtn: 0, //不显示关闭按钮
+						anim: 2,
+						shadeClose: true, //开启遮罩关闭
+						content: html,
+						btn: ['确定','取消'],
+						btnAlign:'c',
+						yes:function(){
+							layer.confirm('确定要拉黑并转移渠道数据吗？', {
+								btn: ['确定','我再想想'] //按钮
+							}, function(){
+								channel = $("#cid").val();
+								$.get("{:U('ban')}&id="+uid+'&channel='+channel,function(res){
+									if(res.status == 1){
+										location.reload();
+									}else{
+										layer.alert(res.info)
+									}
+								})
+							}, function(){
+							     layer.close();
+							});
+
+
+						}
+					});
+
+				}
+			});
+		});
+
+	</script>
+</body>
+</html>

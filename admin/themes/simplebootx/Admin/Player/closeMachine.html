@@ -1,0 +1,39 @@
+<admintpl file="header" />
+</head>
+<body>
+	<div class="wrap">
+		<ul class="nav nav-tabs">
+			<li><a href="{:U('player/closingMachine',array('uid'=>$uid))}">查封记录</a></li>
+			<li class="active"><a href="{:U('player/colseMachine',array('uid'=>$uid))}">查封设备</a></li>
+		</ul>
+		<form method="post" class="form-horizontal js-ajax-form" action="">
+			<fieldset>
+				<div class="control-group">
+					<label class="control-label">设备号：</label>
+					<div class="controls">
+						<input type="text" name="machine_code" value="{$data.machine_code}" style="width:280px;">
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">{:L('PLAYER_REMARK')}</label>
+					<div class="controls">
+						<textarea name="remark" id="remark" rows="5" cols="57">{$data.remark|default=''}</textarea>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">{:L('END_TIME')}</label>
+					<div class="controls">
+						<input type="text" class="js-datetime" name="end_time" id="end_time" value="{: !empty($data['end_time']) ? date('Y-m-d H:i',$data['end_time']) : date('Y-m-d H:i')}" style="width: 150px;" autocomplete="off">
+					</div>
+				</div>
+			</fieldset>
+			<div class="form-actions">
+				<input type="hidden" name="id" value="{$data.id}">
+				<button type="submit" class="btn btn-primary js-ajax-submit">提交</button>
+				<a class="btn" href="javascript:history.back(-1);">{:L('BACK')}</a>
+			</div>
+		</form>
+	</div>
+	<script src="__PUBLIC__/js/common.js"></script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<admintpl file="header"/>
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/chosen.css">
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/docsupport/prism.css">
+<style type="text/css" media="all">    /* fix rtl for demo */
+.chosen-rtl .chosen-drop {
+    left: -9000px;
+}</style></head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <if condition="$type_date eq 0">
+            <li><a href="{:U('DataManage/inpour_details',array('type_date'=>3))}" target="_self">本月</a></li>
+            <li class="active"><a href="javascript:;">今日</a></li>
+            <li><a href="{:U('DataManage/inpour_details',array('type_date'=>1))}" target="_self">昨日</a></li>
+            <li><a href="{:U('DataManage/inpour_details',array('type_date'=>2))}" target="_self">本周</a></li>
+        </if>
+        <if condition="$type_date eq 1">
+            <li><a href="{:U('DataManage/inpour_details',array('type_date'=>3))}" target="_self">本月</a></li>
+            <li><a href="{:U('DataManage/inpour_details',array('type_date'=>0))}" target="_self">今日</a></li>
+            <li class="active"><a href="javascript:;">昨日</a></li>
+            <li><a href="{:U('DataManage/inpour_details',array('type_date'=>2))}" target="_self">本周</a></li>
+        </if>
+        <if condition="$type_date eq 2">
+            <li><a href="{:U('DataManage/inpour_details',array('type_date'=>3))}" target="_self">本月</a></li>
+            <li><a href="{:U('DataManage/inpour_details',array('type_date'=>0))}" target="_self">今日</a></li>
+            <li><a href="{:U('DataManage/inpour_details',array('type_date'=>1))}" target="_self">昨日</a></li>
+            <li class="active"><a href="javascript:;">本周</a></li>
+        </if>
+        <if condition="$type_date eq 3">
+            <li class="active"><a href="javascript:;">本月</a></li>
+            <li><a href="{:U('DataManage/inpour_details',array('type_date'=>0))}" target="_self">今日</a></li>
+            <li><a href="{:U('DataManage/inpour_details',array('type_date'=>1))}" target="_self">昨日</a></li>
+            <li><a href="{:U('DataManage/inpour_details',array('type_date'=>2))}" target="_self">本周</a></li>
+        </if>
+
+    </ul>
+    <form class="well form-search"  method="post" action="{:U('DataManage/inpour_details')}">
+        <div class="search_type cc mb10">
+            <div class="mb10">
+                <span class="mr20">
+                    渠道：
+                   <select name="cid" class="chosen-select cid" style="width:auto;height: 35px;" tabindex="1">
+                       {:get_channel_list($cid)}
+                   </select>&nbsp;&nbsp;
+                    <!--平台：
+                    <select name="game_platform" class="game_platform"  style="width:auto;height: 35px;" tabindex="1">
+                        <option value="0">所有平台</option>
+                        <foreach name="platform" item="vo" key="k">
+                            <option value="{$k}" <if condition="$game_platform eq $k">selected</if>>{$vo}</option>
+                        </foreach>
+                    </select>&nbsp;&nbsp;-->
+                    游戏：
+                    <select name="gid" class="chosen-select gid"  style="width:auto;height: 35px;" tabindex="1">
+                        <option value="0">所有游戏</option>
+                        {:get_game_list($gid,1,'all')}
+                    </select>&nbsp;&nbsp;
+
+                    账号：
+                    <input type="text" name="username" style="width: 200px;" value="{$username}" placeholder="请输入账号">&nbsp;&nbsp;
+                    自定义日期：
+                    <input type="text" name="start" class="js-date date" value="{$start}" style="width: 120px;" autocomplete="off">&nbsp;至
+                    <input type="text" name="end" class="js-date date" value="{$end}" style="width: 120px;" autocomplete="off">
+
+                    <input type="hidden" name="type_date" value="{$type_date}">
+                    <input type="submit" class="btn btn-primary" value="搜索"/>
+
+                </span>
+            </div>
+        </div>
+    </form>
+    <script src="__PUBLIC__/js/chosen/chosen.jquery.js" type="text/javascript"></script>
+    <script src="__PUBLIC__/js/chosen/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">        var config = {
+        '.chosen-select': {},
+        '.chosen-select-deselect': {allow_single_deselect: true},
+        '.chosen-select-no-single': {disable_search_threshold: 10},
+        '.chosen-select-no-results': {no_results_text: '没有匹配的结果'},
+        '.chosen-select-width': {width: "95%"}
+    };
+    for (var selector in config) {
+        $(selector).chosen(config[selector]);
+    }
+    $("#select_1").val('{$game_id}');
+    $("#select_1").trigger("chosen:updated");    </script>
+
+
+        <table class="table table-hover table-bordered table-list">
+            <thead>
+            <tr>
+
+                <th>账号</th>
+                <th width="4%">小号ID</th>
+                <th width="10%">所属渠道</th>
+                <!--<th width="8%">平台</th>-->
+                <th width="10%">充值游戏</th>
+                <th width="8%">区服</th>
+                <th width="8%">角色名</th>
+                <th width="6%">订单金额(元)</th>
+                <th width="6%">实付金额(元)</th>
+                <th width="6%">平台币</th>
+                <th width="6%">收入(元)</th>
+                <th width="8%">支付方式</th>
+                <th width="9%">充值时间</th>
+                <th width="5%">状态</th>
+                <th width="9%">到账时间</th>
+            </tr>
+            <tr style="color: #c60f0f"><th colspan="6" style="text-align:center;">合计：</th>
+                <th>{$total.money}</th>
+                <th>{$total.getmoney}</th>
+                <th>{$total.platform_money}</th>
+                <th>{$total.income}</th>
+                <th colspan="4"></th>
+            </tr>
+            </thead>
+            <foreach name="list" item="vo">
+                <tr>
+                    <td>{$vo.username}</td>
+                    <td>{$vo.app_uid}</td>
+                    <td>{$vo.channel}</td>
+                    <!--<td>{$platform[$vo['game_type']]}</td>-->
+                    <td>{$vo.game_name}</td>
+                    <td>{$vo.serverNAME}</td>
+                    <td>{$vo.roleNAME}</td>
+                    <td>{$vo.money}</td>
+                    <td>{$vo.getmoney}</td>
+                    <td>{$vo.platform_money}</td>
+                    <td>{$vo.income}</td>
+                    <td>{$pay_type[$vo['payType']]}</td>
+                    <td>{$vo.create_time|date="Y-m-d H:i:s",###}</td>
+                    <td><if condition="$vo['status'] eq 1">成功
+                        <elseif condition="$vo['status'] eq 2"/>发货中
+                        <elseif condition="$vo['status'] eq 3"/>未支付
+                        </if>
+                    </td>
+                    <td><if condition="$vo['status'] eq 1">{$vo.pay_to_time|date="Y-m-d H:i:s",###}
+                        <elseif condition="$vo['status'] eq 2"/>暂未到账
+                        <elseif condition="$vo['status'] eq 3"/>未支付
+                        </if>
+                    </td>
+                </tr>
+            </foreach>
+        </table>
+        <div class="pagination">{$page}</div>
+
+</div>
+<script src="__ROOT__/public/js/common.js?"></script>
+<script>    Think.setValue("cid", {cid | default = 1 });
+setCookie('refersh_time', 0);
+function refersh_window() {
+    var refersh_time = getCookie('refersh_time');
+    if (refersh_time == 1) {
+        window.location.reload();
+    }
+}
+setInterval(function () {
+    refersh_window()
+}, 3000);</script>
+</body></html>

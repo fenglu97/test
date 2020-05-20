@@ -1,0 +1,249 @@
+<admintpl file="header"/>
+<style>
+    .copy{
+        float:right;
+        height: 25px;
+        line-height: 0px;
+        padding: 7px 10px;
+    }
+    .readonly{
+        width: 486px;
+        margin-left: 180px;
+
+        border: 1px solid #e5e7eb;
+        background: #f7f8fa;
+    }
+    .controls input{width:400px}
+</style>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:U('develop/index')}">全部游戏</a></li>
+        <li class="active"><a href="javascript:void(0);">完善游戏资料</a></li>
+    </ul>
+    <form class="form-horizontal js-ajax-forms" action="" method="post">
+        <fieldset>
+            <div class="control-group">
+                <label class="control-label">游戏名<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <input type="text" maxlength="20" name="game_name" value="{$data.game_name}" id="game_name"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">充值比例</label>
+                <div class="controls">
+                    <input type="text" readonly value="{$data.topup_scale}" />
+                    <i class="fa fa-question-circle" title="游戏服需自行处理充值比例"> 游戏服需自行处理充值比例</i>
+                </div>
+            </div>
+            <!--<div class="control-group">-->
+                <!--<label class="control-label">赠送比例</label>-->
+                <!--<div class="controls">-->
+                    <!--<input type="text" readonly value="{$data['give_scale']*100}%" />-->
+                    <!--<i class="fa fa-question-circle"> 充值满50元额外赠送{$data['give_scale']*100}%，游戏服需自行处理</i>-->
+                <!--</div>-->
+            <!--</div>-->
+            <div class="control-group">
+                <label class="control-label">安卓支付地址</label>
+                <div class="controls">
+                    <input type="text" maxlength="250" name="android_payurl" value="{$data.android_payurl}" id="android_payurl"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">苹果支付地址</label>
+                <div class="controls">
+                    <input type="text" maxlength="250" name="ios_payurl" value="{$data.ios_payurl}" id="ios_payurl"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">区服地址</label>
+                <div class="controls">
+                    <input type="text" maxlength="250" name="serverurl" value="{$data.serverurl}" id="serverurl"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">返利地址</label>
+                <div class="controls">
+                    <input type="text" maxlength="250" name="bpayurl" value="{$data.bpayurl}" id="bpayurl"/>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">返利备注</label>
+                <div class="controls">
+                    <input type="text" maxlength="255" name="notice" value="{$data.notice}" id="notice"/>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">H5入口地址</label>
+                <div class="controls">
+                    <input type="text" maxlength="190" name="h5"  value="{$data.h5}" />
+                    <i class="fa fa-question-circle" title="游戏服需自行处理充值比例"> 只有H5游戏需要填写该地址</i>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">GM权限配置名称</label>
+                <div class="controls">
+                    <input type="text" maxlength="250" readonly  value="{$data.pri_name|default = 无}" />
+                </div>
+            </div>
+
+            <div class="form-actions readonly" style="padding:15px;">
+                <p>AppID：{$data.id}<button class="btn btn-primary allcopy copy" onclick="return false;" data-type="1">复制全部</button></p>
+                <p style="overflow: hidden;margin-bottom: 10px;">ServerKey：
+                    <span id="server_key">{$data.server_key}</span>
+                    <button class="btn btn-primary server_key copy" onclick="return false;" data-type="1">复制</button>
+                </p>
+                <p style="overflow: hidden;margin-bottom: 0;">ClientKey：
+                    <span id="client_key">{$data.client_key}</span>
+                    <button class="btn btn-primary client_key copy" onclick="return false;" data-type="2">复制</button>
+                </p>
+            </div>
+
+            
+			<?php $options = get_site_options(); ?>
+            <!--<div class="form-actions readonly" style="padding:15px;width:485px">
+                <p>SDK下载：</p>
+                <p style="margin:0 0 10px 0">（BT、满V版本推荐）
+                    <a class="btn btn-primary" title="" href="{$options['rh_android']}">安卓融合SDK</a>
+                    <a class="btn btn-primary" title="" href="{$options['rh_ios_rh']}">苹果融合SDK</a>
+                </p>
+                <p style="margin:0px">（GM版）
+                    <a class="btn btn-primary" title="" href="{$options['rh_android_gm']}">安卓GM版</a>
+                    <a class="btn btn-primary" title="" href="{$options['rh_ios']}">苹果GM版</a>
+                </p>
+            </div>-->
+            <span id="allcopy" style="display: none">AppID：{$data.id}|ServerKey：{$data.server_key}|ClientKey ：{$data.client_key}</span>
+            <span id="rhallcopy" style="display: none">RH_AppID：{$rh.rh_appID}|RH_ChannelID：{$rh.rh_channelID}|RH_AppKey：{$rh.rh_appKey}|RH_AppSecret：{$rh.rh_appSecret}</span>
+        </fieldset>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary js-ajax-submit">提交</button>
+            <a class="btn" href="javascript:history.back(-1);">{:L('BACK')}</a>
+        </div>
+        <input name="id" value="{$data.id}" type="hidden" />
+        <input name="name" value="{$data.game_name}" type="hidden" />
+    </form>
+</div>
+<script src="__PUBLIC__/js/common.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script src="__PUBLIC__/js/clipboard.min.js"></script>
+<script src="__PUBLIC__/js/copy.js"></script>
+<script type="text/javascript">
+    var addrh_url = "{:U('addRh')}";
+    $(function(){ 
+        Wind.use('validate', 'ajaxForm', 'artDialog', function () {
+            var form = $('form.js-ajax-forms');
+            if ($.browser.msie) {
+                form.find('[placeholder]').each(function () {
+                    var input = $(this);
+                    if (input.val() == input.attr('placeholder')) {
+                        input.val('');
+                    }
+                });
+            }
+            jQuery.validator.addMethod("urlCheck", function(value, element) {
+                return this.optional(element) || /^((http|https)?:\/\/)+/.test(value);
+            }, "地址必须以http或https开头");
+            //表单验证开始
+            form.validate({
+                //是否在获取焦点时验证
+                onfocusout: false,
+                //是否在敲击键盘时验证
+                onkeyup: false,
+                //当鼠标掉级时验证
+                onclick: false,
+                //验证错误
+                showErrors: function (errorMap, errorArr) {
+                    //errorMap {'name':'错误信息'}
+                    //errorArr [{'message':'错误信息',element:({})}]
+                    try {
+                        $(errorArr[0].element).focus();
+                        art.dialog({
+                            id: 'error',
+                            icon: 'error',
+                            lock: true,
+                            fixed: true,
+                            background: "#CCCCCC",
+                            opacity: 0,
+                            content: errorArr[0].message,
+                            cancelVal: '确定',
+                            cancel: function () {
+                                $(errorArr[0].element).focus();
+                            }
+                        });
+                    } catch (err) {
+
+                    }
+                },
+                //验证规则
+                rules: {
+                    'game_name': {required: true},
+                    'android_payurl': {urlCheck: true},
+                    'ios_payurl': {urlCheck: true},
+                    'serverurl': {urlCheck: true},
+                    'bpayurl' : {urlCheck: true},
+                },
+                //验证未通过提示消息
+                messages: {
+                    'game_name': {required: '请输入游戏名'},
+                    'android_payurl': {urlCheck:'地址请以http或https开头'},
+                    'ios_payurl': {urlCheck:'地址请以http或https开头'},
+                    'serverurl': {urlCheck:'地址请以http或https开头'},
+                    'bpayurl' : {urlCheck:'地址请以http或https开头'},
+                },
+                //给未通过验证的元素加效果,闪烁等
+                highlight: false,
+                //是否在获取焦点时验证
+                onfocusout: false,
+                //验证通过，提交表单
+                submitHandler: function (forms) {
+                    $(forms).ajaxSubmit({
+                        url: form.attr('action'), //按钮上是否自定义提交地址(多按钮情况)
+                        dataType: 'json',
+                        beforeSubmit: function (arr, $form, options) {
+
+                        },
+                        success: function (data, statusText, xhr, $form) {
+                            if (data.status) {
+                                setCookie("refersh_time", 1);
+                                //添加成功
+                                Wind.use("artDialog", function () {
+                                    art.dialog({
+                                        id: "succeed",
+                                        icon: "succeed",
+                                        fixed: true,
+                                        lock: true,
+                                        background: "#CCCCCC",
+                                        opacity: 0,
+                                        content: data.info,
+                                        button: [{
+                                            name: '停留本页？',
+                                            callback: function () {
+                                                reloadPage(window);
+                                                return true;
+                                            },
+                                            focus: true
+                                        }, {
+                                            name: '返回列表',
+                                            callback: function () {
+                                                location.href = "index.php?g=admin&m=develop&a=index";
+                                                return true;
+                                            }
+                                        }]
+                                    });
+                                });
+                            } else {
+                                isalert(data.info);
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    })
+</script>
+</body>
+</html>

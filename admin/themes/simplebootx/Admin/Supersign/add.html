@@ -1,0 +1,234 @@
+<admintpl file="header"/>
+<link rel="stylesheet" href="__PUBLIC__/js/switch/bootstrap-switch.css">
+<style>
+    .switch{margin-left:20px}
+</style>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:U('index')}">账号列表</a></li>
+        <li class="active"><a href="javascript:void(0);"><if condition="$data[id] neq 0">编辑账号<else />添加账号</if></a></li>
+    </ul>
+    <form class="form-horizontal js-ajax-forms" action="" method="post">
+        <fieldset>
+            <div class="control-group">
+                <label class="control-label">账号<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <input type="text" style="width:400px" maxlength="200" name="appleAccount" value="{$data.appleAccount}" id="title"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">密码<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <input type="text" style="width:400px" maxlength="200" name="pwd" value="{$data.pwd}" id="title"/>
+                </div>
+            </div>
+			<div class="control-group">
+                <label class="control-label">专用密码<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <input type="text" style="width:400px" maxlength="200" name="spwd" value="{$data.spwd}" id="title"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">专用SESSION<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <input type="text" style="width:400px" name="ssession" value="{$data.ssession}" id="title"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">P12路径</label>
+                <div class="controls">
+                    <input type="text" style="width:400px" maxlength="255" name="p12" value="{$data.p12}" id="title"/>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">描述文件路径</label>
+                <div class="controls">
+                    <input type="text" style="width:400px" maxlength="255" name="profile" value="{$data.profile}" id="title"/>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">证书名</label>
+                <div class="controls">
+                    <input type="text" style="width:400px" maxlength="255" name="pName" value="{$data.pName}" id="title"/>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">Hash</label>
+                <div class="controls">
+                    <input type="text" style="width:400px" maxlength="255" name="pHash" value="{$data.pHash}" id="title"/>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">iphone剩余数量<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <input type="text" style="width:400px" maxlength="10" name="iphone" value="{$data.iphone}" id="title"/>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">ipod剩余数量<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <input type="text" style="width:400px" maxlength="10" name="ipod" value="{$data.ipod}" id="title"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">ipad剩余数量<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <input type="text" style="width:400px" maxlength="10" name="ipad" value="{$data.ipad}" id="title"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">mac剩余数量<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <input type="text" style="width:400px" maxlength="10" name="mac" value="{$data.mac}" id="title"/>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">排序(降序)</label>
+                <div class="controls">
+                    <input type="text" style="width:400px" maxlength="10" name="sort" value="{$data.sort}" id="title"/>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">过期时间<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <input type="text" name="expire" class="js-datetime date" <if condition="$data['expire'] gt 0">value="{$data.expire|date='Y-m-d H:i:s',###}"</if> style="width: 140px;" autocomplete="off">
+                </div>
+            </div>
+        </fieldset>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary js-ajax-submit">提交</button>
+            <a class="btn" href="javascript:history.back(-1);">{:L('BACK')}</a>
+        </div>
+        <input name="id" value="{$data.id}" type="hidden" />
+    </form>
+</div>
+<script src="__PUBLIC__/js/jquery19.js"></script>
+<script src="__PUBLIC__/js/switch/bootstrap.min.js"></script>
+<script src="__PUBLIC__/js/switch/bootstrap-switch.js"></script>
+<script src="__PUBLIC__/js/common.js"></script>
+<script type="text/javascript">
+    $(function(){
+
+        Wind.use('validate', 'ajaxForm', 'artDialog', function () {
+            var form = $('form.js-ajax-forms');
+            //表单验证开始
+            form.validate({
+                //是否在获取焦点时验证
+                onfocusout: false,
+                //是否在敲击键盘时验证
+                onkeyup: false,
+                //当鼠标掉级时验证
+                onclick: false,
+                //验证错误
+                showErrors: function (errorMap, errorArr) {
+                    //errorMap {'name':'错误信息'}
+                    //errorArr [{'message':'错误信息',element:({})}]
+                    try {
+                        $(errorArr[0].element).focus();
+                        art.dialog({
+                            id: 'error',
+                            icon: 'error',
+                            lock: true,
+                            fixed: true,
+                            background: "#CCCCCC",
+                            opacity: 0,
+                            content: errorArr[0].message,
+                            cancelVal: '确定',
+                            cancel: function () {
+                                $(errorArr[0].element).focus();
+                            }
+                        });
+                    } catch (err) {
+
+                    }
+                },
+                //验证规则
+                rules: {
+                    'appleAccount': {required: true},
+                    'pwd': {required: true},
+//                    'p12': {required: true},
+//                    'profile': {required: true},
+//                    'pName': {required: true},
+//                    'pHash': {required: true},
+                    'iphone': {required: true},
+                    'ipad': {required: true},
+                    'ipod': {required: true},
+                    'mac': {required: true},
+                    'expire': {required: true}
+                },
+                //验证未通过提示消息
+                messages: {
+                    'appleAccount': {required: '请输入账号'},
+                    'pwd': {required: '请输入密码'},
+//                    'p12': {required: '请输入p12文件路径'},
+//                    'profile': {required: '请输入描述文件路径'},
+//                    'pName': {required: '请输入证书名'},
+//                    'pHash': {required: '请输入Hash'},
+                    'iphone': {required: '请输入iphone剩余数量'},
+                    'ipad': {required: '请输入ipad剩余数量'},
+                    'ipod': {required: '请输入ipod剩余数量'},
+                    'mac': {required: '请输入mac剩余数量'},
+                    'expire': {required: '请输入过期时间'}
+                },
+                //给未通过验证的元素加效果,闪烁等
+                highlight: false,
+                //是否在获取焦点时验证
+                onfocusout: false,
+                //验证通过，提交表单
+                submitHandler: function (forms) {
+                    $(forms).ajaxSubmit({
+                        url: form.attr('action'), //按钮上是否自定义提交地址(多按钮情况)
+                        dataType: 'json',
+                        beforeSubmit: function (arr, $form, options) {
+
+                        },
+                        success: function (data, statusText, xhr, $form) {
+                            if (data.status) {
+                                setCookie("refersh_time", 1);
+                                //添加成功
+                                Wind.use("artDialog", function () {
+                                    art.dialog({
+                                        id: "succeed",
+                                        icon: "succeed",
+                                        fixed: true,
+                                        lock: true,
+                                        background: "#CCCCCC",
+                                        opacity: 0,
+                                        content: data.info,
+                                        button: [{
+                                            name: '继续操作？',
+                                            callback: function () {
+                                                reloadPage(window);
+                                                return true;
+                                            },
+                                            focus: true
+                                        }, {
+                                            name: '返回列表',
+                                            callback: function () {
+                                                location.href = "index.php?g=admin&m=supersign&a=index";
+                                                return true;
+                                            }
+                                        }]
+                                    });
+                                });
+                            } else {
+                                layer.alert(data.info);
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<admintpl file="header" />
+<style>
+.check_item{
+width:12%;
+display:inline-block;
+}
+</style>
+</head>
+<body>
+	<div class="wrap">
+		<ul class="nav nav-tabs">
+			<li><a href="{:U('user/index')}">{:L('ADMIN_USER_INDEX')}</a></li>
+			<li class="active"><a href="{:U('user/add')}">{:L('ADMIN_USER_ADD')}</a></li>
+		</ul>
+		<form method="post" class="form-horizontal js-ajax-form" action="{:U('User/do_edit_userrights')}">
+		<input type="hidden" name="userid" value="{$id}">
+			<div class="table_full">
+				<table class="table table-bordered" id="authrule-tree">
+					<tbody>
+					<p style="font-weight:bold;font-size:20px;">游戏权限
+					&nbsp;&nbsp;<input type="button" value="全选" class="select_all_game">
+					&nbsp;&nbsp;<input type="button" value="反选" class="reverse_select_game">
+					</p>
+					<foreach name="games" item="vo" key="k">
+				<tr>
+			
+                   <td style='padding-left:30px;'>
+                   	<p style="font-weight:bold;">{$k}</p>
+                   <foreach name="vo" item="v">
+                   <span class="check_item"><input type='checkbox' name='game_ids[]' value='{$v.id}' level='0'
+                   <?php if($userrights['game_role'] == 'all'){ echo 'checked'; }else{ if(in_array($v['id'],$game_role_arr)){ echo 'checked'; }} ?>
+                   >{$v.game_name}
+                   </span>
+                   </foreach>
+                   </td>
+    			</tr>
+    			</foreach>
+					</tbody>
+				</table>
+								<table class="table table-bordered" id="authrule-tree">
+					<tbody>
+					<p style="font-weight:bold;font-size:20px;">渠道权限
+					&nbsp;&nbsp;<input type="button" value="全选" class="select_all_channel">
+					&nbsp;&nbsp;<input type="button" value="反选" class="reverse_select_channel"></p>
+					<foreach name="channels" item="vo" key="k">
+				<tr>
+			
+                   <td style='padding-left:30px;'>
+                   	<p style="font-weight:bold;">{$k}</p>
+                   <foreach name="vo" item="v">
+                   <span class="check_item"><input type='checkbox' name='channel_ids[]' value='{$v.id}' level='0'
+                                      <?php if($userrights['channel_role'] == 'all'){ echo 'checked'; }else{ if(in_array($v['id'],$channel_role_arr)){ echo 'checked'; }} ?>
+                   >{$v.name}
+                   </span>
+                   </foreach>
+                   </td>
+    			</tr>
+    			</foreach>
+					</tbody>
+				</table>
+			</div>
+			<div class="form-actions">
+				<button type="submit" class="btn btn-primary js-ajax-submit">{:L('EDIT')}</button>
+				<a class="btn" href="javascript:history.back(-1);">{:L('BACK')}</a>
+			</div>
+		</form>
+	</div>
+	<script src="__PUBLIC__/js/common.js"></script>
+	<script>
+	$(document).ready(function(){
+		$(".select_all_game").click(function(){
+			$("input[name='game_ids[]']").attr("checked","true");
+		});
+
+		$('.reverse_select_game').click(function(){
+			$("input[name='game_ids[]']").each(function(){
+				if($(this).attr("checked"))
+				{
+					$(this).removeAttr("checked");
+				}
+				else
+				{
+					$(this).attr("checked","true");
+				}
+			})
+		});
+		$(".select_all_channel").click(function(){
+			$("input[name='channel_ids[]']").attr("checked","true");
+		});
+
+		$('.reverse_select_channel').click(function(){
+			$("input[name='channel_ids[]']").each(function(){
+				if($(this).attr("checked"))
+				{
+					$(this).removeAttr("checked");
+				}
+				else
+				{
+					$(this).attr("checked","true");
+				}
+			})
+		})
+	});
+	</script>
+</body>
+</html>

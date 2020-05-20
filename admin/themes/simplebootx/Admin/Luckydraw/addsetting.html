@@ -1,0 +1,147 @@
+<admintpl file="header"/>
+<style>
+</style>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:U('setting')}">配置列表</a></li>
+        <li  class="active"><a href="javascript:void(0)"><if condition="$id">修改配置<else/>添加配置</if></a></li>
+    </ul>
+    <form class="form-horizontal js-ajax-forms" action="" method="post">
+        <fieldset>
+            <div class="control-group">
+                <label class="control-label">抽奖限制</label>
+                <div class="controls">
+                    <input type="number" placeholder="例:充值X元及以上" style="margin-bottom: 10px;" name="money"  value="{$data.money}"/>
+                    <foreach name="list" item="v">
+                        <div style="margin-bottom: 10px">
+                            <input type="checkbox" name="place[]" <if condition="$data['setting'][$v['place']]">checked</if> value="{$v.place}"/>{$v.name}
+                            <input type="number" name="chance[{$v.place}]" style="width:105px" <if condition="$data['setting'][$v['place']]">value="{$data['setting'][$v['place']]}"</if> placeholder="概率,输入整数" />
+                        </div>
+                    </foreach>
+                </div>
+            </div>
+        </fieldset>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary js-ajax-submit">提交</button>
+            <a class="btn" href="javascript:history.back(-1);">{:L('BACK')}</a>
+            <i class="fa fa-question-circle"></i><span>配置中务必要有一个充值0元的，可以设置成谢谢参与</span>
+        </div>
+        <input name="id" value="{$data.id}" type="hidden" />
+    </form>
+</div>
+<script src="__PUBLIC__/js/jquery19.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script src="__PUBLIC__/js/common.js"></script>
+<script type="text/javascript">
+    $(function(){
+
+        Wind.use('validate', 'ajaxForm', 'artDialog', function () {
+            var form = $('form.js-ajax-forms');
+            //表单验证开始
+            form.validate({
+                //是否在获取焦点时验证
+                onfocusout: false,
+                //是否在敲击键盘时验证
+                onkeyup: false,
+                //当鼠标掉级时验证
+                onclick: false,
+                //验证错误
+                showErrors: function (errorMap, errorArr) {
+                    //errorMap {'name':'错误信息'}
+                    //errorArr [{'message':'错误信息',element:({})}]
+                    try {
+                        $(errorArr[0].element).focus();
+                        art.dialog({
+                            id: 'error',
+                            icon: 'error',
+                            lock: true,
+                            fixed: true,
+                            background: "#CCCCCC",
+                            opacity: 0,
+                            content: errorArr[0].message,
+                            cancelVal: '确定',
+                            cancel: function () {
+                                $(errorArr[0].element).focus();
+                            }
+                        });
+                    } catch (err) {
+
+                    }
+                },
+                //验证规则
+                rules: {
+                    'money': {required: true,digits:true,
+                        remote: {
+                            url: "{:U('checkMoney')}",     //后台处理程序
+                            type: "post",               //数据发送方式
+                            dataType: "json",           //接受数据格式
+                            data:{                     //要传递的数据
+                                place: function() {
+                                    return $(":input[name=money]").val();
+                                },
+                                id:function(){
+                                    return $(':input[name=id]').val();
+                                }
+                            }
+                        }
+                    },
+                },
+                //验证未通过提示消息
+                messages: {
+                    'money': {required: '请输入限制金额',digits:'请输入正确金额',remote:'限制金额已存在'}
+                },
+                //给未通过验证的元素加效果,闪烁等
+                highlight: false,
+                //是否在获取焦点时验证
+                onfocusout: false,
+                //验证通过，提交表单
+                submitHandler: function (forms) {
+                    $(forms).ajaxSubmit({
+                        url: form.attr('action'), //按钮上是否自定义提交地址(多按钮情况)
+                        dataType: 'json',
+                        beforeSubmit: function (arr, $form, options) {
+
+                        },
+                        success: function (data, statusText, xhr, $form) {
+                            if (data.status) {
+                                setCookie("refersh_time", 1);
+                                //添加成功
+                                Wind.use("artDialog", function () {
+                                    art.dialog({
+                                        id: "succeed",
+                                        icon: "succeed",
+                                        fixed: true,
+                                        lock: true,
+                                        background: "#CCCCCC",
+                                        opacity: 0,
+                                        content: data.info,
+                                        button: [{
+                                            name: '继续{:isset($info['id'])?'编辑':'添加'}？',
+                                            callback: function () {
+                                                reloadPage(window);
+                                                return true;
+                                            },
+                                            focus: true
+                                        }, {
+                                            name: '返回列表',
+                                            callback: function () {
+                                                location.href = "index.php?g=admin&m=luckydraw&a=setting";
+                                                return true;
+                                            }
+                                        }]
+                                    });
+                                });
+                            } else {
+                                layer.alert(data.info);
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    })
+</script>
+</body>
+</html>

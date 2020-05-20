@@ -1,0 +1,54 @@
+<admintpl file="header" />
+</head>
+<body>
+	<div class="wrap js-check-wrap">
+		<ul class="nav nav-tabs">
+		   <li class=""><a href="{:U('player/index')}">{:L('PLAYER_DATA')}</a></li>
+			<li class="active"><a href="javascript;">邀请好友列表</a></li>
+		</ul>
+
+		<table class="table table-hover table-bordered">
+			<thead>
+				<tr>
+					<th width="50">ID</th>
+					<th>{:L('USERNAME')}</th>
+					<th>{:L('MOBILE')}</th>
+					<th>{:L('GAME')}</th>
+					<th>{:L('CHANNEL')}</th>
+					<th>{:L('LOGIN_TIMES')}</th>
+					<th>{:L('SOURCE')}</th>
+					<th>系统</th>
+					<th>设备号</th>
+					<th>{:L('REGISTER_IP')}</th>
+					<th>{:L('REGISTER_TIME')}</th>
+					<th>{:L('STATUS')}</th>
+		
+				</tr>
+			</thead>
+			<tbody>
+				<php>$user_statuses=array("1"=>L('PLAYER_STATUS_ACTIVATED'),"2"=>L('PLAYER_STATUS_PREVENT'));</php>
+				<foreach name="player" item="vo">
+				<tr>
+					<td>{$vo.id}</td>
+					<td>{$vo.username}</td>
+					<td><if condition="$vo['mobile']"> {$vo.mobile}
+					</if></td>
+					<td>{$games[$vo['appid']]}</td>
+					<td>{$channels[$vo['channel']]}</td>
+					<td>{$vo.count}</td>
+					<td>{$vo.source}</td>
+					<td><if condition="$vo['system'] eq 1">安卓<else />苹果</if></td>
+					<td>{$vo.machine_code}</td>
+					<td>{:long2ip($vo['regip'])}</td>
+					<td>{:date('Y-m-d H:i',$vo['regtime'])}</td>
+					<td>{$user_statuses[$vo['status']]}</td>
+
+				</tr>
+				</foreach>
+			</tbody>
+		</table>
+		<div class="pagination">{$page}</div>
+	</div>
+	<script src="__PUBLIC__/js/common.js"></script>
+</body>
+</html>

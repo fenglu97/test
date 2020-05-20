@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>扫码支付</title>
+    <meta id="viewport" name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1; user-scalable=no;">
+    <meta name="format-detection" content="telephone=no">
+    <script src="__TMPL__Public/assets/js/jquery-1.10.2.js"></script>
+    <script src="__TMPL__Public/assets/js/jquery.qrcode.min.js"></script>
+    <style type="text/css">
+        body {
+            text-align: center;
+            margin-left: 0px;
+            margin-top: 0px;
+            margin-right: 0px;
+            margin-bottom: 0px;
+            font-family: "Microsoft YaHei";
+            font-size: 16px;
+            color: #333333;
+        }
+        .btn_blue{display:inline-block;padding:0 20px;height:40px;line-height:40px;background:#2284D8;letter-spacing:2px;color:#ffffff;}
+        .bg_gray{display:inline-block;width:100%;background:#f2f2f2;}
+        .bg_white{display:inline-block;width:100%;}
+        .text_in{display:inline-block;width:300px;height:30px;line-height:30px;padding: 0 0 0 70px;}
+    </style>
+</head>
+
+<body style="font-family: '微软雅黑';">
+<div align="center" class="btn_blue">等待您扫码支付...</div>
+<div class="bg_white">&nbsp;</div>
+<div class="bg_white" id="qrcode"></div>
+<div class="bg_white">&nbsp;</div>
+<div class="bg_gray">
+    <div align="left" class="text_in">订单：&nbsp;&nbsp;<span id="orderid" style="color: #006000">{$orderid}</span></div>
+</div>
+<div class="bg_white">
+    <div align="left" class="text_in">金额：&nbsp;&nbsp;<span id="money" style="color: #ff0000">{$money}</span> 元</div>
+</div>
+<div class="bg_gray">
+    <div align="left" class="text_in">&nbsp;</div>
+</div>
+
+
+<script type="text/javascript">
+    jQuery(function($) {
+        $('#qrcode').qrcode({
+            render: "canvas", //也可以替换为table
+            width: 120,
+            height: 120,
+            text: "{$img}"
+        });
+//页面加载完毕后自动事件
+//如果你要每隔1秒执行一次，那么就用setInterval 不要用setTimeout
+        $(document).ready(function(){
+            GetQueryStringa()
+        });
+
+        function GetQueryStringb() {
+            setTimeout(GetQueryStringa,3000);
+        }
+
+        function GetQueryStringa() {
+            var id=$('#orderid').text();//取订单号
+            var money = $('#money').text();
+            $.post("{:U('checkOrder')}",{id:id}, function(data) {
+
+                if(data.status == 1){
+                    $(".btn_blue").text("成功支付："+money+"元。");
+                    window.location.href="{:C('API_URL')}/api/pay/paySuccess?orderId="+id+"&Money="+money;
+                }
+                setTimeout(GetQueryStringa,3000);
+            });
+        }
+    });
+
+</script>
+</body>
+</html>

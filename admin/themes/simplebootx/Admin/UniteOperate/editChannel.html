@@ -1,0 +1,243 @@
+<admintpl file="header"/>
+<link rel="stylesheet" href="__PUBLIC__/js/switch/bootstrap-switch.css">
+<style>
+    .switch{margin-left:20px}
+    .do{
+        color: #33485d;
+        border: 1px dashed;
+        padding: 5px 9px;
+        border-radius: 6px;
+    }
+    .controls{
+        margin-bottom:10px
+    }
+    #add select{
+        width:120px;
+    }
+</style>
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/chosen.css">
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/docsupport/prism.css">
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:U('index')}">安卓渠道列表</a></li>
+        <li class="active"><a href="javascript:void(0);">编辑安卓渠道</a></li>
+    </ul>
+    <form class="form-horizontal js-ajax-forms" action="" method="post">
+        <fieldset>
+            <div class="control-group">
+                <label class="control-label">渠道</label>
+                <div class="controls">
+                    <select name="cid" class="chosen-select" tabindex="1">
+                        <foreach name="channel" key="k" item="v">
+                            <option value="{$k}" <if condition="$data.cid eq $k">selected</if>>{$v}</option>
+                        </foreach>
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">渠道拼音简写</label>
+                <div class="controls">
+                    <input  type="text"  name="tag" value="{$data.tag}"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">包名格式</label>
+                <div class="controls">
+                    <input  type="text"  name="packname" value="{$data.packname}"/> <span>例：com.#tag#或com.xxx.#tag#、com.#tag#.xxx；#tag#表示自动生成的游戏简写</span>
+                </div>
+            </div>
+            <div class="control-group" id="add">
+                <label class="control-label">参数</label>
+                <div class="controls" style="margin-top: 5px;color:#da534f">
+                    <p>注：1、参数值类型选择布尔值后，参数值默认自动填入true，可自行填写true或false，其他值无效</p>
+                </div>
+                <foreach name="data['parameter']" key="k" item="v">
+                    <div class="controls">
+                        <input placeholder="参数名" type="text"  name="name[]" value="{$v.name}"/>
+                        <input placeholder="映射名" type="text"  name="mapped[]" value="{$v.mapped}"/>
+                        <input placeholder="默认值" type="text"  name="default[]" value="{$v.default}" class="default"/>
+                        <select name="type[]" class="type">
+                            <option value="1" <if condition="$v.type eq 1">selected</if> >客户端</option>
+                            <option value="2" <if condition="$v.type eq 2">selected</if>>服务端</option>
+                            <option value="3" <if condition="$v.type eq 3">selected</if>>客户和服务端</option>
+                            <option value="4" <if condition="$v.type eq 4">selected</if>>文件</option>
+                        </select>
+                        <select name="value[]" class="value" <if condition="$v.type eq 4">style="display:none"</if> >
+                            <option value="1" <if condition="$v.value eq 1">selected</if>>字符值</option>
+                            <option value="2" <if condition="$v.value eq 2">selected</if>>布尔值</option>
+                        </select>
+                        <select name="change[]" <if condition="$v.type eq 4">style="display:none"</if>>
+                            <option value="1" <if condition="$v.change eq 1">selected</if>>参数可编辑</option>
+                            <option value="2" <if condition="$v.change eq 2">selected</if>>参数不可编辑</option>
+                        </select>
+                        <select name="required[]" <if condition="$v.type eq 4">style="display:none"</if>>
+                            <option value="1" <if condition="$v.required eq 1">selected</if>>必填</option>
+                            <option value="2" <if condition="$v.required eq 2">selected</if>>选填</option>
+                        </select>
+                        <if condition="$k eq 0">
+                            <a href="javascript:void(0);" class="do add"><i class="fa fa-plus"></i></a>
+                            <else/>
+                            <a href="javascript:void(0);" class="do del"><i class="fa fa-minus"></i></a>
+                        </if>
+
+                    </div>
+                </foreach>
+            </div>
+            <div class="control-group float checkboxs">
+                <label class="control-label">渠道是否再分包</label>
+                <div class="switch" data-on="success" data-off="danger">
+                    <input type="checkbox" name="again_sub" <if condition="$data['again_sub'] eq 1">checked</if>/>
+                </div>
+            </div>
+        </fieldset>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary js-ajax-submit">提交</button>
+            <a class="btn" href="javascript:history.back(-1);">{:L('BACK')}</a>
+        </div>
+        <input type="hidden" value="{$data.id}" name="id" />
+    </form>
+</div>
+<script src="__PUBLIC__/js/jquery19.js"></script>
+<script src="__PUBLIC__/js/switch/bootstrap.min.js"></script>
+<script src="__PUBLIC__/js/switch/bootstrap-switch.js"></script>
+<script src="__PUBLIC__/js/common.js"></script>
+<script src="__PUBLIC__/js/chosen/chosen.jquery.js" type="text/javascript"></script>
+<script src="__PUBLIC__/js/chosen/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script type="text/javascript">
+    var config = {
+        '.chosen-select'           : {},
+        '.chosen-select-deselect'  : {allow_single_deselect:true},
+        '.chosen-select-no-single' : {disable_search_threshold:10},
+        '.chosen-select-no-results': {no_results_text:'没有匹配的结果'},
+        '.chosen-select-width'     : {width:"95%"}
+    }
+    for (var selector in config) {
+        $(selector).chosen(config[selector]);
+    }
+    $('body').on('click','.del',function(){
+        $(this).parent('div').remove();
+    });
+    $('body').on('click','.type',function(){
+        if($(this).val() == 4){
+            $(this).siblings('select').hide();
+        }else{
+            $(this).siblings('select').show();
+        }
+    });
+    $('body').on('change','.value',function(){
+        if($(this).val() == 2){
+            $(this).siblings('.default').val('true');
+        }else{
+            $(this).siblings('.default').val('');
+        }
+    });
+
+    $(function(){
+        $('.add').click(function(){
+            var html = '<div class="controls">';
+            html += '<input placeholder="参数名" type="text"  name="name[]" value=""/> ';
+            html += '<input placeholder="映射名" type="text"  name="mapped[]" value=""/> ';
+            html += '<input placeholder="默认值" type="text"  name="default[]" value="" class="default"/> ';
+            html += '<select name="type[]" class="type"><option value="1">客户端</option> <option value="2">服务端</option> <option value="3">客户和服务端</option> <option value="4">文件</option></select> ';
+            html += '<select name="value[]" class="value"><option value="1">字符值</option> <option value="2">布尔值</option> </select> ';
+            html += '<select name="change[]"> <option value="1">参数可编辑</option> <option value="2">参数不可编辑</option> </select> ';
+            html += '<select name="required[]"> <option value="1">必填</option> <option value="2">选填</option> </select> ';
+            html += '<a href="javascript:void(0);" class="do del"><i class="fa fa-minus"></i></a></div>';
+            $('#add').append(html);
+        });
+
+        Wind.use('validate', 'ajaxForm', 'artDialog', function () {
+            var form = $('form.js-ajax-forms');
+            //表单验证开始
+            form.validate({
+                //是否在获取焦点时验证
+                onfocusout: false,
+                //是否在敲击键盘时验证
+                onkeyup: false,
+                //当鼠标掉级时验证
+                onclick: false,
+                //验证错误
+                showErrors: function (errorMap, errorArr) {
+                    //errorMap {'name':'错误信息'}
+                    //errorArr [{'message':'错误信息',element:({})}]
+                    try {
+                        $(errorArr[0].element).focus();
+                        art.dialog({
+                            id: 'error',
+                            icon: 'error',
+                            lock: true,
+                            fixed: true,
+                            background: "#CCCCCC",
+                            opacity: 0,
+                            content: errorArr[0].message,
+                            cancelVal: '确定',
+                            cancel: function () {
+                                $(errorArr[0].element).focus();
+                            }
+                        });
+                    } catch (err) {
+
+                    }
+                },
+                //验证规则
+                rules: {
+                },
+                //验证未通过提示消息
+                messages: {
+                },
+                //给未通过验证的元素加效果,闪烁等
+                highlight: false,
+                //是否在获取焦点时验证
+                onfocusout: false,
+                //验证通过，提交表单
+                submitHandler: function (forms) {
+                    $(forms).ajaxSubmit({
+                        url: form.attr('action'), //按钮上是否自定义提交地址(多按钮情况)
+                        dataType: 'json',
+                        beforeSubmit: function (arr, $form, options) {
+
+                        },
+                        success: function (data, statusText, xhr, $form) {
+                            if (data.status) {
+                                setCookie("refersh_time", 1);
+                                //添加成功
+                                Wind.use("artDialog", function () {
+                                    art.dialog({
+                                        id: "succeed",
+                                        icon: "succeed",
+                                        fixed: true,
+                                        lock: true,
+                                        background: "#CCCCCC",
+                                        opacity: 0,
+                                        content: data.info,
+                                        button: [{
+                                            name: '继续编辑',
+                                            callback: function () {
+                                                reloadPage(window);
+                                                return true;
+                                            },
+                                            focus: true
+                                        }, {
+                                            name: '返回列表',
+                                            callback: function () {
+                                                location.href = "index.php?g=admin&m=UniteOperate&a=index";
+                                                return true;
+                                            }
+                                        }]
+                                    });
+                                });
+                            } else {
+                                layer.alert(data.info);
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src='__PUBLIC__/js/jquery-1.8.3.min.js'></script>
+    <script src='__PUBLIC__/js/clipboard.min.js'></script>
+</head>
+<body>
+<!--<button class="btn" data-clipboard-text="1">Copy</button>-->
+<!--<button class="btn" data-clipboard-text="2">Copy</button>-->
+<!--<button class="btn" data-clipboard-text="3">Copy</button>-->
+<a id="isCopy" href="{$url}" data-clipboard-text="">下载</a>
+<script>
+    $(function () {
+        var channel = '{$channel}';
+        $('#isCopy').attr('data-clipboard-text', channel);
+        var clipboard = new Clipboard('#isCopy');
+        clipboard.on('success', function(e) {
+            alert('复制成功');
+            console.log(e);
+        });
+        clipboard.on('error', function(e) {
+            alert('复制失败');
+            console.log(e);
+        });
+    });
+</script>
+</body>
+</html>

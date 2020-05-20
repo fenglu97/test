@@ -24,14 +24,24 @@ class PromoterController extends AdminbaseController{
         $gid = I('gid');
         $access_type = I('access_type',0);
 
+        $admin_id = session('ADMIN_ID');
+        $userright = M('userrights')->where(array('userid' => $admin_id))->getField('game_role');
+
+
         $cid_type = M('channel')->where(array('id'=>$cid))->getField('type');
 
         if($gid){
             $map['g.id'] = $gid;
             $where['id'] = $gid;
         }else{
-            $map['g.id'] = array('neq','1000');
-            $where['id'] = array('neq','1000');
+            if($userright != 'all'){
+                $map['g.id'] = array('in',$userright);
+                $where['id'] = array('in',$userright);
+            }else{
+                $map['g.id'] = array('neq','1000');
+                $where['id'] = array('neq','1000');
+            }
+
         }
         if($game_type > 0){
             $map['g.game_type'] = $game_type;
@@ -68,7 +78,7 @@ class PromoterController extends AdminbaseController{
             }
             $data[$k]['game_type'] = $platform[$v['game_type']];
             $info = get_185_gameinfo($v['tag']);
-	   
+
             $data[$k]['types'] = getTypes($info['tid'],$types);
             $data[$k]['logo'] = C('CDN_URL').$info['logo'];
             $data[$k]['system'] = $info['system'];

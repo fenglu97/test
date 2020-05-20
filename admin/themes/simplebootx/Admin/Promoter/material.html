@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{$info.gamename}</title>
+    <link rel="stylesheet" href="__TMPL__Public/assets/css/reset.css"/>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            font-style: normal;
+        }
+        .news_box02 b {
+            font-size: 16px;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .news_box h2 {
+            color: #333;
+            text-align: center;
+            font-size: x-large;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .news_box02 p {
+            margin-bottom: 20px;
+            display: block;
+        }
+        .news_bg{ background: #eee;}
+        .news_header{ width: 100%; overflow: hidden; background: #fff;}
+        .w1200{ width: 1200px; margin: 0 auto;}
+        .header { height: 88px; line-height: 88px; vertical-align: middle;}
+        .news_main{ position: relative; background: #fff; margin-top: 20px; box-shadow: 0 0 5px rgba(0,0,0,0.1); padding: 40px;}
+        p.news_title { color: #9c9c9c; border-bottom: 2px solid #e8e8e8; padding-bottom: 5px; margin-bottom: 20px;}
+        p.news_title a{ color: #9c9c9c;}
+        p.news_title a:hover{ color: red;}
+        .news_box h2 { color: #333; text-align: center; font-size: x-large; font-weight: bold; margin-bottom: 15px;}
+        .MsoNormal img{ margin-top: 80px;}
+        .news_box02 div img {
+            margin: 5px 15px 0 10px;
+        }
+
+    </style>
+</head>
+<body>
+<div class="news_bg">
+    <div class="news_header">
+        <div class="w1200 header">
+            <img src="__TMPL__Public/assets/images/login-logo.png?v=1.1">
+        </div>
+    </div>
+    <div class="w1200 news_main">
+        <p class="news_title"><a href="/index.php">首页</a>&gt;<a href="javascript:;">{$info.gamename}</a></p>
+        <div class="news_box news_box02">
+            <h2>{$info.gamename}</h2>
+            <p><b>游戏介绍：</b>{$info.abstract}</p>
+            <p><b>类型：</b>{$game_types}</p>
+            <p><b>游戏包大小：</b>{$info.size}M</p>
+            <div>
+                <b>游戏图标：</b>
+                <img src="{$url_185}/{$info.logo}" style="width: 120px;height:120px" />
+            </div>
+            <div>
+                <b>游戏截图：</b>
+                <if condition="$info.pic1"><img src="{$url_185}/{$info.pic1}" style="width: 240px;height:400px" /></if>
+                <if condition="$info.pic2"><img src="{$url_185}/{$info.pic2}" style="width: 240px;height:400px" /></if>
+                <if condition="$info.pic3"><img src="{$url_185}/{$info.pic3}" style="width: 240px;height:400px" /></if>
+                <if condition="$info.pic4"><img src="{$url_185}/{$info.pic4}" style="width: 240px;height:400px" /></if>
+                <if condition="$info.pic5"><img src="{$url_185}/{$info.pic5}" style="width: 240px;height:400px" /></if>
+            </div>
+        </div>
+        <if condition="$material_url neq ''">
+        <div style="text-align: center;margin-top:5px;">
+        <a href="{$material_url}"  target="_blank"><img src="__PUBLIC__/images/material_download.png" style="width:100px;"></a>
+            </div>
+            </if>
+    </div>
+</div>
+</body>
+</html>

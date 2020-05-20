@@ -1,0 +1,105 @@
+<admintpl file="header" />
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="{:U('index')}">军团列表</a></li>
+        <li><a href="{:U('add')}">添加军团</a></li>
+    </ul>
+    <form class="well form-search" method="post" action="{:U('index')}">
+
+        <div class="search_type cc mb10">
+            <div class="mb10">
+					<span class="mr20">
+						渠道名称：
+  <select name="channel" id="channel" style="width:180px;" tabindex="1">
+      <option value="">所有渠道</option>
+      {$channel_list}
+  </select>
+                        时间:
+ <input type="text" name="time" class="layui-input" id="datePicker" placeholder="" value="{$time}">
+						<input type="submit" class="btn btn-primary" value="搜索" />
+					</span>
+            </div>
+        </div>
+    </form>
+    <table class="table table-hover table-bordered table-list" id="menus-table">
+        <thead>
+        <tr>
+            <th>军团名称</th>
+            <th>当月目标</th>
+            <th>已完成</th>
+            <th>完成率</th>
+            <th>渠道</th>
+            <if condition="$is_edit eq 1">
+            <th width="180">{:L('ACTIONS')}</th>
+                </if>
+        </tr>
+        <tr>
+            <th>合计</th>
+            <th>{$total_target}</th>
+            <th>{$total_pay}</th>
+            <th>{$total_comlate_rate}%</th>
+            <th colspan="2"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <foreach name="list" item="vo">
+
+            <tr>
+
+                <td>{$vo['name']}</td>
+
+                <td>{$vo['current_target']}</td>
+                <td>{$vo['current_money']}</td>
+                <td>{$vo['complate_rate']}%</td>
+
+                <td>{$vo['channel_names']}</td>
+                <if condition="$is_edit eq 1">
+                <td>
+                    <a href="{:U('edit',array('id'=>$vo['id']))}">修改</a>
+                </td>
+                    </if>
+            </tr>
+
+        </foreach>
+        </tbody>
+    </table>
+
+    </form>
+</div>
+
+<div class="pagination">{$page}</div>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script src="__PUBLIC__/js/laydate/laydate.js"></script>
+<script src="__PUBLIC__/js/common.js"></script>
+<script>
+    function formatDate(time){
+        var date = new Date(time);
+        var year = date.getFullYear(),
+                month = date.getMonth() + 1,//月份是从0开始的
+                day = date.getDate();
+        var newTime = year + '-' +
+                month + '-' +
+                day;
+        return newTime;
+    }
+
+    $(document).ready(function() {
+        //年月选择器
+        laydate.render({
+            elem: '#datePicker'
+            ,type: 'month'
+            ,value:'{$time}'
+            ,min: '2018-12-1'
+            ,max: formatDate(new Date().getTime())
+            ,done: function(value)
+            {
+                $('#datePicker').val(value);
+            }
+        });
+    });
+
+</script>
+</body>
+</html>

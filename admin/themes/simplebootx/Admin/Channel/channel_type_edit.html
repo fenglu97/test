@@ -1,0 +1,41 @@
+<admintpl file="header"/>
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/chosen.css">
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/docsupport/prism.css">
+
+</head>
+<body>
+	<div class="wrap js-check-wrap">
+		<ul class="nav nav-tabs">
+			<li><a href="{:U('Channel/channel_type')}">渠道类别</a></li>
+			<li class="active"><a href="javascript:void(0);">添加渠道类别</a></li>
+		</ul>
+		<form action="{:U('Channel/channel_type_edit')}" method="post" class="form-horizontal js-ajax-forms" enctype="multipart/form-data">
+			<input type="hidden" name="id" value="{$info['id']}">
+			<div class="row-fluid">
+				<div class="span9">
+					<table class="table table-bordered">
+
+						<tr>
+							<th>渠道类别名称</th>
+							<td>
+								<input type="text" style="width: 200px;" required name="name" value="{$info['name']}" placeholder="请输入渠道类别名称"/>
+								<span class="form-required">*</span>
+							</td>
+						</tr>
+
+
+					</table>
+				</div>
+
+			</div>
+			<div class="form-actions">
+				<button class="btn btn-primary js-ajax-submit" type="submit">{:L("EDIT")}</button>
+				<a class="btn" href="javascript:history.back(-1);">{:L('BACK')}</a>
+			</div>
+		</form>
+	</div>
+
+
+
+</body>
+</html>

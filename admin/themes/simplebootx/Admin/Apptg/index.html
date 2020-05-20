@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{:C('BOX_NAME')}盒子APP推广</title>
+    <style>
+        html, body, div, span, object, iframe,
+        h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+        abbr, address, cite, code,
+        del, dfn, em, img, ins, kbd, q, samp,
+        small, strong, sub, sup, var,
+        b, i,
+        dl, dt, dd, ol, ul, li,
+        fieldset, form, label, legend,
+        table, caption, tbody, tfoot, thead, tr, th, td,
+        article, aside, canvas, details, figcaption, figure,
+        footer, header, menu, nav, section, summary,
+        time, mark, audio, video {
+            margin:0;
+            padding:0;
+        }
+        img{ vertical-align: top;}
+        a{ text-decoration: none; color: #333;}
+        a:hover{ text-decoration: underline;}
+        body, a, input{
+            font-family: "Microsoft Yahei", "Droid Sans Fallback", "Arial", "Helvetica", "sans-serif", "宋体";
+            color: #333;
+            font-size: 12px;
+        }
+        .main{ padding: 20px 50px; background: #e8eff7;}
+        .cdn_box{ width: 100%; padding: 15px 0;}
+        .all-game{ font-size: 18px; margin-right: 150px; margin-top: 20px;}
+        .all-game i { width: 8px; height: 23px; border-radius: 2px; background: #4e9cef; display: inline-block; float: left; margin-right: 7px;}
+        .game-fenl { width: 100%; margin: 10px 0 30px 0;}
+        .game-fenl .fenl a { width: 110px; height: 40px; text-align: center; line-height: 40px; border-radius: 20px; font-size: 16px; color: #5aa3f0; border: 1px solid #5aa3f0; text-decoration: none; cursor: pointer; display: inline-block; margin-right: 40px;}
+        .game-fenl .fenl a.hover { background: #5aa3f0; border: 1px solid #5aa3f0; color: #fff;}
+
+        .min-center { width: 100%; background: #fff; border-radius: 2px; margin-bottom: 36px; font-size: 16px; overflow: hidden;}
+        .min-center .title { height: 45px; line-height: 45px; background: #4e9cef; color: #fff; text-indent: 30px; width: 100%; text-align: left;}
+        .yxzx01 { overflow: hidden; height: auto; padding: 10px 5px 10px 10px;}
+        .yxzx01_left { float: left; width: 135px; overflow: hidden; height: auto; border-right: 1px dashed #DBDBDB; padding: 0 30px 0 30px; text-align: center;}
+        .yxzx01_left span { display: block; line-height: 30px; font-size: 16px;}
+        .yxzx01_left a, .yxzx01_right a { display: inline-block; width: auto; min-width: 100px; padding: 0 20px; font-size: 16px; line-height: 40px; color: #FFF; text-align: center; height: 40px; background-color: #4e9cef; }
+        .yxzx01_left_duan { padding: 5px 0 0 30px;}
+        .yxzx01_right { float: left; overflow: hidden; height: auto; /*padding: 76px 0 0 30px;*/}
+        .yxzx01_right span { font-size: 16px;}
+        .yxzx01_left_duan.yxzx01_right p { margin: 10px 0 10px 0;}
+        .yxzx01_right p { display: block; line-height: 30px; color: red; font-size: 18px; padding: 0 0 20px 0; text-align: left; margin-top: 20px; margin-bottom: 20px;}
+        .yxzx01_left_duan a.copy { float: left; margin-right: 20px;}
+        .yxzx01_left a, .yxzx01_right a { width: auto; min-width: 100px; display: inline-block; padding: 0 20px;}
+        .img-code{ width: 135px; height: 135px;}
+    </style>
+</head>
+<body>
+<div class="main">
+    <!--<div class="cdn_box">-->
+        <!--<div class="all-game">-->
+            <!--<i></i>推广链接-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--<div class="game-fenl">-->
+        <!--<div class="fenl">-->
+            <!--<a href="javascript:;" class="hover reglink_type">185手游APP</a>-->
+            <!--&lt;!&ndash;<a href="javascript:;" class="reglink_type">BT页游推广</a>&ndash;&gt;-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--<div class="min-center">-->
+        <!--<div class="title">下载地址（先下载后注册）<span style="color: red;">主要用这种方式推广APP，适合所有推广渠道</span></div>-->
+        <!--<div class="yxzx01" style="padding: 10px 5px 10px 10px">-->
+            <!--<div class="yxzx01_left">-->
+                <!--<span>我的APP二维码</span>-->
+                <!--<div class="img-code" id="code_pic_2">-->
+                    <!--&lt;!&ndash;<canvas width="135" height="135"></canvas>&ndash;&gt;-->
+                <!--</div>-->
+                <!--&lt;!&ndash;<a href="javascript:void(0);" class="download_code" index_v="1" download="img.png">下载二维码</a>&ndash;&gt;-->
+            <!--</div>-->
+            <!--<div class="yxzx01_right yxzx01_left_duan">-->
+                <!--&lt;!&ndash;&lt;!&ndash;新添加短链接&ndash;&gt;<span>我的推广短链接</span><p id="shortlink">http://suo.im/4EKyBZ</p>&ndash;&gt;-->
+                <!--<span>我的推广链接</span><p id="longlink">{$url2}</p>-->
+                <!--<a href="javascript:void(0);" class="copy" data-clipboard-action="copy" data-clipboard-target="#longlink">点击复制</a>-->
+                <!--&lt;!&ndash;<a href="javascript:void(0);" class="copy" data-clipboard-action="copy" data-clipboard-target="#shortlink">复制短链(不推荐)</a>&ndash;&gt;-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+    <div class="min-center">
+        <!--<div class="title">下载地址（先下载后注册）<span style="color: red;">主要用这种方式推广APP，适合所有推广渠道</span></div>-->
+        <div class="title">下载地址</div>
+        <div class="yxzx01">
+            <div class="yxzx01_left">
+                <span>我的APP二维码</span>
+                <div class="img-code" id="code_pic_2">
+                    <!--<canvas width="135" height="135"></canvas>-->
+                </div>
+                <!--<a href="javascript:void(0);" class="download_code" index_v="1" download="img.png">下载二维码</a>-->
+            </div>
+            <div class="yxzx01_right yxzx01_left_duan">
+                <if condition="$url2_short"><!--新添加短链接--><span>我的推广短链接</span><p id="shortlink">{$url2_short}</p></if>
+                <span>我的推广链接</span><p id="longlink">{$url2}</p>
+                <a href="javascript:void(0);" class="copy" data-clipboard-action="copy" data-clipboard-target="#longlink">点击复制</a>
+                <if condition="$url2_short"><a href="javascript:void(0);" class="copy" data-clipboard-action="copy" data-clipboard-target="#shortlink">复制短链(不推荐)</a></if>
+                <a href="{:U('admin/Apptg/trust_develop')}" target="_blank" class="copy">如何信任开发者</a>
+            </div>
+        </div>
+    </div>
+  <!--<div class="min-center">
+        <div class="title">APP推广地址（先注册后下载）<span style="color: red;">备选推广方式，在上面推广方式出问题的情况下选择</span></div>
+        <div class="yxzx01">
+            <div class="yxzx01_left">
+                <span>注册链接二维码</span>
+                <div class="img-code" id="code_pic_1">
+                    <canvas width="135" height="135"></canvas>
+                    <img src="" alt="" width="135" height="135">
+                </div>
+                <a href="javascript:void(0);" class="download_code" index_v="2" download="img.png">下载二维码</a>
+            </div>
+            <div class="yxzx01_right yxzx01_left_duan">
+                <if condition="$url1_short"><!--新添加短链接<span>我的推广短链接</span><p id="shortlink2">{$url1_short}</p></if>
+                <span>我的推广链接</span><p id="longlink2">{$url1}</p>
+                <a href="javascript:void(0);" class="copy" data-clipboard-action="copy" data-clipboard-target="#longlink2">点击复制</a>
+                <if condition="$url1_short"><a href="javascript:void(0);" class="copy" data-clipboard-action="copy" data-clipboard-target="#shortlink2">复制短链(不推荐))</a></if>
+                <a href="{:U('admin/Apptg/trust_develop')}" target="_blank" class="copy">如何信任开发者</a>
+            </div>
+        </div>
+    </div>-->
+    <!--<div class="min-center">-->
+        <!--<div class="title">webAPP地址 <span style="color: red;">备选推广方式，在上面推广方式出问题的情况下选择</span></div>-->
+        <!--<div class="yxzx01">-->
+            <!--<div class="yxzx01_left">-->
+                <!--<span>webAPP二维码</span>-->
+                <!--<div class="img-code" id="code_pic_3"></div>-->
+            <!--</div>-->
+            <!--<div class="yxzx01_right yxzx01_left_duan">-->
+                <!--<if condition="$url1_short">&lt;!&ndash;新添加短链接&ndash;&gt;<span>我的推广短链接</span><p id="shortlink3">{$url3_short}</p></if>-->
+                <!--<span>我的推广链接</span><p id="longlink3">{$url3}</p>-->
+                <!--<a href="javascript:void(0);" class="copy" data-clipboard-action="copy" data-clipboard-target="#longlink3">点击复制</a>-->
+                <!--<if condition="$url1_short"><a href="javascript:void(0);" class="copy" data-clipboard-action="copy" data-clipboard-target="#shortlink3">复制短链(不推荐))</a></if>-->
+                <!--&lt;!&ndash;<a href="{:U('admin/Apptg/trust_develop')}" target="_blank" class="copy">如何信任开发者</a>&ndash;&gt;-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+</div>
+<script src="__PUBLIC__/js/jquery-1.10.2.js"></script>
+<script src="__PUBLIC__/js/clipboard.min.js"></script>
+<script>
+    if(Clipboard.isSupported()){
+        var clipboard = new Clipboard('.copy');
+        clipboard.on('success', function(e) {
+//            alert('复制成功');
+            e.clearSelection();
+//            clipboard.destroy();
+        });
+        clipboard.on('error', function(e) {
+//            clipboard.destroy();
+        });
+    } else {
+        alert('请更新你的浏览器或使用Chrome浏览器进行复制');
+    }
+    getCodeAjax('code_pic_1', '{$url1}');
+    getCodeAjax('code_pic_2', '{$url2}');
+    getCodeAjax('code_pic_3', '{$url3}');
+    function getCodeAjax(id, url) {
+        //步骤一:创建异步对象
+        var ajax = new XMLHttpRequest();
+        ajax.open('get','/index.php?g=api&m=qrcode&a=qrcode&url='+url);
+        ajax.responseType = 'blob';
+        ajax.send();
+        ajax.onreadystatechange = function () {
+            if (ajax.readyState==4 && ajax.status==200) {
+                var blob = this.response;
+                var img = document.createElement("img");
+                img.width = 135;
+                img.height = 135;
+                img.onload = function(e) {
+                    window.URL.revokeObjectURL(img.src);
+                };
+                img.src = window.URL.createObjectURL(blob);
+                if($){
+                    $('#'+id).html(img);
+                } else {
+                    document.getElementById(id).innerHTML = '';
+                    document.getElementById(id).appendChild(img);
+                }
+            }
+        };
+    }
+</script>
+</body>
+</html>

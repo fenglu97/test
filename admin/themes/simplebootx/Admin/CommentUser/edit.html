@@ -1,0 +1,148 @@
+<admintpl file="header"/>
+
+
+</head>
+<body>
+	<div class="wrap js-check-wrap">
+		<ul class="nav nav-tabs">
+			<li><a href="{:U('CommentUser/index')}">所有灌水用户</a></li>
+			<li class="active"><a href="javascript:void(0);">修改灌水用户</a></li>
+		</ul>
+		<form action="" method="post" class="form-horizontal js-ajax-forms" enctype="multipart/form-data">
+			<div class="row-fluid">
+				<div class="span9">
+					<table class="table table-bordered">
+                        
+                      <tr>
+							<th>用户名</th>
+							<td>
+								<input type="text" style="width: 200px;" required name="username" value="{$info.username}" placeholder="请输入用户名"/>
+								<span class="form-required">*</span>
+							</td>
+						</tr>
+                        <tr>
+                       <th>VIP</th>
+                            <td>
+
+                                <label class="radio"><input type="radio" name="is_vip" <if condition="$info['is_vip'] eq 1">checked</if>  value="1">是</label>
+
+                                <label class="radio"><input type="radio" name="is_vip" value="0" <if condition="$info['is_vip'] eq 0">checked</if> >不是</label>
+
+                            </td>
+
+                        </tr>
+			
+					</table>
+				</div>
+				<div class="span3">
+					<table class="table table-bordered icon_url" >
+						<tr>
+							<th>头像</th>
+						</tr>
+						<tr>
+							<td>
+								<div style="text-align: center;">
+									<input type="hidden" name="icon_url" id="thumb" value="<php> echo str_replace('http://www.sy218.com/assets/pic/','',$info['icon_url']); </php>">
+									<a href="javascript:upload_one_image('图片上传','#thumb');">
+										<img src="<if condition="$info['icon_url']">{$info['icon_url']}<else />__TMPL__Public/assets/images/default-thumbnail.png</if>" id="thumb-preview" width="135" style="cursor: hand" />
+									</a>
+									<input type="button" class="btn btn-small" onclick="$('#thumb-preview').attr('src','__TMPL__Public/assets/images/default-thumbnail.png');$('#thumb').val('');return false;" value="取消图片">
+							
+									</div>
+							</td>
+						</tr>
+						
+
+					</table>
+					<input type="hidden" name="id" value="{$info.id}">
+				</div>
+			</div>
+			<div class="form-actions">
+				<button class="btn btn-primary js-ajax-submit" type="submit">{:L("EDIT")}</button>
+				<a class="btn" href="javascript:history.back(-1);">{:L('BACK')}</a>
+			</div>
+		</form>
+	</div>
+<script src="__PUBLIC__/js/jquery19.js"></script>
+<script src="__PUBLIC__/js/switch/bootstrap.min.js"></script>
+<script src="__PUBLIC__/js/switch/bootstrap-switch.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script src="__PUBLIC__/js/common.js"></script>
+<script type="text/javascript">
+
+			Wind.use('validate', 'ajaxForm', 'artDialog', function() {
+				//javascript
+
+				//编辑器
+				editorcontent = new baidu.editor.ui.Editor();
+				editorcontent.render('content');
+				try {
+					editorcontent.sync();
+				} catch (err) {
+				}
+				//增加编辑器验证规则
+				jQuery.validator.addMethod('editorcontent', function() {
+					try {
+						editorcontent.sync();
+					} catch (err) {
+					}
+					return editorcontent.hasContents();
+				});
+				var form = $('form.js-ajax-forms');
+				//ie处理placeholder提交问题
+				if ($.browser && $.browser.msie) {
+					form.find('[placeholder]').each(function() {
+						var input = $(this);
+						if (input.val() == input.attr('placeholder')) {
+							input.val('');
+						}
+					});
+				}
+
+				var formloading = false;
+				//表单验证开始
+				form.validate({
+					//是否在获取焦点时验证
+					onfocusout : false,
+					//是否在敲击键盘时验证
+					onkeyup : false,
+					//当鼠标掉级时验证
+					onclick : false,
+					//验证错误
+					showErrors : function(errorMap, errorArr) {
+						//errorMap {'name':'错误信息'}
+						//errorArr [{'message':'错误信息',element:({})}]
+						try {
+							$(errorArr[0].element).focus();
+							art.dialog({
+								id : 'error',
+								icon : 'error',
+								lock : true,
+								fixed : true,
+								background : "#CCCCCC",
+								opacity : 0,
+								content : errorArr[0].message,
+								cancelVal : '确定',
+								cancel : function() {
+									$(errorArr[0].element).focus();
+								}
+							});
+						} catch (err) {
+						}
+					},
+	            //验证规则
+	            rules: {'username':{required:1}},
+	            //验证未通过提示消息
+	            messages: {'username':{required:'请输入用户名'}},
+	            //给未通过验证的元素加效果,闪烁等
+	            highlight: false,
+	            //是否在获取焦点时验证
+	            onfocusout: false,
+	        });
+
+	    });
+
+  </script>
+
+</body>
+</html>

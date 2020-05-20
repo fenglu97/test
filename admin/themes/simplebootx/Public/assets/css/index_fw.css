@@ -1,0 +1,167 @@
+ul, ol {list-style: none;}
+#hint{
+    margin: 0;
+    padding: 0;
+    position: fixed;
+    top: 85px;
+    right: 20px;
+    z-index: 1000;
+    width: 400px;
+    border: 1px solid #009f95;
+    background-color: #fff;
+    font-weight: normal;
+}
+.list_title{
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    height: 40px;
+    line-height: 40px;
+    font-size: 18px;
+    color: #fff;
+    background-color: #009f95;
+}
+/*提示框内容*/
+.hint_cont{
+    color: #FF0033;
+    font-size: 16px;
+    line-height: 26px;
+    margin: 0;
+    padding: 10px 16px;
+}
+#monthList{
+    position: fixed;
+    top: 240px;
+    right: 20px;
+    z-index: 999;
+    background-color: #fff;
+    width: 220px;
+    text-align: center;
+    color: black;
+    border: 1px solid #009f95;
+}
+.list_title{
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    height: 40px;
+    line-height: 40px;
+    font-size: 18px;
+    color: #fff;
+    background-color: #009f95;
+}
+#monthList .s_tr{
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+}
+#monthList .s_tr .s_th{
+    display: block;
+    width: 50%;
+    float: left;
+    text-align: center;
+    font-weight: normal;
+    overflow: hidden;
+}
+#monthList .s_tr .s_td{
+    display: block;
+    width: 50%;
+    float: left;
+    text-align: center;
+    overflow: hidden;
+}
+#monthList .s_my{
+    color: #ff0033;
+    position: relative;
+}
+#monthList .s_my .s_my_{
+    position: absolute;
+    left: 5px;
+}
+#monthList .s_tr:nth-child(even){
+    background: #ecf0f1;
+}
+.btn_hide{
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background: url("../images/x_16.png") no-repeat;
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    z-index: 9999;
+}
+.btn_hide:hover{
+    background: url("../images/x_16_fff.png") no-repeat;
+}
+.btn_newdata{
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background: url("../images/xiaoxiguanli_shuaxin.png") no-repeat;
+    background-size: contain;
+    position: absolute;
+    left: 5px;
+    top: 5px;
+    z-index: 9999;
+    /*animation: popupRotate .5s infinite, move .5s linear normal;*/
+}
+@-webkit-keyframes popupRotate{
+    0%{ background: url("../images/a.png") no-repeat; background-size: 100% 100%;}
+    9%{ background: url("../images/b.png") no-repeat; background-size: 100% 100%;}
+    18%{ background: url("../images/c.png") no-repeat; background-size: 100% 100%;}
+    27%{ background: url("../images/d.png") no-repeat; background-size: 100% 100%;}
+    36%{ background: url("../images/e.png") no-repeat; background-size: 100% 100%;}
+    45%{ background: url("../images/f.png") no-repeat; background-size: 100% 100%;}
+    54%{ background: url("../images/g.png") no-repeat; background-size: 100% 100%;}
+    63%{ background: url("../images/h.png") no-repeat; background-size: 100% 100%;}
+    72%{ background: url("../images/i.png") no-repeat; background-size: 100% 100%;}
+    81%{ background: url("../images/j.png") no-repeat; background-size: 100% 100%;}
+    90%{ background: url("../images/k.png") no-repeat; background-size: 100% 100%;}
+    100%{ background: url("../images/l.png") no-repeat; background-size: 100% 100%;}
+}
+@-moz-keyframes popupRotate{
+    0%{ background: url("../images/a.png") no-repeat; background-size: 100% 100%;}
+    9%{ background: url("../images/b.png") no-repeat; background-size: 100% 100%;}
+    18%{ background: url("../images/c.png") no-repeat; background-size: 100% 100%;}
+    27%{ background: url("../images/d.png") no-repeat; background-size: 100% 100%;}
+    36%{ background: url("../images/e.png") no-repeat; background-size: 100% 100%;}
+    45%{ background: url("../images/f.png") no-repeat; background-size: 100% 100%;}
+    54%{ background: url("../images/g.png") no-repeat; background-size: 100% 100%;}
+    63%{ background: url("../images/h.png") no-repeat; background-size: 100% 100%;}
+    72%{ background: url("../images/i.png") no-repeat; background-size: 100% 100%;}
+    81%{ background: url("../images/j.png") no-repeat; background-size: 100% 100%;}
+    90%{ background: url("../images/k.png") no-repeat; background-size: 100% 100%;}
+    100%{ background: url("../images/l.png") no-repeat; background-size: 100% 100%;}
+}
+@keyframes popupRotate{
+    0%{ background: url("../images/a.png") no-repeat; background-size: 100% 100%;}
+    9%{ background: url("../images/b.png") no-repeat; background-size: 100% 100%;}
+    18%{ background: url("../images/c.png") no-repeat; background-size: 100% 100%;}
+    27%{ background: url("../images/d.png") no-repeat; background-size: 100% 100%;}
+    36%{ background: url("../images/e.png") no-repeat; background-size: 100% 100%;}
+    45%{ background: url("../images/f.png") no-repeat; background-size: 100% 100%;}
+    54%{ background: url("../images/g.png") no-repeat; background-size: 100% 100%;}
+    63%{ background: url("../images/h.png") no-repeat; background-size: 100% 100%;}
+    72%{ background: url("../images/i.png") no-repeat; background-size: 100% 100%;}
+    81%{ background: url("../images/j.png") no-repeat; background-size: 100% 100%;}
+    90%{ background: url("../images/k.png") no-repeat; background-size: 100% 100%;}
+    100%{ background: url("../images/l.png") no-repeat; background-size: 100% 100%;}
+}
+
+.btn_popup{
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background: url("../images/ask.png") no-repeat;
+    background-size: contain;
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+    z-index: 9999;
+}
+
+#rule>div{
+    width: 50%;
+    float: left;
+}

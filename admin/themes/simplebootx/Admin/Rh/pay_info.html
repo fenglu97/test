@@ -1,0 +1,108 @@
+<admintpl file="header" />
+<style type="text/css" media="all">
+    /* fix rtl for demo */
+    .chosen-rtl .chosen-drop { left: -9000px; }
+    th{width:50px;}
+</style>
+</head>
+
+<body>
+
+<div class="wrap js-check-wrap">
+
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="javascript:;">订单详情</a></li>
+    </ul>
+
+    <table class="table table-hover table-bordered table-list">
+
+        <tr>
+            <td style="width:15%;">订单号</td><td>{$data['orderID']}</td>
+        </tr>
+        <tr>
+            <td>渠道订单号</td><td>{$data['channelOrderID']}</td>
+        </tr>
+        <tr>
+            <td>用户ID</td><td>{$data['userID']}</td>
+        </tr>
+        <tr>
+            <td>游戏</td><td>{$data['appName']}</td>
+        </tr>
+        <tr>
+            <td>区服ID</td><td>{$data['serverID']}</td>
+        </tr>
+        <tr>
+            <td>区服名</td><td>{$data['serverName']}</td>
+        </tr>
+        <tr>
+            <td>角色ID</td><td>{$data['roleID']}</td>
+        </tr>
+        <tr>
+            <td>角色名</td><td>{$data['roleName']}</td>
+        </tr>
+        <tr>
+            <td>商品ID</td><td>{$data['productID']}</td>
+        </tr>
+        <tr>
+            <td>商品名</td><td>{$data['productName']}</td>
+        </tr>
+        <tr>
+            <td>请求地址</td><td><php>echo htmlspecialchars($data['callParams']);</php></td>
+        </tr>
+        <tr>
+            <td>返回参数</td><td><php>echo htmlspecialchars($data['backFromGame']);</php></td>
+        </tr>
+
+    </table>
+
+
+
+
+    <div class="form-actions">
+        <a class="btn" href="javascript:history.back(-1);">{:L('BACK')}</a>
+    </div>
+
+</div>
+
+<script src="__ROOT__/public/js/common.js?"></script>
+
+<script>
+
+
+    setCookie('refersh_time', 0);
+
+    function refersh_window() {
+
+        var refersh_time = getCookie('refersh_time');
+
+        if (refersh_time == 1) {
+
+            window.location.reload();
+
+        }
+
+    }
+
+    setInterval(function() {
+
+        refersh_window()
+
+    }, 3000);
+
+    $(function() {
+
+        $("#selected_cid").change(function() {
+
+            $("#cid_form").submit();
+
+        });
+
+    });
+
+
+
+</script>
+
+</body>
+
+</html>

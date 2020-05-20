@@ -1,0 +1,83 @@
+<admintpl file="header" />
+
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="javascript:void(0);">交易账号列表</a></li>
+    </ul>
+    <form class="well form-search" method="post" action="{:U('index')}">
+        <div class="search_type cc mb10">
+            <div class="mb10">
+					<span class="mr20">
+						用户名：
+						<input type="text" name="username" id="username" value="{$username}" style="width:100px;" />&nbsp;&nbsp;
+						手机号：
+                        <input type="text" name="mobile" id="mobile" value="{$mobile}" style="width:120px;" />&nbsp;&nbsp;
+                        小号ID：
+                        <input type="text" name="account" id="account" value="{$account}" style="width:120px;" />&nbsp;&nbsp;
+                        时间：
+   <input type="text" name="start_time" id="start_time" value="{$start_time}" class="input length_3 js-date" size="11" style="width:180px;"> 至
+   <input type="text" name="end_time" id="end_time" value="{$end_time}" size="11" class="input length_3 js-date" style="width:180px;">&nbsp;&nbsp;
+				<input type="submit" class="btn btn-primary" value="搜索" />
+					</span>
+            </div>
+        </div>
+    </form>
+    <table class="table table-hover table-bordered table-list" id="menus-table">
+        <thead>
+
+        <tr>
+            <th width="6%">用户名</th>
+            <th width="6%">小号ID</th>
+            <th width="6%">手机号</th>
+            <th width="8%">支付宝账号</th>
+            <th width="8%">注册IP</th>
+            <th width="4%">系统</th>
+            <th width="6%">厂商</th>
+            <th width="6%">手机型号</th>
+            <th width="8%">设备号</th>
+            <th width="8%">系统版本</th>
+            <th width="8%">上次登陆时间</th>
+            <th width="8%">创建时间</th>
+            <th width="10%">操作</th>
+        </tr>
+
+        </thead>
+        <tbody>
+
+        <foreach name="list" item="vo">
+            <tr>
+                <td>{$vo.username}</td>
+                <td>{$vo.app_uid}</td>
+                <td>{:showInfo($vo['mobile'],'mobile')} </td>
+                <td><if condition="$vo['alipay_account']">{:showInfo($vo['alipay_account'],'mobile')}</if></td>
+                <td>{:long2ip($vo['regip'])}</td>
+                <td><if condition="$vo['system'] eq 1">安卓<else />苹果</if></td>
+                <td>{$vo.maker}</td>
+                <td>{$vo.mobile_model}</td>
+                <td>{$vo.machine_code}</td>
+                <td>{$vo.system_version}</td>
+                <td><if condition="$vo['last_login_time']">{$vo.last_login_time|date="Y-m-d H:i:s",###}</if></td>
+                <td>{$vo.create_time|date="Y-m-d H:i:s",###}</td>
+
+                <td>
+                    <!--<a href='{:U("sdkuser_list",array("uid"=>$vo["id"]))}'>关联账号</a>|-->
+                    <a href='{:U("products_by_user",array("uid"=>$vo["uid"]))}'>商品列表</a> |
+                    <a href='{:U("order_by_buyer",array("uid"=>$vo["uid"]))}'>买家订单</a> |
+                    <a href='{:U("order_by_seller",array("uid"=>$vo["uid"]))}'>卖家订单</a>
+
+                </td>
+            </tr>
+        </foreach>
+        </tbody>
+
+    </table>
+
+    </form>
+</div>
+
+<div class="pagination">{$page}</div>
+<script src="__PUBLIC__/js/common.js"></script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<admintpl file="header"/>
+
+
+</head>
+<body>
+	<div class="wrap js-check-wrap">
+		<ul class="nav nav-tabs">
+			<li><a href="{:U('index')}">所有评论模板</a></li>
+			<li class="active"><a href="javascript:void(0);">修改评论模板</a></li>
+		</ul>
+		<form action="" method="post" class="form-horizontal js-ajax-forms" enctype="multipart/form-data">
+			<div class="row-fluid">
+				<div class="span9">
+					<table class="table table-bordered">
+                      <tr>
+							<th>评论模板</th>
+							<td>
+								<textarea id="content" name="content" maxlength="200" style="width:300px;height:150px" >{$info.content}
+								</textarea>
+								<span class="form-required">(200字以内)*</span>
+							</td>
+						</tr>
+					</table>
+					<input type="hidden" name="id" value="{$info.id}" />
+				</div>
+			</div>
+			<div class="form-actions">
+				<button class="btn btn-primary js-ajax-submit" type="submit">{:L("EDIT")}</button>
+				<a class="btn" href="javascript:history.back(-1);">{:L('BACK')}</a>
+			</div>
+		</form>
+	</div>
+<script src="__PUBLIC__/js/jquery19.js"></script>
+<script src="__PUBLIC__/js/common.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	
+	$('.js-ajax-forms').submit(function(){
+		if($('#content').val().trim() =='')
+		{
+			layer.alert('请输入评论内容');
+			return false;
+		}
+		
+	})
+	
+})
+
+  </script>
+
+</body>
+</html>

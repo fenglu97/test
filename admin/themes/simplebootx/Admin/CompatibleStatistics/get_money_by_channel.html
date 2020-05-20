@@ -1,0 +1,106 @@
+<admintpl file="header" />
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/chosen.css">
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/docsupport/prism.css">
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="javascript:;">充值报表-渠道</a></li>
+    </ul>
+
+    <form class="well form-search" method="post" action="{:U('get_money_by_channel')}">
+        <div class="search_type cc mb10">
+            <div class="mb10">
+					<span class="mr20">
+渠道名称：
+					<select name="cid" id="cid"  class="chosen-select cid" style="width:180px;" tabindex="1">
+                        <option value="">所有渠道</option>
+                        {:get_channel_list(I('request.cid'))}
+                    </select>&nbsp;&nbsp;
+						游戏名称：
+  <select name="appid" id="appid" class="chosen-select appid" style="width:180px;" tabindex="1">
+      <option value="">所有游戏</option>
+      {:get_game_list(I('request.appid'),1,'all')}
+  </select>
+
+                    					时间：
+
+   <input type="text" name="start_time" id="start_time" value="{$start_time}" class="input length_3 js-date" size="11" style="width:180px;" max="{$max}"> 至
+   <input type="text" name="end_time" id="end_time" value="{$end_time}" size="11" class="input length_3 js-date" style="width:180px;" max="{$max}">
+						<input type="submit" class="btn btn-primary" value="搜索" />
+                        <input type="button" class="btn btn-primary export" value="导出" />
+					</span>
+            </div>
+        </div>
+    </form>
+    <table class="table table-hover table-bordered table-list">
+        <thead>
+        <tr>
+            <th>渠道名称</th>
+            <th>渠道ID</th>
+            <th>订单金额（元）</th>
+			<th>订单金额（不包含平台币）</th>
+            <th>实付金额（元）</th>
+            <th>平台币（元）</th>
+            <th>充值笔数</th>
+        </tr>
+        <tr>
+            <th colspan="2" style="text-align: center;">合计</th>
+            <th>{:sprintf("%.2f",$heji['money'])}</th>
+		    <th>{:sprintf("%.2f",$heji['money']-$heji['platform_money'])}</th>
+            <th>{:sprintf("%.2f",$heji['getmoney'])}</th>
+            <th>{$heji['platform_money']}</th>
+            <th>{$heji['count']}</th>
+        </tr>
+        </thead>
+
+        <foreach name="list" item="vo">
+
+            <tr>
+                <td>{$vo['name']}</td>
+                <td>{$vo['id']}</td>
+                <td>{:sprintf("%.2f",$vo['money'])}</td>
+				<td>{:sprintf("%.2f",$vo['money_currency'])}</td>
+                <td>{$vo['getmoney']}</td>
+                <td>{$vo['platform_money']}</td>
+                <td>{$vo['count']}</td>
+            </tr>
+        </foreach>
+
+    </table>
+
+</div>
+<script src="__ROOT__/public/js/common.js?"></script>
+<script src="__PUBLIC__/js/chosen/chosen.jquery.js" type="text/javascript"></script>
+<script src="__PUBLIC__/js/chosen/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    var config = {
+        '.chosen-select'           : {},
+        '.chosen-select-deselect'  : {allow_single_deselect:true},
+        '.chosen-select-no-single' : {disable_search_threshold:10},
+        '.chosen-select-no-results': {no_results_text:'没有匹配的结果'},
+        '.chosen-select-width'     : {width:"95%"}
+    }
+    for (var selector in config) {
+        $(selector).chosen(config[selector]);
+    }
+    //$("#select_1").val('{$game_id}');
+    //$("#select_1").trigger("chosen:updated");
+
+</script>
+<script>
+    $('.export').click(function(){
+
+        var start_time = $('input[name="start_time"]').val();
+        var end_time = $('input[name="end_time"]').val();
+        var access_type= $('#access_type').val();
+        var url =$('.form-search').attr('action');
+        var appid = $('#appid').val();
+        var cid = $('#cid').val();
+        location.href=url+'&start_time='+start_time+'&end_time='+end_time+'&access_type='+access_type+'&action=2&appid='+appid+'&cid='+cid;
+    })
+</script>
+
+</body>
+
+</html>

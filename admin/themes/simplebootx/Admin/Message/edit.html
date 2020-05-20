@@ -1,0 +1,193 @@
+<admintpl file="header"/>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:U('index')}">玩家邮件</a></li>
+        <li class="active"><a href="javascript:void(0);">修改玩家邮件</a></li>
+    </ul>
+    <form class="form-horizontal js-ajax-forms" action="" method="post">
+        <fieldset>
+            <div class="control-group">
+                <label class="control-label">标题<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <input type="text" style="width:200px" maxlength="200" name="title" value="{$info.title}" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">指定用户<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <input type="text" style="width:300px" maxlength="200" name="usernames" value="{$usernames}" />（空为全部用户，多个用户用英文,分隔）
+                </div>
+            </div>
+
+
+            <div class="control-group">
+                <label class="control-label">类型</label>
+                <div class="controls">
+                    <select name="action"  id="action" style="width:150px;" tabindex="1">
+                        <option value="1" <if condition="$info['action'] eq 1">selected</if>>文本</option>
+                        <option value="2" <if condition="$info['action'] eq 2">selected</if>>附件</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="control-group" <if condition="$info['action'] eq 1"> style="display:none;"</if> id="attach_type">
+                <label class="control-label">附件类型</label>
+                <div class="controls">
+                    <select name="attach_type"  style="width:150px;" tabindex="1">
+                        <option value="1" <if condition="$info['attach_type'] eq 1">selected</if>>平台币</option>
+                        <option value="2" <if condition="$info['attach_type'] eq 2">selected</if>>金币</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="control-group" <if condition="$info['action'] eq 1"> style="display:none;"</if>  id="attach_count">
+                <label class="control-label">附件数量</label>
+                <div class="controls">
+                    <input type="text" style="width:100px" maxlength="1000" name="attach_count" value="{$info.attach_count}" />（最大数量为{$attach_top}）
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">过期时间<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <input type="text" class="js-datetime date" style="width:200px" maxlength="1000" name="end_time" value="{$info.end_time|date='Y-m-d H:i',###}" />
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">消息内容<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <textarea name="desc"  rows="2" cols="20" maxlength="800" style="height: 100px; width: 40%;">{$info.desc}</textarea>
+                </div>
+            </div>
+
+
+        </fieldset>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary js-ajax-submit">提交</button>
+            <a class="btn" href="javascript:history.back(-1);">{:L('BACK')}</a>
+        </div>
+<input type="hidden" name="id" value="{$id}" />
+    </form>
+</div>
+<script src="__PUBLIC__/js/jquery19.js"></script>
+<script src="__PUBLIC__/js/common.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script type="text/javascript">
+
+    $(function(){
+        $('#action').change(function(){
+            if($(this).val() == 2)
+            {
+                $('#attach_type').show();
+                $('#attach_count').show();
+            }
+            else
+            {
+                $('#attach_type').hide();
+                $('#attach_count').hide();
+            }
+
+
+        });
+
+        Wind.use('validate', 'ajaxForm', 'artDialog', function () {
+            var form = $('form.js-ajax-forms');
+            //表单验证开始
+            form.validate({
+                //是否在获取焦点时验证
+                onfocusout: false,
+                //是否在敲击键盘时验证
+                onkeyup: false,
+                //当鼠标掉级时验证
+                onclick: false,
+                //验证错误
+                showErrors: function (errorMap, errorArr) {
+                    //errorMap {'name':'错误信息'}
+                    //errorArr [{'message':'错误信息',element:({})}]
+                    try {
+                        $(errorArr[0].element).focus();
+                        art.dialog({
+                            id: 'error',
+                            icon: 'error',
+                            lock: true,
+                            fixed: true,
+                            background: "#CCCCCC",
+                            opacity: 0,
+                            content: errorArr[0].message,
+                            cancelVal: '确定',
+                            cancel: function () {
+                                $(errorArr[0].element).focus();
+                            }
+                        });
+                    } catch (err) {
+
+                    }
+                },
+                //验证规则
+                rules: {
+                    'title': {required: true},
+                    'desc':{required: true},
+                    'end_time':{required: true},
+                },
+                //验证未通过提示消息
+                messages: {
+                    'title': {required: '请输入标题'},
+                    'desc': {required: '请输入内容'},
+                    'end_time': {required: '请输入过期时间'},
+                },
+                //给未通过验证的元素加效果,闪烁等
+                highlight: false,
+                //是否在获取焦点时验证
+                onfocusout: false,
+                //验证通过，提交表单
+                submitHandler: function (forms) {
+                    $(forms).ajaxSubmit({
+                        url: form.attr('action'), //按钮上是否自定义提交地址(多按钮情况)
+                        dataType: 'json',
+                        beforeSubmit: function (arr, $form, options) {
+
+                        },
+                        success: function (data, statusText, xhr, $form) {
+                            if (data.status) {
+                                setCookie("refersh_time", 1);
+                                //添加成功
+                                Wind.use("artDialog", function () {
+                                    art.dialog({
+                                        id: "succeed",
+                                        icon: "succeed",
+                                        fixed: true,
+                                        lock: true,
+                                        background: "#CCCCCC",
+                                        opacity: 0,
+                                        content: data.info,
+                                        button: [{
+                                            name: '继续修改？',
+                                            callback: function () {
+                                                reloadPage(window);
+                                                return true;
+                                            },
+                                            focus: true
+                                        }, {
+                                            name: '返回列表',
+                                            callback: function () {
+                                                location.href = "/index.php?g=admin&m=Message&a=index";
+                                                return true;
+                                            }
+                                        }]
+                                    });
+                                });
+                            } else {
+                                layer.alert(data.info);
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    })
+</script>
+</body>
+</html>

@@ -1388,6 +1388,10 @@ class UserController extends AppframeController
             $this->ajaxReturn(null, '身份证号不合法', 16);
         }
 
+        if (!validateIDCardReal($id_card, $real_name)) {
+            $this->ajaxReturn(null, '身份证号不合法', 16);
+        }
+
         $app_info = M('game')->where(array('status' => 1, 'id' => $appid))->find();
         if (!$app_info) {
             $this->ajaxReturn(null, 'app不存在', 3);
@@ -2468,6 +2472,7 @@ class UserController extends AppframeController
         // 4.2 节假日接口返回数据，code为0 则为非法定节假日
 
         $data = I('request.');
+        $data['uid'] = 734;
         if(empty($data['uid'])) {
             $this->ajaxReturn(null,'参数错误',0);
         }
@@ -2488,6 +2493,7 @@ class UserController extends AppframeController
             ->find();
         // 获取该用户年龄
         $age = getAgeByIdcard($playerInfo['id_card']);
+        \Think\Log::write(var_export($age,true));
 
         if($age >= 18) {
             $this->ajaxReturn(null,'成年用户',1);

@@ -1,0 +1,232 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>绑定信息</title>
+    <link rel="stylesheet" href="__TMPL__Public/assets/css/reset.css"/>
+    <link rel="stylesheet" href="__TMPL__Public/assets/css/new_public.css"/>
+</head>
+<body>
+<div class="wrap">
+    <div class="toast is-placemiddle" style="padding: 10px; display: none;">
+        <span class="toast-text" style="padding-top: 0;">提示信息</span>
+    </div>
+    <div class="header">
+        <div class="header-button header-left"></div>
+        <div class="header-title">绑定信息</div>
+        <div class="header-button header-right"></div>
+    </div>
+    <div class="main">
+
+        <div class="form" style="margin-top: 15px">
+            <form>
+                <div class="form-item">
+                    <div class="form-item-content">
+                        <label class="form-item-label">
+                            <i class="icon-user"></i>
+                        </label>
+                        <input class="form-item-input name" type="text" name="username" placeholder="用户名" value="{$data.username}" <if condition="$data['is_visitor'] == 0">readonly</if>>
+                        <!-- <input class="form-item-input" type="text" name="username" placeholder="用户名" value="{$data.username}"> -->
+                        <i class="icon-clear"></i>
+                    </div>
+                </div>
+
+                <div class="form-item">
+                    <div class="form-item-content">
+                        <label class="form-item-label">
+                            <i class="icon-password"></i>
+                        </label>
+                        <input class="form-item-input psd"  name="password" placeholder="密码" value="{$data.password}" <if condition="$data['is_visitor'] == 0">readonly type="password"<else/>type="text"</if>>
+                        <i class="icon-clear"></i>
+                    </div>
+                </div>
+
+                <div class="form-item">
+                    <div class="form-item-content">
+                        <label class="form-item-label">
+                            <i class="icon-card-name"></i>
+                        </label>
+                        <input class="form-item-input" type="text" name="real_name" placeholder="真实名字">
+                        <i class="icon-clear"></i>
+                    </div>
+                </div>
+
+                <div class="form-item">
+                    <div class="form-item-content">
+                        <label class="form-item-label">
+                            <i class="icon-card"></i>
+                        </label>
+                        <input class="form-item-input" type="text" name="id_card" placeholder="身份证号码">
+                        <input class="form-item-input" type="hidden" name="uid" value="{$data.id}">
+                        <i class="icon-clear"></i>
+                    </div>
+                </div>
+                <div class="wxts" style="border: none;margin: -15px 0 10px">
+                    <p><span>温馨提示：</span>根据相关规定，需要填写实名认证信息。</p>
+                </div>
+                <div class="form-item">
+
+                    <button class="button button-primary is-round submit" type="button">提交</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+<script charset="utf-8" type="text/javascript" defer="defer">
+    document.write('<script src="__PUBLIC__/js/jquery.js?v='+(new Date()).getTime()+'"><\/script>');
+</script>
+<script charset="utf-8" type="text/javascript" defer="defer">
+    document.write('<script src="__PUBLIC__/js/md5.js?v='+(new Date()).getTime()+'"><\/script>');
+</script>
+<script charset="utf-8" type="text/javascript" defer="defer">
+    document.write('<script src="__PUBLIC__/js/layer/layer.js?v='+(new Date()).getTime()+'"><\/script>');
+</script>
+<script charset="utf-8" type="text/javascript" defer="defer">
+    document.write('<script src="__TMPL__Public/assets/js/base64.js?v='+(new Date()).getTime()+'"><\/script>');
+</script>
+<script charset="utf-8" type="text/javascript">
+    document.write('<script src="__TMPL__Public/assets/js/osvalue.js?v='+(new Date()).getTime()+'"><\/script>');
+</script>
+<script>
+    $(function () {
+        function toast(msg){
+            msg = msg || '提示';
+            $('.toast').children('.toast-text').html(msg);
+            $('.toast').fadeIn();
+            var toastTimer =  setTimeout(function () {
+                $('.toast').fadeOut();
+                clearTimeout(toastTimer);
+            }, 2000);
+        }
+
+        $('.name').on('blur',function() {
+            var username = this.value
+            var rep = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,12}$/;
+            if(!rep.test(username)) {
+                layer.msg('用户名由6-12位字母或字母+数字组成');
+            }
+        })
+
+        $('.psd').on('blur',function() {
+            var password = this.value
+            var rep = /^[0-9a-zA-Z]{6,12}$/;
+            if(!rep.test(password)) {
+                layer.msg('密码应该由6-12位数字或字母组成');
+            }
+        })
+
+        $('.submit').on('click', function () {
+            var cardname = $('input[name="real_name"]').val();
+            var card = $('input[name="id_card"]').val();
+            var username = $('input[name="username"]').val();
+            var password = $('input[name="password"]').val();
+            var uid = $('input[name="uid"]').val();
+            var radioState = $('.icon-radio').hasClass('icon-radio-checked');
+            var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/; // 身份证号码正则表达式  15位或者18位，15位为全数字，18位前17位为数字，最后一位可能是数字或字符X
+            var regName = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,12}$/;
+            var regPsd = /^[0-9a-zA-Z]{6,12}$/;
+
+            if(!cardname){
+                toast('真是姓名不能为空');
+                return
+            }
+
+            if(!card){
+                toast('身份证号码不能为空');
+                return
+            }
+
+            if(!reg.test(card)) {
+                toast('身份证号码不合法');
+                return;
+            }
+
+            if(!username){
+                toast('用户名不能为空');
+                return
+            }
+            if(!password){
+                toast('密码不能为空');
+                return
+            }
+            if(!regName.test(username)) {
+                layer.msg('用户名由6-12位字母或字母+数字组成');
+            }
+            if(!regPsd.test(password)) {
+                layer.msg('密码应该由6-12位数字或字母组成');
+            }
+            submitForm({
+                uid: uid,
+                username: username,
+                password: password,
+                real_name: cardname,
+                id_card: card,
+            });
+        });
+
+        var submitFormFlag = true;
+
+        // 实名验证信息 提交
+        function submitForm(vals) {
+            if(!submitFormFlag){
+                return
+            }
+            submitFormFlag = false;
+            var options = {
+                uid: vals.uid,
+                username: vals.username,
+                password: vals.password,
+                real_name: vals.real_name,
+                id_card: vals.id_card,
+            };
+
+            $.ajax({
+                // url: Api.config.host + '/index.php?g=api&m=h5sdk&a=visitor_info',
+                url: '',
+                type: 'post',
+                data: options,
+                success: function (res) {
+                    if(res.status === 1){
+                        var data = res.data;
+                        Api.util.cookie.set('185_account_username', JSON.stringify({
+                            username: data.username,
+                            password: data.password
+                        }));
+                        Api.util.iosCookie.set('185_account_username', JSON.stringify({
+                            username: data.username,
+                            password: data.password
+                        }));
+                        if (Api.config.system===1){
+                            window.Android.setAccount("mowanshouyou",data.username,'',data.password);
+                        }
+                        else if (Api.config.system===2){
+                            Api.util.iosCookie.set('userInfo', JSON.stringify({
+                                account: data.username,
+                                mobile:"",
+                                password: data.password
+                            }));
+                        }
+                        layer.msg('绑定成功，请重新登陆',{time:2000},function(){
+                            location.href = '/api/H5sdk/login_account.html';
+                        })
+                    } else{
+                        toast(res.msg);
+                    }
+                    submitFormFlag = true;
+                },
+                error: function (err) {
+                    submitFormFlag = true;
+                    console.log(err);
+                }
+            })
+        }
+    })
+</script>
+
+</body>
+</html>
+

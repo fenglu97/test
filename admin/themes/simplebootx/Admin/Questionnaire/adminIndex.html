@@ -1,0 +1,95 @@
+<admintpl file="header" />
+<link rel="stylesheet" href="__PUBLIC__/js/switch/bootstrap-switch.css">
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="javascript:void(0);">问卷列表</a></li>
+        <li><a href="{:U('add')}">新增问卷</a></li>
+    </ul>
+    <form class="well form-search" method="post" action="">
+        问卷标题:
+        <input type="text" name="title" style="width: 200px;" value="{$title}" placeholder="">
+        <input type="submit" class="btn btn-primary" value="搜索" />
+    </form>
+    <form class="js-ajax-form" method="post">
+        <!--<div class="table-actions">-->
+            <!--<button class="btn btn-danger btn-small js-ajax-submit" type="submit" data-action="{:U('del')}" data-subcheck="true" data-msg="{:L('DELETE_CONFIRM_MESSAGE')}">批量删除</button>-->
+        <!--</div>-->
+        <table class="table table-hover table-bordered">
+            <thead>
+            <tr>
+                <!--<th width="15"><label><input type="checkbox" class="js-check-all" data-direction="x" data-checklist="js-check-x"></label></th>-->
+                <!--<th width="50">ID</th>-->
+                <th>标题</th>
+                <th>参与人数</th>
+                <th>是否开启</th>
+                <th>开始时间</th>
+                <th>结束时间</th>
+                <th>创建时间</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <foreach name="data" item="vo">
+                <tr>
+                    <!--<td><input type="checkbox" class="js-check" data-yid="js-check-y" data-xid="js-check-x" name="id[]" value="{$vo.id}"></td>-->
+                    <!--<td>{$vo.id}</td>-->
+                    <td>{$vo.title}</td>
+                    <td>{$vo.count}</td>
+                    <td>
+                        <div class="switch change-box"  data-id="{$vo.id}" data-on="success" data-off="danger">
+                            <input class="box"  type="checkbox" <if condition="$vo['open'] eq 1">checked</if> />
+                        </div>
+                    </td>
+                    <td>{$vo.start|date="Y-m-d H:i",###}</td>
+                    <td>{$vo.end|date="Y-m-d H:i",###}</td>
+                    <td>{$vo.create_time|date="Y-m-d H:i",###}</td>
+                    <td>
+                        <a href="{:U('analysis',array('id'=>$vo['id']))}">问卷统计</a>
+                        <a href="{:U('sampleList',array('id'=>$vo['id']))}">样本数据</a>
+                        <a href="javascript:void(0)" data-id="{$vo.id}" class="delete">删除</a>
+                    </td>
+                    <input type="hidden" class="content" value="{$vo.content}" />
+                </tr>
+            </foreach>
+            </tbody>
+        </table>
+        <div class="pagination">{$page}</div>
+    </form>
+</div>
+<script src="__PUBLIC__/js/common.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script src="__PUBLIC__/js/switch/bootstrap.min.js"></script>
+<script src="__PUBLIC__/js/switch/bootstrap-switch.js"></script>
+<script>
+$(function () {
+    $('.change-box').on('switch-change',function(){
+        var val = $(this).find('input').is(':checked'),status,id = $(this).attr('data-id');
+        status = val === false ? 0 : 1;
+        $.post("{:U('changeStatus')}",{id:id,status:status},function(res){
+            if(res.status != 1){
+                layer.alert(res.info);
+                setTimeout('location.href = "index.php?g=admin&m=game&a=index"',1500);
+            }
+        })
+    });
+    $('.delete').click(function () {
+        var id = $(this).data('id');
+        layer.confirm('确认删除吗？', {
+            btn: ['确认','取消'] //按钮
+        }, function(){
+            $.post("{:U('del')}",{id:id},function (res) {
+                if(res.status == 1){
+                    location.reload()
+                }else{
+                    layer.alert(res.info)
+                }
+            })
+        });
+
+    })
+})
+</script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<admintpl file="header" />
+
+<style type="text/css" media="all">
+    /* fix rtl for demo */
+    .chosen-rtl .chosen-drop { left: -9000px; }
+    .desc {
+        background-image: url('/public/js/treeTable/images/toggle-collapse-dark.png');
+        background-position: left center;
+        background-repeat: no-repeat;
+        cursor: pointer;
+        padding: 0;
+        zoom: 1;
+        margin-left: -20px;
+    }
+    .asc {
+        background-image: url('/public/js/treeTable/images/toggle-up-dark.png');
+        background-position: left center;
+        background-repeat: no-repeat;
+        cursor: pointer;
+        padding: 0;
+        zoom: 1;
+        margin-left: -20px;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="wrap js-check-wrap">
+
+    <ul class="nav nav-tabs">
+
+        <li class="active"><a href="javascript:;">管理员评分统计</a></li>
+
+    </ul>
+
+    <form class="well form-search" method="post" action="{:U('statistics')}">
+
+        <div class="search_type cc mb10">
+
+            <div class="mb10">
+
+					<span class="mr20">
+                        管理员:
+                        <input type="text" name="admin_user" value="{$admin_user}">
+                                事件类型:
+        <select name="type" id="type">
+            <option value="">全部</option>
+            <option value="1" <if condition="$type eq 1">selected</if>>渠道工单</option>
+            <option value="2" <if condition="$type eq 2">selected</if>>玩家工单</option>
+        </select>
+                    					时间:
+   <input type="text" name="start_time" id="start_time" value="{$start_time}" class="input length_3 js-date" size="11" style="width:180px;" max="{$max}"> 至
+   <input type="text" name="end_time" id="end_time" value="{$end_time}" size="11" class="input length_3 js-date" style="width:180px;" max="{$max}">
+						<input type="submit" class="btn btn-primary" value="搜索" />
+
+					</span>
+
+
+            </div>
+
+        </div>
+
+    </form>
+    <table class="table table-hover table-bordered table-list">
+
+        <thead>
+
+        <tr>
+
+ <th>管理员</th>
+            <th style="padding-left: 15px;" <if condition="$order eq 10">class="desc"</if> <if condition="$order eq 9">class="asc"</if> value="5">5星</th>
+
+            <th style="padding-left: 15px;" <if condition="$order eq 8">class="desc"</if> <if condition="$order eq 7">class="asc"</if> value="4">4星</th>
+
+            <th style="padding-left: 15px;" <if condition="$order eq 6">class="desc"</if> <if condition="$order eq 5">class="asc"</if> value="3">3星</th>
+            <th style="padding-left: 15px;" <if condition="$order eq 4">class="desc"</if> <if condition="$order eq 3">class="asc"</if> value="2">2星</th>
+            <th style="padding-left: 15px;" <if condition="$order eq 2">class="desc"</if> <if condition="$order eq 1">class="asc"</if> value="1">1星</th>
+        </tr>
+
+        </thead>
+
+        <foreach name="data" key="k" item="vo">
+
+            <tr>
+               <td>{$k}</td>
+               <td>{$vo[5]|default=0}</td>
+               <td>{$vo[4]|default=0}</td>
+               <td>{$vo[3]|default=0}</td>
+               <td>{$vo[2]|default=0}</td>
+               <td>{$vo[1]|default=0}</td>
+            </tr>
+
+        </foreach>
+
+
+
+    </table>
+
+</div>
+
+<script src="__ROOT__/public/js/common.js?"></script>
+
+<script>
+
+
+    setCookie('refersh_time', 0);
+
+    function refersh_window() {
+
+        var refersh_time = getCookie('refersh_time');
+
+        if (refersh_time == 1) {
+
+            window.location.reload();
+
+        }
+
+    }
+
+    setInterval(function() {
+
+        refersh_window()
+
+    }, 3000);
+
+    $('th').click(function(){
+        var value = $(this).attr('value');
+        if(value)
+        {
+            var order = $(this).attr('class');
+            order = order?order:'desc';
+            if(order =='asc')
+            {
+                order = value*2;
+            }
+            else
+            {
+                order = value*2-1;
+            }
+            var url = '{:U('statistics')}';
+            var start_time = $('input[name=start_time]').val();
+            var end_time = $('input[name=end_time]').val();
+            var admin_user = $('input[name=admin_user]').val();
+            var type = $('#type').val();
+
+            location.href= url+'&start_time='+start_time+'&end_time='+end_time+'&admin_user='+admin_user+'&order='+order+'&type='+type;
+        }
+
+    })
+
+</script>
+
+</body>
+
+</html>

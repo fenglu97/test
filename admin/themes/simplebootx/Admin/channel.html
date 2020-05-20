@@ -1,0 +1,24 @@
+					<select id="channel_type" name="channel_type" style="width:180px;" tabindex="1">
+					<option value="">所有渠道类型</option>
+					<foreach name="channel_type" item="vo" key="k">
+					<option value="{$k}" <if condition="$k eq $selected_channel_type">selected</if>>{$vo}</option>
+					</foreach>
+					</select>
+					
+					<script type="text/javascript">
+					$(document).ready(function(){
+						$('#channel_type').change(function(){
+	
+							url = "{:U('Api/Channel/get_channel_list')}";
+							$.get(url,{type:this.value},function(data){
+								$('#cid').html('');							
+								var html = '<option value="">所有渠道</option>';
+								html=html+data;
+								$('#cid').attr('class','chosen-select cid');
+								$('#cid').html(html);
+									
+
+							})
+						})						
+					})
+					</script>

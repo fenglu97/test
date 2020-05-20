@@ -1,0 +1,186 @@
+<admintpl file="header" />
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/chosen.css">
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/docsupport/prism.css">
+  <style type="text/css" media="all">
+    /* fix rtl for demo */
+    .chosen-rtl .chosen-drop { left: -9000px; }
+
+  </style>
+</head>
+
+<body>
+
+	<div class="wrap js-check-wrap">
+
+		<ul class="nav nav-tabs">
+
+			<li class="active"><a href="javascript:;">充值统计</a></li>
+
+		</ul>
+
+		<form class="well form-search" method="post" action="{:U('Statistics/pay_statistics')}">
+
+			<div class="search_type cc mb10">
+
+				<div class="mb10">
+
+					<span class="mr20">
+						渠道名称：
+<admintpl file="channel" />
+					<select name="cid" id="cid"  style="width:180px;" tabindex="1">
+                          <option value="">所有渠道</option>
+
+                          {$channel_list}
+                    </select>&nbsp;&nbsp;
+
+						游戏名称： 
+
+  <select name="appid" id="appid" class="chosen-select appid" style="width:180px;" tabindex="1">
+                        <option value="">所有游戏</option>
+                        {$game_list}
+                    </select>
+                    					时间：
+
+   <input type="text" name="start_time" id="start_time" value="{$start_time}" class="input length_3 js-date" size="11" style="width:180px;" max="{$max}"> 至 
+   <input type="text" name="end_time" id="end_time" value="{$end_time}" size="11" class="input length_3 js-date" style="width:180px;" max="{$max}">
+						<input type="submit" class="btn btn-primary" value="搜索" />
+<input type="button" class="btn btn-primary export" value="导出" />
+					</span>
+
+					
+
+
+
+
+				</div>
+
+			</div>
+
+		</form>
+
+<script src="__PUBLIC__/js/chosen/chosen.jquery.js" type="text/javascript"></script>
+  <script src="__PUBLIC__/js/chosen/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    var config = {
+      '.chosen-select'           : {},
+      '.chosen-select-deselect'  : {allow_single_deselect:true},
+      '.chosen-select-no-single' : {disable_search_threshold:10},
+      '.chosen-select-no-results': {no_results_text:'没有匹配的结果'},
+      '.chosen-select-width'     : {width:"95%"}
+    }
+    for (var selector in config) {
+      $(selector).chosen(config[selector]);
+    }
+//$("#select_1").val('{$game_id}');
+//$("#select_1").trigger("chosen:updated");
+
+  </script>
+
+			<table class="table table-hover table-bordered table-list">
+
+				<thead>
+
+					<tr>
+
+						<th>日期</th>
+
+						<th>游戏名称</th>
+
+						<th>渠道名称</th>
+
+						<th>活跃用户</th>
+						<th>充值次数</th>
+						<th>充值人数</th>
+						<th>总充值金额</th>
+                        <th>新增SDK用户</th>
+						<th>新增小号</th>
+						<th>新增小号(排重)</th>
+<th>新增小号充值次数</th>
+<th>新增小号充值人数</th>
+<th>新增小号充值金额</th>
+<th>活跃Arpu</th>
+<th>新增Arpu</th>
+<th>付费率</th>
+					</tr>
+					<tr>
+
+						<th colspan="3">合计</th>
+						<th>{$heji['sum(active_user)']|default=0}</th>
+						<th>{$heji['sum(pay_counts)']|default=0}</th>
+						<th>{$heji['sum(pay_number)']|default=0}</th>
+						<th>{$heji['sum(pay_amount)']|default='0.00'}</th>
+						<th>{$heji['sum(new_box_user)']|default=0}</th>
+						<th>{$heji['sum(new_user)']|default=0}</th>
+						<th>{$heji['sum(valid_new_user)']|default=0}</th>
+<th>{$heji['sum(new_user_counts)']|default=0}</th>
+<th>{$heji['sum(new_user_number)']|default=0}</th>
+<th>{$heji['sum(new_user_amount)']|default='0.00'}</th>
+<th><php>echo round($heji['sum(pay_amount)']/$heji['sum(active_user)'],2)</php></th>
+<th><php>echo round($heji['sum(new_user_amount)']/$heji['sum(new_user)'],2)</php></th>
+<th><php>echo round($heji['sum(pay_number)']/$heji['sum(active_user)'],4)*100</php>%</th>
+					</tr>
+				</thead>
+
+				<foreach name="result" item="vo">
+
+				<tr>
+
+					<td>{$vo[0]}</td>
+
+					<td>{$game_name}</td>
+
+					<td>{$channel_name}</td>
+
+					<td>{$vo[1]}</td>
+					<td>{$vo[2]}</td>
+					<td>{$vo[3]}</td>
+					<th>{$vo[4]}</th>
+		<td>{$vo[5]}</td>
+					<td>{$vo[6]}</td>
+					<td>{$vo[7]}</td>
+					<td>{$vo[8]}</td>
+					<td>{$vo[9]}</td>
+								
+					<td>{$vo[10]}</td>
+					<td>{$vo[11]}</td>
+					<td>{$vo[12]}</td>
+					<td>{$vo[13]}</td>
+				
+
+
+
+				</tr>
+
+				</foreach>
+
+
+
+			</table>
+
+
+
+			<div class="pagination">{$page}</div>
+
+		
+	</div>
+
+	<script src="__ROOT__/public/js/common.js?"></script>
+
+	<script>
+
+		$('.export').click(function(){
+			
+		   var appid = $('#appid').val();
+		   var cid = $('#cid').val();
+		   var start_time = $('input[name="start_time"]').val();
+		   var end_time = $('input[name="end_time"]').val();
+		   var url =$('.form-search').attr('action');
+		    location.href=url+'&appid='+appid+'&cid='+cid+'&start_time='+start_time+'&end_time='+end_time+'&action=1&p={$p}';
+		})
+		
+
+	</script>
+
+</body>
+
+</html>

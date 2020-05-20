@@ -1,0 +1,148 @@
+@charset "utf-8";
+/* CSS Document */
+html { height: 100%; font-size:62.5%;}
+* { margin: 0; padding: 0; list-style: none; font-style: normal;}
+*:focus {outline: none}
+body {font-family: "微软雅黑",Tahoma, Geneva, sans-serif; font-size: 1.2rem; color:#333;}
+img {border: 0; display:inline-block;}
+input, textarea, select, label {font-family: inherit; font-size: inherit; font-weight: inherit;}
+a{text-decoration:none;color: #666;}
+a:focus{color: #666;}
+img{border:0;}
+.clear {clear:both; height:0; overflow:hidden;}
+
+
+/*邀请注册页*/
+.bg-f5{ background:#f5f5f5;}
+.banner img{ width:100%; display:block;margin-top:20px;}
+
+.leiji-download{ background:#ff7065; width:100%; overflow:hidden; display: table;}
+.leiji-download > div{ display: table-cell; vertical-align: middle;}
+.leiji-download .download-l{ background:#ff5b4f; width:30%; padding:15px 0; text-align:center;}
+.leiji-download .download-l img{ width:70%;}
+.leiji-download .download-r{ width:70%;  text-align:center; color:#fff; font-size:1.4rem; }
+.leiji-download .download-r i{ color:#333; font-size:1.6rem; margin:0 3px 0 3px; background:url(../images/i-bj02.png) no-repeat center center; text-align:center; width:7%; height:30px; line-height:30px; background-size:100%; display:inline-block;}
+
+
+.yq-teshe{ padding:0 0 10px 0; overflow:hidden;}
+.yq-teshe,.yq-teshe img{ width:100%;}
+
+
+	/*input-box*/
+.input-box{  width:90%; margin-left:5%;}
+.input-box > div{ width:100%; display:inline-block; height:24px; line-height:24px; padding:9px 0; position:relative;}
+.input-box-g > div{  background:#fff; border:1px solid #cdcdcd;  border-radius:4px; font-size:14px; margin-bottom:20px;}	
+
+.input-box > div input{
+    width: 73%; line-height:24px; 
+    border: none;  border-left:1px solid #cdcdcd; text-indent:12px;
+    background: none;
+    outline:none; color:#333; border-radius:0; font-size:15px;
+}
+		/*input-灰色*/
+.input-box > div ::-webkit-input-placeholder { /* WebKit browsers */ 
+color: #9a9a9a; font-size:15px;
+} 
+.input-box > div :-moz-placeholder { /* Mozilla Firefox 4 to 18 */ 
+color: #9a9a9a;  font-size:15px;
+} 
+.input-box > div ::-moz-placeholder { /* Mozilla Firefox 19+ */ 
+color: #9a9a9a;  font-size:15px;
+} 
+.input-box > div :-ms-input-placeholder { /* Internet Explorer 10+ */ 
+color: #9a9a9a;  font-size:15px;
+} 
+		/*end input-灰色*/	
+	
+		/*左边小图标*/
+.input-box > div i{
+    display: inline-block;
+    width: 25px;
+    vertical-align: middle;
+    padding: 0 10px;
+    height: 30px;
+    float: left;
+}
+
+.input-box > div i.yy-icon-phone {background: url(../images/icon-user.png) no-repeat center 0; background-size: auto 25px;}
+.input-box > div i.yy-icon-lock {background: url(../images/icon-lock.png) no-repeat center 0;background-size: auto 25px ;}
+.input-box > div i.yy-icon-lock02 {background: url(../images/icon-lock02.png) no-repeat center 0;background-size: auto 27px ;}
+		/*end 左边小图标*/	
+		/*验证码*/
+.input-box > div.yanzm input{ width:50%;}
+.input-box > div.yanzm span{ position:absolute; top:7px; right:7px; height:28px; line-height:28px;  color:#fff; background:#ff8f18; border-radius:2px; padding:0 10px;}
+		/*end 验证码*/			
+	/*end input-box*/
+	
+.input-button{ width:90%; margin-left:5%; background:#ff8f19; border:none; border-radius:4px; font-size:17px; font-weight:bold; color:#fff; text-align:center; height:40px; line-height:40px; box-shadow:0px 2px 0 0px rgba(211,67,55,1);}	
+
+.foot{ width:90%;  margin-left:5%; color:#353535; text-align:left; font-size:1.2rem; padding:10px 0; overflow:hidden;}
+.foot a{ color:#353535; text-decoration:underline;}
+.foot .box-r{ color:#3377f6 !important; float:right; text-decoration:underline;}
+/*end 邀请注册页*/
+/*mask*/
+.mask{ width:100%; height:100%; background:rgba(0,0,0,.8); position:fixed; top:0; left:0; z-index:2000;}
+.mask-content {
+    width: 90%;
+    position: fixed;
+    left: 5%; 
+    background: #fff;
+    border-radius: 8px;
+}
+.mask-content h3{ font-size:1.8rem; font-weight:normal; color:#1b1b1b; border-bottom:1px solid #e7e7e7; padding:4% 0; text-align:center; position:relative;}
+.mask-content h3 .mask-close{ position:absolute; top:-40px; right:5px; height:60px; display:block;}
+.mask-content h3 .mask-close img{ height:100%;}
+.mask-content .mask-banner{ width:100%; color:#1b1b1b; font-size:1.4rem; margin-bottom:2%; text-align:center;}
+.mask-content .mask-banner img{ width:50%;}
+.mask-content .mask-qq{ width:100%; padding:0 10px; box-sizing:border-box; -webkit-box-sizing:border-box;}
+.mask-content .mask-qq ul{  border-top:1px solid #e7e7e7; padding:15px 0; overflow:hidden;}
+.mask-content .mask-qq ul li{ width:50%; float:left; text-align:center; box-sizing:border-box; -webkit-box-sizing:border-box; font-size:1.4rem;}
+.mask-content .mask-qq ul li:nth-child(1){ border-right:1px solid #e7e7e7;}
+.mask-content .mask-qq ul li b{  font-size:1.4rem;}
+.mask-content .mask-qq ul li a{  display:inline-block; text-align:center; padding:5px 0; border-radius:4px; font-size:1.5rem; color:#fff; width:70%; margin-top:10px;}
+
+.mask-content .mask-qq ul li.yellow b span{ color:#ff8f19; }
+.mask-content .mask-qq ul li.yellow a{ background:#ff8f19;}
+
+.mask-content .mask-qq ul li.blue b span{ color:#4cb5ff; }
+.mask-content .mask-qq ul li.blue a{ background:#4cb5ff;}
+	/*安装弹框*/
+.mask-anz {
+    width:80%; left:10%;
+}
+.mask-anz  h3{ font-weight:bold;}	
+.mask-wenz{ padding:30px 15px;}	
+.mask-wenz p{ text-align:left; text-indent:2.8rem; line-height:1.6em; font-size:1.4rem; margin-bottom:10px; color:#666;}
+.mask-wenz p:last-child{ margin-bottom:0;}	
+		/*两个按钮*/
+.button01{ overflow:hidden;  }
+.button01 button{ width:100%; float:left; height:45px; line-height:45px; border:0; font-size:1.5rem; text-align:center;}
+.button01 .bg-blue{ background:#ffb618; color:#fff; border-radius:0 0 6px 6px;}
+	/*end 安装弹框*/	
+/*end mask*/
+
+@media only screen and (max-width: 768px) {
+html {
+	font-size:75%;
+}
+}
+@media only screen and (max-width: 435px) {
+html {
+	font-size:68.8%;
+}
+}
+@media only screen and (max-width: 384px) {
+html {
+	font-size:68.8%;
+}
+}
+@media only screen and (max-width: 375px) {
+html {
+	font-size:68.8%;
+}
+}
+@media only screen and (max-width: 320px) {
+html { 
+	font-size:62.5%;
+}
+}

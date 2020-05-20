@@ -1,0 +1,1285 @@
+<admintpl file="header" />
+<style>
+	.do{
+		color: #33485d;
+		border: 1px dashed;
+		padding: 5px 9px;
+		border-radius: 6px;
+	}
+</style>
+</head>
+<body>
+	<div class="wrap js-check-wrap">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="#A" data-toggle="tab">{:L('WEB_SITE_INFOS')}</a></li>
+			<li><a href="#K" data-toggle="tab">融合设置</a></li>
+<!--			<li><a href="#P" data-toggle="tab">评论设置</a></li>-->
+			<li><a href="#W" data-toggle="tab">渠道提现</a></li>
+			<!--<li><a href="#PAY" data-toggle="tab">支付配置</a></li>-->
+<!--			<li><a href="#VIP" data-toggle="tab">VIP设置</a></li>-->
+<!--			<li><a href="#PC" data-toggle="tab">平台币兑换</a></li>-->
+<!--			<li><a href="#Friend" data-toggle="tab">邀请好友设置</a></li>-->
+			<li><a href="#R" data-toggle="tab">返利设置</a></li>
+			<!--<li><a href="#S" data-toggle="tab">自助结算</a></li>-->
+<!--			<li><a href="#L" data-toggle="tab">抽奖基本配置</a></li>-->
+			<!--<li><a href="#B" data-toggle="tab">{:L('SEO_SETTING')}</a></li>-->
+			<li><a href="#C" data-toggle="tab">{:L('URL_SETTING')}</a></li>
+			<!--<li><a href="{:U('route/index')}">{:L('URL_OPTIMIZATION')}</a></li>-->
+			<!-- <li><a href="#D" data-toggle="tab">{:L('UCENTER_SETTING')}</a></li> -->
+			<!--<li><a href="#E" data-toggle="tab">{:L('COMMENT_SETTING')}</a></li>-->
+			<!--<li><a href="#F" data-toggle="tab">{:L("USERNAME_FILTER")}</a></li>-->
+			<!--<li><a href="#G" data-toggle="tab">CDN设置</a></li>-->
+			<!--<li><a href="#H" data-toggle="tab">用户同步</a></li>-->
+<!--			<li><a href="#I" data-toggle="tab">SDK设置</a></li>-->
+			<li><a href="#CG" data-toggle="tab">转游须知</a></li>
+<!--			<li><a href="#ACN" data-toggle="tab">APP承诺</a></li>-->
+			<li><a href="#INFO" data-toggle="tab">用户信息显示权限</a></li>
+<!--			<li><a href="#rank" data-toggle="tab">邀请排行设置</a></li>-->
+<!--			<li><a href="#account" data-toggle="tab">账号交易</a></li>-->
+			<li><a href="#activity" data-toggle="tab">日常活动</a></li>
+<!--			<li><a href="#consult" data-toggle="tab">问答须知</a></li>-->
+		</ul>
+		<form class="form-horizontal js-ajax-forms" action="{:U('setting/site_post')}" method="post">
+			<fieldset>
+				<div class="tabbable">
+					<div class="tab-content">
+						<div class="tab-pane active" id="A">
+							<fieldset>
+								<div class="control-group">
+									<label class="control-label">{:L('WEBSITE_NAME')}</label>
+									<div class="controls">
+										<input type="text" name="options[site_name]" value="{$site_name}"><span class="form-required">*</span>
+										<php>if($option_id):</php>
+										<input type="hidden" name="option_id" value="{$option_id}">
+										<php>endif;</php>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">后台地址加密码：</label>
+									<div class="controls">
+										<input type="text" name="options[site_admin_url_password]" value="{$site_admin_url_password}" id="js-site-admin-url-password"><span class="form-required">*</span>
+										<span class="help-block" style="color: red;">设置加密码后必须通过以下地址访问后台,请劳记此地址，为了安全，您也可以定期更换此加密码!</span>
+										<php>$site_admin_url_password =C("SP_SITE_ADMIN_URL_PASSWORD");</php>
+										<if condition="!empty($site_admin_url_password)">
+										<span class="help-block">后台地址：<span id="js-site-admin-url">{:sp_get_host()}__ROOT__?g=admin&upw={:C('SP_SITE_ADMIN_URL_PASSWORD')}</span></span>
+										</if>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">{:L('WEBSITE_THEME')}</label>
+									<div class="controls">
+										<select name="options[site_tpl]">
+											<foreach name="templates" item="vo">
+											<php>$tpl_selected=$site_tpl==$vo?"selected":"";</php>
+											<option value="{$vo}" {$tpl_selected}>{$vo}</option>
+											</foreach>
+										</select>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">{:L('ENABLE_MOBILE_THEME')}：</label>
+									<div class="controls">
+										<php>$mobile_tpl_enabled_checked=empty($mobile_tpl_enabled)?'':'checked';</php>
+										<label class="checkbox inline"><input type="checkbox" name="options[mobile_tpl_enabled]" value="1" {$mobile_tpl_enabled_checked}></label>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">{:L('WEBSITE_ADMIN_THEME')}</label>
+									<div class="controls">
+										<php>$site_adminstyle=empty($site_adminstyle)?'flat':$site_adminstyle;</php>
+										<select name="options[site_adminstyle]">
+											<foreach name="adminstyles" item="vo">
+											<php>$adminstyle_selected=$site_adminstyle==$vo?"selected":"";</php>
+											<option value="{$vo}" {$adminstyle_selected}>{$vo}</option>
+											</foreach>
+										</select>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">{:L('HTML_CACHE')}：</label>
+									<div class="controls">
+										<php>$html_cache_on_checked=empty($html_cache_on)?'':'checked';</php>
+										<label class="checkbox inline"><input type="checkbox" name="options[html_cache_on]" value="1" {$html_cache_on_checked}></label>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">{:L('WEBSITE_ICP')}</label>
+									<div class="controls">
+										<input type="text" name="options[site_icp]" value="{$site_icp}">
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">{:L('WEBMASTER_EMAIL')}</label>
+									<div class="controls">
+										<input type="text" name="options[site_admin_email]" value="{$site_admin_email}">
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">{:L("WEBSITE_STATISTICAL_CODE")}</label>
+									<div class="controls">
+										<textarea name="options[site_tongji]" rows="5" cols="57">{$site_tongji}</textarea>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">{:L('WEBSITE_COPYRIGHT_INFOMATION')}</label>
+									<div class="controls">
+										<textarea name="options[site_copyright]" rows="5" cols="57">{$site_copyright}</textarea>
+									</div>
+								</div>
+
+
+							</fieldset>
+						</div>
+						<div class="tab-pane" id="W">
+							<fieldset>
+								<div class="control-group">
+									<label class="control-label">最低提现金额</label>
+									<div class="controls">
+										<input type="text" name="options[withdraw_cash]" value="{$withdraw_cash}">
+									</div>
+								</div>
+							</fieldset>
+						</div>
+						<!--<div class="tab-pane" id="PAY">-->
+							<!--<fieldset>-->
+								<!--<div class="control-group">-->
+									<!--<label class="control-label">快接防风控 <i class="fa fa-question-circle" onmouseover="showtips(this)"></i></label>-->
+									<!--<div class="controls">-->
+										<!--<label>-->
+											<!--<input type="checkbox" name="options[pay_risk]" <if condition="$pay_risk eq 'on'">checked</if> />-->
+										<!--</label>-->
+									<!--</div>-->
+								<!--</div>-->
+								<!--<div class="control-group">-->
+									<!--<label class="control-label">微信支付</label>-->
+									<!--<div class="controls">-->
+										<!--<label>-->
+											<!--<input type="radio" value="4" <if condition="$pay_way_wechat eq 4">checked</if> name="options[pay_way_wechat]" />快接微信-->
+										<!--</label>-->
+									<!--</div>-->
+								<!--</div>-->
+								<!--<div class="control-group">-->
+									<!--<label class="control-label">支付宝支付</label>-->
+
+									<!--<div class="controls">-->
+										<!--<label>-->
+										<!--<input type="radio" value="3" <if condition="$pay_way_alipay eq 3">checked</if> name="options[pay_way_alipay]" />快接支付宝(腾王，暂不可用)-->
+										<!--</label>-->
+									<!--</div>-->
+									<!--<div class="controls">-->
+										<!--<label>-->
+											<!--<input type="radio" value="5" <if condition="$pay_way_alipay eq 5">checked</if> name="options[pay_way_alipay]" />快接支付宝(众乐，限额3000)-->
+										<!--</label>-->
+									<!--</div>-->
+									<!--<div class="controls">-->
+										<!--<label>-->
+											<!--<input type="radio" value="6" <if condition="$pay_way_alipay eq 6">checked</if> name="options[pay_way_alipay]" />原生支付宝-->
+										<!--</label>-->
+									<!--</div>-->
+
+								<!--</div>-->
+							<!--</fieldset>-->
+						<!--</div>-->
+						<div class="tab-pane" id="B">
+							<fieldset>
+								<div class="control-group">
+									<label class="control-label">{:L('WEBSITE_SEO_TITLE')}</label>
+									<div class="controls">
+										<input type="text" name="options[site_seo_title]" value="{$site_seo_title}">
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">{:L('WEBSITE_SEO_KEYWORDS')}</label>
+									<div class="controls">
+										<input type="text" name="options[site_seo_keywords]" value="{$site_seo_keywords}">
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">{:L('WEBSITE_SEO_DESCRIPTION')}</label>
+									<div class="controls">
+										<textarea name="options[site_seo_description]" rows="5" cols="57">{$site_seo_description}</textarea>
+									</div>
+								</div>
+							</fieldset>
+						</div>
+						<div class="tab-pane" id="INFO">
+							<fieldset>
+								<div class="control-group">
+									<label class="control-label">后台角色ID</label>
+									<div class="controls">
+										<input type="text" name="options[roleID]" value="{$roleID}" placeholder="多个用英文逗号隔开">
+									</div>
+								</div>
+							</fieldset>
+						</div>
+						<div class="tab-pane" id="rank">
+							<fieldset>
+								<div class="control-group rankappend">
+
+									<foreach name="rank" item="v" key="k">
+										<label class="control-label">第{$k+1}名</label>
+										<div class="controls" style="margin-bottom: 10px">
+											<input type="number" class="rank" name="options[rank][{$k}]" value="{$v}" placeholder="奖励金币">
+										</div>
+									</foreach>
+									<label class="control-label">排行奖励须知</label>
+									<if condition="$rankNotice['title']">
+										<foreach name="rankNotice['title']" item="v" key="k">
+											<div class="controls">
+												<input type="text"style="margin-bottom: 10px;" name="options[rankNotice][title][]" value="{$v}">
+												<if condition="$k eq 0">
+													<a href="javascript:void(0);" class="do rankadd"><i class="fa fa-plus"></i></a>
+													<else/>
+													<a href="javascript:void(0);" class="do rankdel"><i class="fa fa-minus"></i></a>
+												</if>
+
+												<textarea style="display:block;margin-bottom: 20px;" name="options[rankNotice][content][]">{$rankNotice['content'][$k]}</textarea>
+											</div>
+										</foreach>
+										<else/>
+										<div class="controls">
+											<input type="text" placeholder="标题" style="margin-bottom: 10px;" name="options[rankNotice][title][]" value="{$rankNotice[title][0]}">
+											<a href="javascript:void(0);" class="do rankadd"><i class="fa fa-plus"></i></a>
+											<textarea placeholder="内容" style="display:block;margin-bottom: 20px;" name="options[rankNotice][content][]">{$rankNotice['content'][0]}</textarea>
+										</div>
+									</if>
+									<!--<label class="control-label">第一名</label>-->
+									<!--<div class="controls" style="margin-bottom: 10px">-->
+										<!--<input type="number" name="options[rank][]" placeholder="奖励金币">-->
+									<!--</div>-->
+									<!--<label class="control-label">第二名</label>-->
+									<!--<div class="controls" style="margin-bottom: 10px">-->
+										<!--<input type="number" name="options[rank][]" placeholder="奖励金币">-->
+									<!--</div>-->
+									<!--<label class="control-label">第三名</label>-->
+									<!--<div class="controls" style="margin-bottom: 10px">-->
+										<!--<input type="number" name="options[rank][]" placeholder="奖励金币">-->
+									<!--</div>-->
+									<!--<label class="control-label">第四名</label>-->
+									<!--<div class="controls" style="margin-bottom: 10px">-->
+										<!--<input type="number" name="options[rank][]" placeholder="奖励金币">-->
+									<!--</div>-->
+									<!--<label class="control-label">第五名</label>-->
+									<!--<div class="controls" style="margin-bottom: 10px">-->
+										<!--<input type="number" name="options[rank][]" placeholder="奖励金币">-->
+									<!--</div>-->
+									<!--<label class="control-label">第六名</label>-->
+									<!--<div class="controls" style="margin-bottom: 10px">-->
+										<!--<input type="number" name="options[rank][]" placeholder="奖励金币">-->
+									<!--</div>-->
+									<!--<label class="control-label">第七名</label>-->
+									<!--<div class="controls" style="margin-bottom: 10px">-->
+										<!--<input type="number" name="options[rank][]" placeholder="奖励金币">-->
+									<!--</div>-->
+									<!--<label class="control-label">第八名</label>-->
+									<!--<div class="controls" style="margin-bottom: 10px">-->
+										<!--<input type="number" name="options[rank][]" placeholder="奖励金币">-->
+									<!--</div>-->
+									<!--<label class="control-label">第九名</label>-->
+									<!--<div class="controls" style="margin-bottom: 10px">-->
+										<!--<input type="number" name="options[rank][]" placeholder="奖励金币">-->
+									<!--</div>-->
+									<!--<label class="control-label">第十名</label>-->
+									<!--<div class="controls" style="margin-bottom: 10px">-->
+										<!--<input type="number" name="options[rank][]" placeholder="奖励金币">-->
+									<!--</div>-->
+								</div>
+							</fieldset>
+						</div>
+						<div class="tab-pane" id="L">
+							<fieldset>
+								<div class="control-group">
+									<label class="control-label">抽奖消耗金币</label>
+									<div class="controls">
+										<input type="number" name="options[deplete_coin]" value="{$deplete_coin}">
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">指定中奖位置</label>
+									<div class="controls">
+										<input type="number" placeholder="1-12" name="options[place]" value="{$place}">
+										不指定填0
+									</div>
+								</div>
+							</fieldset>
+						</div>
+						<div class="tab-pane" id="account">
+							<fieldset>
+								<div class="control-group">
+									<label class="control-label">支付宝支付服务费率</label>
+									<div class="controls">
+										<input type="number" name="options[alipay_rate]" value="{$alipay_rate}" style="width: 50px">%
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">微信支付服务费率</label>
+									<div class="controls">
+										<input type="number"  name="options[wechat_rate]" value="{$wechat_rate}" style="width: 50px">%
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">本站服务费率</label>
+									<div class="controls">
+										<input type="number" name="options[sdk_rate]" value="{$sdk_rate}" style="width: 50px">%
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">客服QQ</label>
+									<div class="controls">
+										<input type="text" name="options[product_customerqq]" value="{$product_customerqq}" style="width: 300px">&nbsp;&nbsp;多个账号用英文逗号,分隔
+									</div>
+								</div>
+
+									<div class="control-group BUY">
+										<label class="control-label">买家须知</label>
+										<if condition="count($buyer_notes) gt 1">
+											<foreach name="buyer_notes" item="v" key="k">
+												<div class="controls" style="margin-bottom: 10px">
+											<textarea  placeholder="买家须知" style="display:inline-block;" class="" name="options[buyer_notes][]" >
+                                            {$v}
+											</textarea>
+
+													<if condition="$k == 0">
+														<a href="javascript:void(0);" class="do add_buy"><i class="fa fa-plus"></i></a>
+														<else/>
+														<a href="javascript:void(0);" class="do del"><i class="fa fa-minus"></i></a>
+													</if>
+												</div>
+											</foreach>
+											<else />
+											<div class="controls" style="margin-bottom: 10px">
+											<textarea  placeholder="买家须知" style="display:inline-block;" class="" name="options[buyer_notes][]" >
+											{$buyer_notes[0]}
+											</textarea>&nbsp;
+												<a href="javascript:void(0);" class="do add_buy"><i class="fa fa-plus"></i></a>
+											</div>
+										</if>
+									</div>
+
+								<div class="control-group SELL">
+									<label class="control-label">卖家须知</label>
+									<if condition="count($seller_notes) gt 1">
+										<foreach name="seller_notes" item="v" key="k">
+											<div class="controls" style="margin-bottom: 10px">
+											<textarea  placeholder="卖家须知" style="display:inline-block;" class="" name="options[seller_notes][]" >
+                                            {$v}
+											</textarea>
+
+												<if condition="$k == 0">
+													<a href="javascript:void(0);" class="do add_sell"><i class="fa fa-plus"></i></a>
+													<else/>
+													<a href="javascript:void(0);" class="do del"><i class="fa fa-minus"></i></a>
+												</if>
+											</div>
+										</foreach>
+										<else />
+										<div class="controls" style="margin-bottom: 10px">
+											<textarea  placeholder="卖家须知" style="display:inline-block;" class="" name="options[seller_notes][]" >
+											{$seller_notes[0]}
+											</textarea>&nbsp;
+											<a href="javascript:void(0);" class="do add_sell"><i class="fa fa-plus"></i></a>
+										</div>
+									</if>
+								</div>
+
+								<div class="control-group BUSINESS_NOTICE">
+									<label class="control-label">注意事项</label>
+									<if condition="count($business_notice) gt 1">
+										<foreach name="business_notice" item="v" key="k">
+											<div class="controls" style="margin-bottom: 10px">
+											<textarea  placeholder="注意事项" style="display:inline-block;" class="" name="options[business_notice][]" >
+                                            {$v}
+											</textarea>
+
+												<if condition="$k == 0">
+													<a href="javascript:void(0);" class="do add_business_notice"><i class="fa fa-plus"></i></a>
+													<else/>
+													<a href="javascript:void(0);" class="do del"><i class="fa fa-minus"></i></a>
+												</if>
+											</div>
+										</foreach>
+										<else />
+										<div class="controls" style="margin-bottom: 10px">
+											<textarea  placeholder="注意事项" style="display:inline-block;" class="" name="options[business_notice][]" >
+											{$business_notice[0]}
+											</textarea>&nbsp;
+											<a href="javascript:void(0);" class="do add_business_notice"><i class="fa fa-plus"></i></a>
+										</div>
+									</if>
+								</div>
+
+							</fieldset>
+						</div>
+						<div class="tab-pane" id="K">
+							<fieldset>
+								<div class="control-group">
+									<label class="control-label">安卓融合SDK</label>
+									<div class="controls">
+										<input type="text" placeholder="地址以http://或https://开头" name="options[rh_android]" value="{$rh_android}">
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">苹果融合SDK</label>
+									<div class="controls">
+										<input type="text" placeholder="地址以http://或https://开头" name="options[rh_ios_rh]" value="{$rh_ios_rh}">
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">安卓GM版</label>
+									<div class="controls">
+										<input type="text" placeholder="地址以http://或https://开头" name="options[rh_android_gm]" value="{$rh_android_gm}">
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">苹果GM版</label>
+									<div class="controls">
+										<input type="text" placeholder="地址以http://或https://开头" name="options[rh_ios]" value="{$rh_ios}">
+									</div>
+								</div>
+
+							</fieldset>
+						</div>
+
+
+						<div class="tab-pane" id="VIP">
+							<fieldset>
+								<div class="control-group">
+									<label class="control-label">每日首评获得金币倍数</label>
+									<div class="controls">
+										<input type="number"  name="options[vip_comment]" value="{$vip_comment}">
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">每日签到赠送金币</label>
+									<div class="controls">
+										<input type="number"  name="options[vip_sign_coin]" value="{$vip_sign_coin}">
+									</div>
+								</div>
+								<div class="control-group vip">
+									<label class="control-label">VIP充值档位</label>
+									<div style="margin-left:180px;margin-bottom: 10px">
+										<input  type="text" readonly  value="开通月数">&nbsp;
+										<input  type="text" readonly  value="原价">&nbsp;
+										<input  type="text"  readonly value="现价">&nbsp;
+										<input  type="text"  readonly value="返平台币">&nbsp;
+									</div>
+									<if condition="$vip">
+										<foreach name="vip" item="v" key="k1">
+											<div class="controls" style="margin-bottom: 10px">
+												<foreach name="v" item="val" key="k2">
+												<input  type="number" placeholder="" class="{$k1}-{$k2}" name="options[vip][{$k1}][{$k2}]" value="{$val}">&nbsp;&nbsp;
+												</foreach>
+												<if condition="$k1 == type1">
+													<a href="javascript:void(0);" class="do add"><i class="fa fa-plus"></i></a>
+													<else/>
+													<a href="javascript:void(0);" class="do del"><i class="fa fa-minus"></i></a>
+												</if>
+											</div>
+										</foreach>
+									<else />
+										<div class="controls" style="margin-bottom: 10px">
+											<input type="number" placeholder="开通月数，请输入整数" class="type1-month" name="options[vip][type1][month]" value="{$vip['type1']['month']}">&nbsp;
+											<input type="number" placeholder="原价，请输入整数" class="type1-month" name="options[vip][type1][costMoney]" value="{$vip['type1']['costMoney']}">&nbsp;
+											<input type="number" placeholder="现价，请输入整数" class="type1-money" name="options[vip][type1][money]" value="{$vip['type1']['money']}">&nbsp;
+											<input type="number" placeholder="返平台币，请输入整数" class="type1-ptb" name="options[vip][type1][ptb]" value="{$vip['type1']['ptb']}">&nbsp;&nbsp;
+
+											<a href="javascript:void(0);" class="do add"><i class="fa fa-plus"></i></a>
+										</div>
+									</if>
+								</div>
+							</fieldset>
+						</div>
+
+						<div class="tab-pane" id="S">
+							<fieldset>
+								<div class="control-group">
+									<label class="control-label">客服QQ</label>
+									<div class="controls">
+										<input type="number"  name="options[settlement_qq]" value="{$settlement_qq}">
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">兼职交流群</label>
+									<div class="controls">
+										<input type="text"  name="options[settlement_qun]" value="{$settlement_qun}">
+									</div>
+								</div>
+								<div class="control-group settle">
+									<label class="control-label">结算标准</label>
+									<div style="margin-left:180px;margin-bottom: 10px">
+										<input  type="text" readonly  value="金额范围">&nbsp;
+										<input  type="text" readonly  value="计算百分比">&nbsp;
+									</div>
+									<if condition="$settlement">
+										<foreach name="settlement" item="v" key="k1">
+											<div class="controls" style="margin-bottom: 10px">
+												<foreach name="v" item="val" key="k2">
+													<input  type="text" placeholder="" class="{$k1}-{$k2}" name="options[settlement][{$k1}][{$k2}]" value="{$val}">&nbsp;&nbsp;
+												</foreach>
+												<if condition="$k1 == type1">
+													<a href="javascript:void(0);" class="do settlement"><i class="fa fa-plus"></i></a>
+													<else/>
+													<a href="javascript:void(0);" class="do sdel"><i class="fa fa-minus"></i></a>
+												</if>
+											</div>
+										</foreach>
+										<else />
+										<div class="controls" style="margin-bottom: 10px">
+											<input type="text" placeholder="金额范围,用英文'-'号隔开" class="type1-month" name="options[settlement][type1][range]" value="{$settlement['type1']['range']}">&nbsp;
+											<input type="number" placeholder="计算百分比" class="type1-month" name="options[settlement][type1][percent]" value="{$settlement['type1']['percent']}">&nbsp;
+
+											<a href="javascript:void(0);" class="do settlement"><i class="fa fa-plus"></i></a>
+										</div>
+									</if>
+								</div>
+							</fieldset>
+						</div>
+
+						<div class="tab-pane" id="R">
+							<fieldset>
+								<div class="control-group content">
+									<label class="control-label">单笔上限</label>
+									<div class="controls">
+										<input type="number" style="margin-bottom: 10px;" name="options[rebateSingle]" value="{$rebateSingle}">
+									</div>
+
+									<label class="control-label">每日累计上限</label>
+									<div class="controls">
+										<input type="number" style="margin-bottom: 10px;" name="options[rebateTotal]" value="{$rebateTotal}">
+									</div>
+
+									<label class="control-label">返利须知</label>
+									<if condition="$notice['title']">
+										<foreach name="notice['title']" item="v" key="k">
+											<div class="controls">
+												<input type="text"style="margin-bottom: 10px;" name="options[notice][title][]" value="{$v}">
+												<if condition="$k eq 0">
+													<a href="javascript:void(0);" class="do cadd"><i class="fa fa-plus"></i></a>
+													<else/>
+													<a href="javascript:void(0);" class="do cdel"><i class="fa fa-minus"></i></a>
+												</if>
+
+												<textarea style="display:block;margin-bottom: 20px;" name="options[notice][content][]">{$notice['content'][$k]}</textarea>
+											</div>
+										</foreach>
+										<else/>
+										<div class="controls">
+											<input type="text" placeholder="标题" style="margin-bottom: 10px;" name="options[notice][title][]" value="{$notice[title][0]}">
+											<a href="javascript:void(0);" class="do cadd"><i class="fa fa-plus"></i></a>
+											<textarea placeholder="内容" style="display:block;margin-bottom: 20px;" name="options[notice][content][]">{$notice['content'][0]}</textarea>
+										</div>
+									</if>
+
+
+								</div>
+							</fieldset>
+						</div>
+						<div class="tab-pane" id="P">
+							<fieldset>
+								<div class="control-group">
+									<label class="control-label">评论获得金币范围</label>
+									<div class="controls">
+										<input type="text" style="width:260px" placeholder="设置范围用'-'隔开，设置固定值填入整数" name="options[pl_coin]" value="{$pl_coin}">
+									</div>
+								</div>
+							</fieldset>
+						</div>
+						<div class="tab-pane" id="C">
+							<fieldset>
+								<div class="control-group">
+									<label class="control-label">{:L('URL_MODE')}</label>
+									<div class="controls">
+										<php>$urlmodes=array( "0"=>L('URL_NORMAL_MODE'), "1"=>L('URL_PATHINFO_MODE'), "2"=>L('URL_REWRITE_MODE'));</php>
+										<select name="options[urlmode]">
+											<foreach name="urlmodes" item="vo">
+											<php>$urlmode_selected=$key==$urlmode?"selected":"";</php>
+											<option value="{$key}" {$urlmode_selected}>{$vo}</option>
+											</foreach>
+										</select>
+										<span class="form-required">* {:L('URL_MODE_HELP_TEXT')}</span>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">{:L('URL_REWRITE_SUFFIX')}</label>
+									<div class="controls">
+										<input type="text" name="options[html_suffix]" value="{$html_suffix}">
+										<span class="form-required">{:L('URL_REWRITE_SUFFIX_HELP_TEXT')}</span>
+									</div>
+								</div>
+							</fieldset>
+						</div>
+						<div class="tab-pane" id="E">
+							<fieldset>
+								<div class="control-group">
+									<label class="control-label">{:L('COMMENT_CHECK')}</label>
+									<div class="controls">
+										<php>$comment_need_checked=empty($comment_need_check)?"":"checked";</php>
+										<input type="checkbox" class="js-check" name="options[comment_need_check]" value="1" {$comment_need_checked}>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">{:L('COMMENT_TIME_INTERVAL')}</label>
+									<div class="controls">
+										<input type="number" name="options[comment_time_interval]" value="{$comment_time_interval|default=60}" style="width:40px;">{:L('SECONDS')}
+									</div>
+								</div>
+							</fieldset>
+						</div>
+						<div class="tab-pane" id="F">
+							<fieldset>
+								<div class="control-group">
+									<label class="control-label">{:L('SPECAIL_USERNAME')}</label>
+									<div class="controls">
+										<textarea name="cmf_settings[banned_usernames]" rows="5" cols="57">{$cmf_settings.banned_usernames}</textarea>
+									</div>
+								</div>
+							</fieldset>
+						</div>
+												<div class="tab-pane" id="PC">
+							<fieldset>
+								<div class="control-group">
+									<label class="control-label">获得金币比</label>
+									<div class="controls">
+										1平台币=<input type="number" name="options[platform_coin_ratio]" value="{$platform_coin_ratio|default=10}" style="width:50px;">金币
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">平台币起兑值</label>
+									<div class="controls">
+										<input type="number" name="options[platform_start_count]" value="{$platform_start_count|default=10}" style="width:50px;">个
+									</div>
+								</div>
+							</fieldset>
+						</div>
+
+
+						<div class="tab-pane" id="Friend">
+							<fieldset>
+								<div class="control-group">
+									<label class="control-label">获得金币比</label>
+									<div class="controls">
+										1RMB：<input type="number" name="options[friend_coin_ratio]" value="{$friend_coin_ratio|default=10}" style="width:50px;">金币
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">邀请好友</label>
+									<div class="controls">
+										1位好友：<input type="number" name="options[onefriend_register_coin]" value="{$onefriend_register_coin|default=10}" style="width:50px;">金币
+									</div>
+								</div>
+
+								<div class="control-group">
+									<label class="control-label">单个好友封顶奖励金币</label>
+									<div class="controls">
+										<input type="number" name="options[friend_coin_top]" value="{$friend_coin_top|default=2000}" style="width:100px;">金币
+									</div>
+								</div>
+							</fieldset>
+						</div>
+
+						<div class="tab-pane" id="G">
+							<fieldset>
+								<div class="control-group">
+									<label class="control-label">静态资源cdn地址</label>
+									<div class="controls">
+										<input type="text" name="cdn_settings[cdn_static_root]" value="{$cdn_settings.cdn_static_root}">
+										<span class="help-block">
+											不能以/结尾；设置这个地址后，请将ThinkCMF下的静态资源文件放在其下面；<br>
+											ThinkCMF下的静态资源文件大致包含以下(如果你自定义后，请自行增加)：<br>
+											admin/themes/simplebootx/Public/assets<br>
+											public<br>
+											themes/simplebootx/Public/assets<br>
+											例如未设置cdn前：jquery的访问地址是/public/js/jquery.js, 设置cdn是后它的访问地址就是：静态资源cdn地址+/public/js/jquery.js
+
+										</span>
+									</div>
+								</div>
+							</fieldset>
+						</div>
+
+						                    <div class="tab-pane" id="H">
+
+                        <fieldset>
+
+                            <div class="control-group">
+
+                                <label class="control-label">开启Ucenter:</label>
+
+                                <div class="controls">
+
+                                    <php>$ucenter_enabled_checked=empty($ucenter_enabled)?"":"checked";</php>
+
+                                    <input type="checkbox" class="js-check" name="options[ucenter_enabled]" value="1"
+                                           {$ucenter_enabled_checked}>
+
+                                </div>
+
+                            </div>
+
+                        </fieldset>
+
+                    </div>
+
+
+                                          						<div class="tab-pane" id="CG">
+							<fieldset>
+
+								<div class="control-group CG">
+									<label class="control-label">转游须知</label>
+									<div style="margin-left:180px;margin-bottom: 10px">
+										<input  type="text" readonly  value="转游须知标题">&nbsp;
+										<input  type="text"  readonly value="转游须知内容">&nbsp;
+									</div>
+
+									<if condition="count($change_game) gt 1">
+										<foreach name="change_game" item="v" key="k1">
+											<div class="controls" style="margin-bottom: 10px">
+
+								            <input type="text" placeholder="转游须知标题" class="" name="options[change_game][{$k1}][title]" value="{$v['title']}">&nbsp;
+											<textarea  placeholder="转游须知内容" style="display:inline-block;" class="" name="options[change_game][{$k1}][content]" >
+                                            {$v['content']}
+											</textarea>
+												<if condition="$k1 == type1">
+													<a href="javascript:void(0);" class="do add_cg"><i class="fa fa-plus"></i></a>
+													<else/>
+													<a href="javascript:void(0);" class="do del"><i class="fa fa-minus"></i></a>
+												</if>
+											</div>
+										</foreach>
+									<else />
+										<div class="controls" style="margin-bottom: 10px">
+											<input type="text" placeholder="转游须知标题" class="" name="options[change_game][type1][title]" value="{$change_game['type1']['title']}">&nbsp;
+											<textarea  placeholder="转游须知内容" style="display:inline-block;" class="" name="options[change_game][type1][content]" >
+											{$change_game['type1']['content']}
+											</textarea>&nbsp;
+
+											<a href="javascript:void(0);" class="do add_cg"><i class="fa fa-plus"></i></a>
+										</div>
+									</if>
+								</div>
+							</fieldset>
+						</div>
+
+
+						<div class="tab-pane" id="consult">
+							<fieldset>
+								<div class="control-group consult_protocol">
+									<label class="control-label">问答礼仪</label>
+									<if condition="count($consult['protocol']) gt 1">
+										<foreach name="consult['protocol']" item="v" key="k1">
+											<div class="controls" style="margin-bottom: 10px">
+											<textarea  placeholder="" style="display:inline-block;" class="" name="options[consult][protocol][]" >
+                                            {$v}
+											</textarea>&nbsp;
+												<if condition="$k1 == 0">
+													<a href="javascript:void(0);" class="do add_consult_protocol"><i class="fa fa-plus"></i></a>
+													<else/>
+													<a href="javascript:void(0);" class="do del"><i class="fa fa-minus"></i></a>
+												</if>
+											</div>
+										</foreach>
+										<else />
+										<div class="controls" style="margin-bottom: 10px">
+											<textarea  placeholder="" style="display:inline-block;" class="" name="options[consult][protocol][]" >
+											{$consult['protocol'][0]}
+											</textarea>&nbsp;
+											<a href="javascript:void(0);" class="do add_consult_protocol"><i class="fa fa-plus"></i></a>
+										</div>
+									</if>
+								</div>
+
+								<div class="control-group consult_notice">
+									<label class="control-label">问答须知</label>
+									<if condition="count($consult['notice']) gt 1">
+										<foreach name="consult['notice']" item="v" key="k1">
+											<div class="controls" style="margin-bottom: 10px">
+											<textarea  placeholder="" style="display:inline-block;" class="" name="options[consult][notice][]" >
+                                            {$v}
+											</textarea>&nbsp;
+												<if condition="$k1 == 0">
+													<a href="javascript:void(0);" class="do add_consult_notice"><i class="fa fa-plus"></i></a>
+													<else/>
+													<a href="javascript:void(0);" class="do del"><i class="fa fa-minus"></i></a>
+												</if>
+											</div>
+										</foreach>
+										<else />
+										<div class="controls" style="margin-bottom: 10px">
+											<textarea  placeholder="" style="display:inline-block;" class="" name="options[consult][notice][]" >
+											{$consult['notice'][0]}
+											</textarea>&nbsp;
+											<a href="javascript:void(0);" class="do add_consult_notice"><i class="fa fa-plus"></i></a>
+										</div>
+									</if>
+								</div>
+							</fieldset>
+						</div>
+
+						<div class="tab-pane" id="ACN">
+							<fieldset>
+
+								<div class="control-group ACN">
+									<label class="control-label">APP承诺</label>
+									<div style="margin-left:180px;margin-bottom: 10px">
+										<input  type="text" readonly  value="APP承诺标题">&nbsp;
+										<input  type="text"  readonly value="qq号">&nbsp;
+										<input  type="text"  readonly value="APP承诺内容">&nbsp;
+
+									</div>
+
+									<if condition="count($app_promise) gt 1">
+										<foreach name="app_promise" item="v" key="k1">
+											<div class="controls" style="margin-bottom: 10px">
+												<input type="text" placeholder="APP承诺标题" class="" name="options[app_promise][{$k1}][title]" value="{$v['title']}">&nbsp;
+												<input type="text" placeholder="qq号" class="" name="options[app_promise][{$k1}][qq]" value="{$v['qq']}">&nbsp;
+											<textarea  placeholder="APP承诺内容" style="display:inline-block;" class="" name="options[app_promise][{$k1}][content]" >
+                                            {$v['content']}
+											</textarea>
+
+												<if condition="$k1 == type1">
+													<a href="javascript:void(0);" class="do add_acn"><i class="fa fa-plus"></i></a>
+													<else/>
+													<a href="javascript:void(0);" class="do del"><i class="fa fa-minus"></i></a>
+												</if>
+											</div>
+										</foreach>
+										<else />
+										<div class="controls" style="margin-bottom: 10px">
+											<input type="text" placeholder="APP承诺标题" class="" name="options[app_promise][type1][title]" value="{$app_promise['type1']['title']}">&nbsp;
+											<input type="text" placeholder="qq号" class="" name="options[app_promise][type1][qq]" value="{$app_promise['type1']['qq']}">&nbsp;
+											<textarea  placeholder="APP承诺标题" style="display:inline-block;" class="" name="options[app_promise][type1][content]" >
+											{$app_promise['type1']['content']}
+											</textarea>&nbsp;
+
+											<a href="javascript:void(0);" class="do add_acn"><i class="fa fa-plus"></i></a>
+										</div>
+									</if>
+								</div>
+							</fieldset>
+							<div class="control-group">
+								<label class="control-label">承诺图片：</label>
+								<input type='hidden' name='options[promise_pic]' id='promise_pic' value='{$promise_pic}'>
+								<a href='javascript:void(0);'
+								   onclick="upload_one_image('图片上传','#promise_pic');return false;">
+									<if condition="empty($promise_pic)">
+										<img src="__ROOT__/public/images/icon/upload-pic.png" id='promise_pic-preview'
+											 width='135' height='113' style='cursor:hand'/>
+										<else/>
+										<img src="{:sp_get_asset_upload_path($promise_pic)}" id='promise_pic-preview' width='100'
+											 height='200px' style='cursor:hand;'/>
+									</if>
+								</a>
+								<input type="button" class="btn"
+									   onclick="$('#promise_pic-preview').attr('src','__ROOT__/public/images/icon/upload-pic.png');$('#promise_pic').val('');return false;"
+									   value="取消图片">
+							</div>
+						</div>
+
+
+						<div class="tab-pane" id="I">
+
+                        <fieldset>
+
+                            <div class="control-group">
+                                <label class="control-label">安卓版本：</label>
+                                <div class="controls">
+                                    <input type="text" class="input" name="options[site_android_version]"
+                                           value="{$site_android_version}">
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label">安卓下载地址：</label>
+                                <div class="controls">
+                                    <input type="text" class="input" name="options[site_android_download]"
+                                           value="{$site_android_download}">
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label">安卓更新时间：</label>
+                                <div class="controls">
+                                    <input type="text" name="options[site_android_updatetime]"
+                                           value="{$site_android_updatetime}" size="21" class="input length_2 js-datetime updatetime"
+                                           style="width: 206px;">
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label">苹果版本：</label>
+                                <div class="controls">
+                                    <input type="text" class="input" name="options[site_ios_version]"
+                                           value="{$site_ios_version}">
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label">苹果下载地址：</label>
+                                <div class="controls">
+                                    <input type="text" class="input" name="options[site_ios_download]"
+                                           value="{$site_ios_download}">
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">苹果更新时间：</label>
+                                <div class="controls">
+                                    <input type="text" name="options[site_ios_updatetime]"
+                                           value="{$site_ios_updatetime}" size="21" class="input length_2 js-datetime updatetime"
+                                           style="width: 206px;">
+                                </div>
+                            </div>
+
+						</fieldset>
+                            </div>
+						<div class="tab-pane" id="activity">
+
+							<fieldset>
+								<div class="control-group">
+									<label class="control-label">活动标题<b style="color:#ee5f5b">*</b></label>
+									<div class="controls">
+										<input type="text" style="width:400px" maxlength="50" name="options[site_activity_title]" value="{$site_activity_title}"/>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">活动内容<b style="color:#ee5f5b">*</b></label>
+									<div class="controls">
+										<textarea name="options[site_activity_content]"  id="site_activity_content" >{:html_entity_decode($site_activity_content)}</textarea>
+									</div>
+								</div>
+
+							</fieldset>
+
+						</div>
+
+                    </div>
+
+
+					</div>
+
+
+				<div class="form-actions">
+					<button type="submit" class="btn btn-primary  js-ajax-submit">{:L("SAVE")}</button>
+					<i class="fa fa-question-circle"></i><span>保存完成后必须要清除缓存新设置才会生效</span>
+				</div>
+			</fieldset>
+		</form>
+
+	</div>
+	<script type="text/javascript" src="__PUBLIC__/js/layer/layer.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/common.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/ueditor/ueditor.config.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/ueditor/ueditor.all.min.js"></script>
+	<script>
+        function showtips(obj){
+            var index = layer.tips('如快接支付宝金额大于3K，该笔订单自动切换为金猪支付宝', obj, {
+                tips: 2,
+                area:['auto','auto'],
+                time:false
+            });
+            $(obj).on('mouseout',function(){
+                layer.close(index)
+            })
+        }
+
+		var editorURL = GV.WEB_ROOT;
+		editorcontent = new baidu.editor.ui.Editor({initialFrameHeight :400,initialFrameWidth:1000});
+		editorcontent.render('site_activity_content');
+		$('.add').click(function(){
+            var len = $(".vip").children("div").length;
+
+            var html = '<div class="controls" style="margin-bottom: 10px">';
+				html += '<input type="number" placeholder="开通月数，请输入整数" class="type'+(len+1)+'-month" name="options[vip][type'+(len+1)+'][month]">&nbsp;&nbsp;';
+            html += '<input type="number" placeholder="原价，请输入整数" class="type'+(len+1)+'-month" name="options[vip][type'+(len+1)+'][costMoney]">&nbsp;&nbsp;';
+				html += '<input type="number" placeholder="现价，请输入整数" class="type'+(len+1)+'-money" name="options[vip][type'+(len+1)+'][money]">&nbsp;&nbsp;';
+				html += '<input type="number" placeholder="返平台币，请输入整数" class="type'+(len+1)+'-ptb" name="options[vip][type'+(len+1)+'][ptb]">&nbsp;&nbsp;&nbsp;';
+				html += '<a href="javascript:void(0);" class="do del"><i class="fa fa-minus"></i></a></div>';
+			$('.vip').append(html);
+		});
+
+        $('.cadd').click(function(){
+            var len = $(".content").children("div").length;
+            var html = '<div class="controls">';
+            html += '<input type="text" placeholder="标题" style="margin-bottom: 10px;" name="options[notice][title][]" >&nbsp;';
+            html += '<a href="javascript:void(0);" class="do cdel"><i class="fa fa-minus"></i></a>';
+            html += '<textarea placeholder="内容" style="display:block;margin-bottom: 20px;" name="options[notice][content][]"></textarea>';
+            html += '</div>';
+            $('.content').append(html);
+        });
+
+        $('.rankadd').click(function(){
+            var len = $(".content").children("div").length;
+            var html = '<div class="controls">';
+            html += '<input type="text" placeholder="标题" style="margin-bottom: 10px;" name="options[rankNotice][title][]" >&nbsp;';
+            html += '<a href="javascript:void(0);" class="do rankdel"><i class="fa fa-minus"></i></a>';
+            html += '<textarea placeholder="内容" style="display:block;margin-bottom: 20px;" name="options[rankNotice][content][]"></textarea>';
+            html += '</div>';
+            $('.rankappend').append(html);
+        });
+
+        $('.settlement').click(function(){
+            var len = $(".settle").children("div").length;
+
+            var html = '<div class="controls" style="margin-bottom: 10px">';
+            html += '<input type="text" placeholder="金额范围,用英文\'-\'号隔开" class="type'+(len+1)+'-range" name="options[settlement][type'+(len+1)+'][range]">&nbsp;&nbsp;';
+            html += '<input type="number" placeholder="计算百分比" class="type'+(len+1)+'-percent" name="options[settlement][type'+(len+1)+'][percent]">&nbsp;&nbsp;';
+            html += '<a href="javascript:void(0);" class="do sdel"><i class="fa fa-minus"></i></a></div>';
+            $('.settle').append(html);
+        });
+
+        	$('.add_cg').click(function(){
+			var len = $(".CG").children("div").length;
+
+			var html = '<div class="controls" style="margin-bottom: 10px">';
+			html += '<input type="text" placeholder="转游须知标题" name="options[change_game][type'+(len)+'][title]">&nbsp;&nbsp;';
+			html += '<textarea   placeholder="转游须知内容" style="display:inline-block;" name="options[change_game][type'+(len)+'][content]"></textarea>';
+			html += '<a href="javascript:void(0);" class="do del"><i class="fa fa-minus"></i></a></div>';
+			$('.CG').append(html);
+		});
+
+		$('.add_acn').click(function(){
+			var len = $(".ACN").children("div").length;
+
+			var html = '<div class="controls" style="margin-bottom: 10px">';
+			html += '<input type="text" placeholder="APP承诺标题" name="options[app_promise][type'+(len)+'][title]">&nbsp;&nbsp;';
+			html += '<input type="text"  placeholder="qq号"  name="options[app_promise][type'+(len)+'][qq]">&nbsp;&nbsp;';
+			html += '<textarea   placeholder="APP承诺标题内容" style="display:inline-block;" name="options[app_promise][type'+(len)+'][content]"></textarea>';
+			html += '<a href="javascript:void(0);" class="do del"><i class="fa fa-minus"></i></a></div>';
+			$('.ACN').append(html);
+		});
+
+		$('.add_buy').click(function(){
+			var len = $(".BUY").children("div").length;
+
+			var html = '<div class="controls" style="margin-bottom: 10px">';
+			html += '<textarea   placeholder="买家须知" style="display:inline-block;" name="options[buyer_notes][]"></textarea>';
+			html += '<a href="javascript:void(0);" class="do del"><i class="fa fa-minus"></i></a></div>';
+			$('.BUY').append(html);
+		});
+
+		$('.add_business_notice').click(function(){
+			var len = $(".BUSINESS_NOTICE").children("div").length;
+
+			var html = '<div class="controls" style="margin-bottom: 10px">';
+			html += '<textarea   placeholder="注意事项" style="display:inline-block;" name="options[business_notice][]"></textarea>';
+			html += '<a href="javascript:void(0);" class="do del"><i class="fa fa-minus"></i></a></div>';
+			$('.BUSINESS_NOTICE').append(html);
+		});
+
+		$('.add_sell').click(function(){
+			var len = $(".SELL").children("div").length;
+
+			var html = '<div class="controls" style="margin-bottom: 10px">';
+			html += '<textarea   placeholder="卖家须知" style="display:inline-block;" name="options[seller_notes][]"></textarea>';
+			html += '<a href="javascript:void(0);" class="do del"><i class="fa fa-minus"></i></a></div>';
+			$('.SELL').append(html);
+		});
+
+		$('.add_consult_protocol').click(function(){
+			var html = '<div class="controls" style="margin-bottom: 10px">';
+			html += '<textarea   placeholder="" style="display:inline-block;" name="options[consult][protocol][]"></textarea>&nbsp;&nbsp;';
+			html += '<a href="javascript:void(0);" class="do del"><i class="fa fa-minus"></i></a></div>';
+			$('.consult_protocol').append(html);
+		});
+
+		$('.add_consult_notice').click(function(){
+			var html = '<div class="controls" style="margin-bottom: 10px">';
+			html += '<textarea   placeholder="" style="display:inline-block;" name="options[consult][notice][]"></textarea>&nbsp;&nbsp;';
+			html += '<a href="javascript:void(0);" class="do del"><i class="fa fa-minus"></i></a></div>';
+			$('.consult_notice').append(html);
+		});
+
+
+		$('body').on('click','.del',function(){
+		    $(this).parent('div').remove();
+		});
+        $('body').on('click','.cdel',function(){
+            $(this).parent('div').remove();
+        });
+        $('body').on('click','.rankdel',function(){
+            $(this).parent('div').remove();
+        });
+        $('body').on('click','.sdel',function(){
+            $(this).parent('div').remove();
+        });
+		/////---------------------
+		$(function(){
+			$("#urlmode-select").change(function(){
+				if($(this).val()==1){
+					alert("更改后，若发现前台链接不能正常访问，可能是您的服务器不支持PATHINFO，请先修改data/conf/config.php文件的URL_MODEL为0保证网站正常运行,在配置服务器PATHINFO功能后再更新为PATHINFO模式！");
+				}
+
+				if($(this).val()==2){
+					alert("更改后，若发现前台链接不能正常访问，可能是您的服务器不支持REWRITE，请先修改data/conf/config.php文件的URL_MODEL为0保证网站正常运行，在开启服务器REWRITE功能后再更新为REWRITE模式！");
+				}
+			});
+			$("#js-site-admin-url-password").change(function(){
+				$(this).data("changed",true);
+			});
+		});
+		Wind.use('validate', 'ajaxForm', 'artDialog', function() {
+			//javascript
+			var form = $('form.js-ajax-forms');
+			//ie处理placeholder提交问题
+			if ($.browser && $.browser.msie) {
+				form.find('[placeholder]').each(function() {
+					var input = $(this);
+					if (input.val() == input.attr('placeholder')) {
+						input.val('');
+					}
+				});
+			}
+			//表单验证开始
+			form.validate({
+				//是否在获取焦点时验证
+				onfocusout : false,
+				//是否在敲击键盘时验证
+				onkeyup : false,
+				//当鼠标掉级时验证
+				onclick : false,
+				//验证错误
+				showErrors : function(errorMap, errorArr) {
+					//errorMap {'name':'错误信息'}
+					//errorArr [{'message':'错误信息',element:({})}]
+					try {
+						$(errorArr[0].element).focus();
+						art.dialog({
+							id : 'error',
+							icon : 'error',
+							lock : true,
+							fixed : true,
+							background : "#CCCCCC",
+							opacity : 0,
+							content : errorArr[0].message,
+							cancelVal : "{:L('OK')}",
+							cancel : function() {
+								$(errorArr[0].element).focus();
+							}
+						});
+					} catch (err) {
+					}
+				},
+				//验证规则
+				rules : {
+					'options[site_name]' : {
+						required : 1
+					},
+					'options[site_host]' : {
+						required : 1
+					},
+					'options[site_root]' : {
+						required : 1
+					},
+                    'options[deplete_coin]' : {
+                        required : 1,
+                        digits:1
+                    },
+                    'options[place]' : {
+                        range:[0,12]
+                    },
+                    'options[settlement][type1][range]' : {
+                        required:1
+                    },
+                    'options[settlement][type1][percent]' : {
+                        required:1
+                    }
+				},
+				//验证未通过提示消息
+				messages : {
+					'options[site_name]' : {
+						required : "{:L('WEBSITE_SITE_NAME_REQUIRED_MESSAGE')}"
+					},
+					'options[site_host]' : {
+						required : "{:L('WEBSITE_SITE_HOST_REQUIRED_MESSAGE')}"
+					},
+                    'options[deplete_coin]' : {
+                        required : '请输入抽奖消耗金额',
+                        digits:'请输入正确数字'
+                    },
+                    'options[place]' : {
+                        range:'中奖位置在0-12之间'
+                    },
+                    'options[settlement][type1][range]' : {
+                        required:'请输入自主结算金额范围'
+                    },
+                    'options[settlement][type1][percent]' : {
+                        required:'请输入自主结算百分比'
+                    }
+				},
+				//给未通过验证的元素加效果,闪烁等
+				highlight : false,
+				//是否在获取焦点时验证
+				onfocusout : false,
+				//验证通过，提交表单
+				submitHandler : function(forms) {
+				    var month = $('.type1-month').val();
+                    var money = $('.type1-money').val();
+                    var ptb = $('.type1-ptb').val();
+                    var rank = true;
+					if(month == '' || money== '' || ptb == ''){
+					    alert('最少要有一个VIP设置');
+					    return false;
+					}
+					$('.rank').each(function(i){
+					    if($(this).val() == ''){
+					        rank = false;
+					        alert('邀请排名奖励不能为空');
+						}
+						if($(this).val() < 0){
+                            rank = false;
+                            alert('奖励金币不能为负');
+						}
+					});
+					if(!rank){
+					    return false;
+					}
+
+					$(forms).ajaxSubmit({
+						url : form.attr('action'), //按钮上是否自定义提交地址(多按钮情况)
+						dataType : 'json',
+						beforeSubmit : function(arr, $form, options) {
+
+						},
+						success : function(data, statusText, xhr, $form) {
+							if (data.status) {
+								setCookie("refersh_time", 1);
+								var admin_url_changed=$("#js-site-admin-url-password").data("changed");
+								var message =admin_url_changed?data.info+'<br><span style="color:red;">后台地址已更新(请劳记！)</span>':data.info;
+
+								//添加成功
+								Wind.use("artDialog", function() {
+									art.dialog({
+										id : "succeed",
+										icon : "succeed",
+										fixed : true,
+										lock : true,
+										background : "#CCCCCC",
+										opacity : 0,
+										content : message,
+										button : [ {
+											name : "{:L('OK')}",
+											callback : function() {
+												reloadPage(window);
+												return true;
+											},
+											focus : true
+										}, {
+											name : "{:L('CLOSE')}",
+											callback : function() {
+												reloadPage(window);
+												return true;
+											}
+										} ]
+									});
+								});
+							} else {
+								alert(data.info);
+							}
+						}
+					});
+				}
+			});
+		});
+		////-------------------------
+	</script>
+</body>
+</html>

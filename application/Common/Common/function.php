@@ -2857,9 +2857,7 @@ function checkSign($arr,$key){
 	foreach ($arr as $k=>$v){
 		$str .= $k.'='.$v.'&';
 	}
-
 	$str = md5(trim($str,'&').$key);
-
 	if($sign != $str){
 		return false;
 	}else{
@@ -3930,6 +3928,50 @@ function validateIDCard($IDCard) {
 	} else {
 		return false;
 	}
+}
+
+function doValidate($IDCard, $realName) {
+    validateIDCardReal($IDCard, $realName);
+}
+
+
+// 验证身份证是否有效
+function validateIDCardReal($IDCard, $realName) {
+    $host = "https://checkid.market.alicloudapi.com";
+    $path = "/IDCard";
+    $method = "GET";
+    $appcode = "583d11c3eea249c5adecc5e7822d0ebb";
+    $headers = array();
+    array_push($headers, "Authorization:APPCODE " . $appcode);
+    $name = $realName;
+    $idcard = $IDCard;
+    $querys = "idCard=".$idcard."&name=".$name;
+    echo $querys;
+    $bodys = "";
+    $url = $host . $path . "?" . $querys;
+
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($curl, CURLOPT_FAILONERROR, false);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_HEADER, false);
+    //curl_setopt($curl, CURLOPT_HEADER, true); 如不输出json, 请打开这行代码，打印调试头部状态码。
+    //状态码: 200 正常；400 URL无效；401 appCode错误； 403 次数用完； 500 API网管错误
+    if (1 == strpos("$".$host, "https://"))
+    {
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+    }
+    $out_put = curl_exec($curl);
+    $ret = json_decode($out_put, true);
+    if ($out_put && $ret) {
+        if($ret["status"] == '01' || $ret["status"] == '403'){
+            return true;
+        }
+    }
+    return false;
 }
 
 //计算身份证的最后一位验证码,根据国家标准GB 11643-1999

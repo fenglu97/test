@@ -1,0 +1,121 @@
+<admintpl file="header"/>
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/chosen.css">
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/docsupport/prism.css">
+<style type="text/css" media="all">    /* fix rtl for demo */
+.chosen-rtl .chosen-drop {
+    left: -9000px;
+}</style></head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <if condition="$type_date eq 0">
+            <li><a href="{:U('DataManage/register_details',array('type_date'=>3))}" target="_self">本月</a></li>
+            <li class="active"><a href="javascript:;">今日</a></li>
+            <li><a href="{:U('DataManage/register_details',array('type_date'=>1))}" target="_self">昨日</a></li>
+            <li><a href="{:U('DataManage/register_details',array('type_date'=>2))}" target="_self">本周</a></li>
+        </if>
+        <if condition="$type_date eq 1">
+            <li><a href="{:U('DataManage/register_details',array('type_date'=>3))}" target="_self">本月</a></li>
+            <li><a href="{:U('DataManage/register_details',array('type_date'=>0))}" target="_self">今日</a></li>
+            <li class="active"><a href="javascript:;">昨日</a></li>
+            <li><a href="{:U('DataManage/register_details',array('type_date'=>2))}" target="_self">本周</a></li>
+        </if>
+        <if condition="$type_date eq 2">
+            <li><a href="{:U('DataManage/register_details',array('type_date'=>3))}" target="_self">本月</a></li>
+            <li><a href="{:U('DataManage/register_details',array('type_date'=>0))}" target="_self">今日</a></li>
+            <li><a href="{:U('DataManage/register_details',array('type_date'=>1))}" target="_self">昨日</a></li>
+            <li class="active"><a href="javascript:;">本周</a></li>
+        </if>
+        <if condition="$type_date eq 3">
+            <li class="active"><a href="javascript:;">本月</a></li>
+            <li><a href="{:U('DataManage/register_details',array('type_date'=>0))}" target="_self">今日</a></li>
+            <li><a href="{:U('DataManage/register_details',array('type_date'=>1))}" target="_self">昨日</a></li>
+            <li><a href="{:U('DataManage/register_details',array('type_date'=>2))}" target="_self">本周</a></li>
+        </if>
+
+    </ul>
+    <form class="well form-search"  method="post" action="{:U('DataManage/register_details')}">
+        <div class="search_type cc mb10">
+            <div class="mb10">
+                <span class="mr20">
+                    渠道：
+                    <select name="cid" class="chosen-select cid" style="width:auto;height: 35px;" tabindex="1">
+                        {:get_channel_list($cid)}
+                    </select>&nbsp;&nbsp;
+
+                    账号：
+                    <input type="text" name="username" style="width: 200px;" value="{$username}" placeholder="请输入账号">&nbsp;&nbsp;
+                    手机号：
+                    <input type="text" name="mobile" style="width: 200px;" value="{$mobile}" placeholder="请输入手机号">&nbsp;&nbsp;
+                    自定义日期：
+                    <input type="text" name="start" class="js-date date" value="{$start}" style="width: 120px;" autocomplete="off">&nbsp;至
+                    <input type="text" name="end" class="js-date date" value="{$end}" style="width: 120px;" autocomplete="off">
+                    <input type="hidden" name="type_date" value="{$type_date}">
+                    <input type="submit" class="btn btn-primary" value="搜索"/>
+
+                </span>
+            </div>
+        </div>
+    </form>
+    <script src="__PUBLIC__/js/chosen/chosen.jquery.js" type="text/javascript"></script>
+    <script src="__PUBLIC__/js/chosen/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">        var config = {
+        '.chosen-select': {},
+        '.chosen-select-deselect': {allow_single_deselect: true},
+        '.chosen-select-no-single': {disable_search_threshold: 10},
+        '.chosen-select-no-results': {no_results_text: '没有匹配的结果'},
+        '.chosen-select-width': {width: "95%"}
+    };
+    for (var selector in config) {
+        $(selector).chosen(config[selector]);
+    }
+    $("#select_1").val('{$game_id}');
+    $("#select_1").trigger("chosen:updated");    </script>
+
+
+        <table class="table table-hover table-bordered table-list">
+            <thead>
+            <tr>
+
+                <th >账号</th>
+                <th width="10%">手机号</th>
+                <th width="12%">所属渠道</th>
+                <th width="10%">注册日期</th>
+                <th width="10%">最后登录时间</th>
+                <th width="8%">最后登录IP</th>
+                <th width="12%">注册游戏</th>
+                <th width="12%">最近登录游戏</th>
+                <th width="18%">设备号</th>
+            </tr>
+            </thead>
+            <foreach name="list" item="vo">
+                <tr>
+                    <td>{$vo.username}</td>
+                    <td>{$vo.mobile}</td>
+                    <td>{$vo.channel}</td>
+                    <td>{$vo.regtime|date="Y-m-d H:i:s",###}</td>
+                    <td>{$vo.last_login_time|date="Y-m-d H:i:s",###}</td>
+                    <td>{$vo.ip}</td>
+                    <td>{$vo.reg_game}</td>
+                    <td>{$vo.last_login_game}</td>
+                    <td>{$vo.machine_code}</td>
+
+                </tr>
+            </foreach>
+        </table>
+        <div class="pagination">{$page}</div>
+
+</div>
+<script src="__ROOT__/public/js/common.js?"></script>
+<script>    Think.setValue("cid", {cid | default = 1 });
+setCookie('refersh_time', 0);
+function refersh_window() {
+    var refersh_time = getCookie('refersh_time');
+    if (refersh_time == 1) {
+        window.location.reload();
+    }
+}
+setInterval(function () {
+    refersh_window()
+}, 3000);</script>
+</body></html>

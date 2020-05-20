@@ -1,0 +1,58 @@
+<admintpl file="header" />
+</head>
+<body>
+	<div class="wrap js-check-wrap">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="{:U('Player/userInfo',array('uid'=>I('get.uid',0,'intval')))}">玩家信息</a></li>
+			<li><a href="{:U('Player/update',array('uid'=>I('get.uid',0,'intval')))}">{:L('ADMIN_SETTING_PASSWORD')}</a></li>
+		</ul>
+		<fieldset>
+			<div class="form-horizontal">
+				<div class="tabbable">
+					<div class="tab-content">
+						<fieldset>
+							<div class="control-group">
+								<label class="control-label">{:L('USERNAME')}</label>
+								<div class="controls">
+									<input type="text" value="{$userInfo['username']}" disabled="disabled">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">{:L('REAL_NAME')}</label>
+								<div class="controls">
+									<input type="text" value="{$userInfo['real_name']}" disabled="disabled">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">{:L('ID_CARD')}</label>
+								<div class="controls">
+									<input type="text" value="{$userInfo['id_card']}" disabled="disabled">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">{:L('QQ')}：</label>
+								<div class="controls">
+									<input type="text" value="{$userInfo['qq']}" disabled="disabled">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">{:L('EMAIL')}</label>
+								<div class="controls">
+									<input type="text" value="{$userInfo['email']}" disabled="disabled">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">{:L('MODIFIY_TIME')}</label>
+								<div class="controls">
+									<input type="text" value="{:date('Y-m-d H:i',$userInfo['modifiy_time'])}" disabled="disabled">
+								</div>
+							</div>
+						</fieldset>
+					</div>
+				</div>
+			</div>
+		</fieldset>
+	</div>
+	<script src="__PUBLIC__/js/common.js"></script>
+</body>
+</html>

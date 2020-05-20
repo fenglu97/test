@@ -1,0 +1,134 @@
+<admintpl file="header" />
+</head>
+<body>
+	<div class="wrap js-check-wrap">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="javascript:void(0);">所有记录</a></li>
+	
+		</ul>
+			<form class="well form-search" method="post" action="{:U('GmPri/authorize_list')}">
+
+			<div class="search_type cc mb10">
+
+				<div class="mb10">
+
+					<span class="mr20">
+					
+						游戏名称： 
+
+  <select name="appid" id="appid" class="chosen-select appid" style="width:120px;" tabindex="1">
+                        <option value="">所有游戏</option>
+                        {$games}
+                    </select>
+
+		
+						&nbsp;&nbsp;
+												区服ID：
+						<input type="text" name="serverid" id="serverid" value="{$parameter['serverid']}" style="width:80px;" />
+							&nbsp;&nbsp;
+																			玩家账号：
+						<input type="text" name="username" id="username" value="{$parameter['username']}" style="width:100px;" />
+							&nbsp;&nbsp;
+																										订单号：
+						<input type="text" name="orderID" id="orderID" value="{$parameter['orderID']}"   style="width:170px;" />
+							&nbsp;&nbsp;
+							
+
+							                    					时间：
+
+   <input type="text" name="start_time" id="start_time" value="{$parameter['start_time']}" class="input length_3 js-date" size="11" style="width:180px;"> 至 
+   <input type="text" name="end_time" id="end_time" value="{$parameter['end_time']}" size="11" class="input length_3 js-date" style="width:180px;">
+   &nbsp;&nbsp;	
+   
+   							授权类型：
+							<select name="type" id="type" style="width:100px">
+							<option value="">所有类型</option>
+							<option value="1" <if condition="$parameter['type'] eq 1">selected</if>>支付</option>
+							<option value="2" <if condition="$parameter['type'] eq 2">selected</if>>后台</option>
+							</select>
+							
+							&nbsp;&nbsp;	
+				<input type="submit" class="btn btn-primary" value="搜索" />
+					</span>
+
+					
+
+
+
+
+				</div>
+
+			</div>
+
+		</form>
+
+			<table class="table table-hover table-bordered table-list" id="menus-table">
+				<thead>
+					<tr>
+					
+						<th width="100">ID</th>
+					
+						<th>游戏名称</th>
+					    <th>区服ID</th>
+					    <th style="width:160px;">玩家账号</th>
+					    <th>订单号</th>
+					    <th>权限档位ID</th>
+					    <th>授权类型</th>
+					    <th style="width:400px;">授权原因</th>
+					    <th>创建时间</th>
+
+					</tr>
+				</thead>
+				<tbody>
+								<foreach name="list" item="vo">
+
+				<tr>
+
+					<td>{$vo['id']}</td>
+
+					<td>{$gamename[$vo['appid']]}</td>
+					<td>{$vo['serverid']}</td>
+                    <td>{$vo['username']}</td>
+                     <td>{$vo['orderID']}</td>
+                     <td>{$vo['gm_gear_id']}</td>
+                     <td><if condition="$vo['type'] eq 1">支付<else />后台</if></td>
+                     <td>{$vo['open_reason']}</td>
+					<td>{$vo['create_time']|date="Y-m-d H:i:s",###}</td>
+
+				
+				
+
+
+
+				</tr>
+
+				</foreach>
+				</tbody>
+
+			</table>
+	
+		</form>
+	</div>
+	
+			<div class="pagination">{$page}</div>
+	<script src="__PUBLIC__/js/common.js"></script>
+	<script>
+		$(document).ready(function() {
+			Wind.css('treeTable');
+			Wind.use('treeTable', function() {
+				$("#menus-table").treeTable({
+					indent : 20
+				});
+			});
+		});
+
+		setInterval(function() {
+			var refersh_time = getCookie('refersh_time_admin_menu_index');
+			if (refersh_time == 1) {
+				reloadPage(window);
+			}
+		}, 1000);
+		setCookie('refersh_time_admin_menu_index', 0);
+	</script>
+</body>
+</html>

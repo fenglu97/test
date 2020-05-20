@@ -1,0 +1,89 @@
+<admintpl file="header" />
+<script type="text/javascript" src="__TMPL__Public/assets/js/emoji-list-with-image.js"></script>
+<script type="text/javascript" src="__TMPL__Public/assets/js/punycode.js"></script>
+<script type="text/javascript" src="__TMPL__Public/assets/js/emoji.js"></script>
+<link rel="stylesheet" href="__PUBLIC__/js/switch/bootstrap-switch.css">
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class=""><a href="{:U('comment/game_index')}">评论列表</a></li>
+        <li class="active"><a href="javascript:void(0);">回复列表</a></li>
+    </ul>
+    <form class="well form-search" method="post" action="{:U('comment_info',array('comment_id'=>$comment_id))}">
+        评论人:
+        <input type="text" name="username" class="user" style="width: 150px;" value="{$parameter['username']}" placeholder="">
+        时间:
+        <input type="text" name="start_time" class="js-date date" value="{$parameter['start_time']}" style="width: 120px;" autocomplete="off">-
+        <input type="text" name="end_time" class="js-date date" value="{$parameter['end_time']}" style="width: 120px;" autocomplete="off">
+        <input type="submit" class="btn btn-primary" value="搜索" />
+    </form>
+    <form class="js-ajax-form" method="post">
+        <div class="table-actions">
+            <button class="btn btn-danger btn-small js-ajax-submit" type="submit" data-action="{:U('game_del')}" data-subcheck="true" data-msg="{:L('DELETE_CONFIRM_MESSAGE')}">批量删除</button>
+        </div>
+        <table class="table table-hover table-bordered" style="table-layout: fixed;">
+            <tr>
+                <th width="10%">评论详情</th>
+                <th width="90%" colspan="7" style="word-wrap: break-word; word-break: break-all;">{$comment_info['content']}<div><foreach name="comment_info.imgs" item="vo"><img style="width:15%;margin-right:3%;" src="{$ftp_url}{$vo}"/></foreach></div></th>
+            </tr>
+        </table>
+        <table class="table table-hover table-bordered" style="table-layout: fixed;">
+            <thead>
+
+            <tr>
+                <th width="3%"><label><input type="checkbox" class="js-check-all" data-direction="x" data-checklist="js-check-x"></label></th>
+                <th width="6%">游戏</th>
+                <th width="6%">评论人</th>
+                <th width="6%">回复人</th>
+                <th width="30%">内容</th>
+                <th width="5%">灌水</th>
+                <th width="5%">赞</th>
+                <th width="8%">时间</th>
+            </tr>
+            </thead>
+            <tbody>
+            <foreach name="list" item="vo">
+                <tr>
+                    <td><input type="checkbox" class="js-check" data-yid="js-check-y" data-xid="js-check-x" name="ids[]" value="{$vo.id}"></td>
+                    <td>{$game_names[$vo['dynamics_id']]}</td>
+                    <td><if condition="$vo['is_fake'] eq 1">{$fake_usernames[$vo['uid']]}<else />{$usernames[$vo['uid']]}</if></td>
+                    <td><if condition="$vo['is_fake'] eq 0">{$usernames[$vo['to_uid']]}<else />{$fake_usernames[$vo['to_uid']]}</if></td>
+                    <td class="content">{$vo.content}</td>
+                    <td><if condition="$vo['is_fake'] eq 0">不是<else />是</if></td>
+                    <td>{$vo.likes}</td>
+                    <td>{$vo.create_time|date="Y-m-d H:i:s",###}</td>
+
+                </tr>
+            </foreach>
+            <input type="hidden" name="comment_id" value="{$comment_id}">
+            </tbody>
+        </table>
+        <div class="pagination">{$page}</div>
+    </form>
+</div>
+<script src="__PUBLIC__/js/common.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script src="__PUBLIC__/js/switch/bootstrap.min.js"></script>
+<script src="__PUBLIC__/js/switch/bootstrap-switch.js"></script>
+<script src="__PUBLIC__/js/laydate/laydate.js"></script>
+<script src="__PUBLIC__/js/datePicker/datePicker.js"></script>
+<script type="text/javascript">
+    $(function(){
+
+        $('.emoji').each(function(){
+            var td = parse($(this).text());
+            $(this).html(td)
+        });
+
+        function parse(arg) {
+            if (typeof ioNull !='undefined') {
+                return  ioNull.emoji.parse(arg);
+            }
+            return '';
+        }
+    });
+
+</script>
+</body>
+</html>

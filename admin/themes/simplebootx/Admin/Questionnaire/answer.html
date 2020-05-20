@@ -1,0 +1,149 @@
+<admintpl file="header"/>
+<link rel="stylesheet" href="__PUBLIC__/js/switch/bootstrap-switch.css">
+<style>
+    .title{
+        width: 755px;
+        margin: 0 0 50px 21%;
+        padding: 20px;
+        border-radius: 15px;
+        display: block;
+        background-color: #008fbf;
+    }
+    .title p{
+        color:white;
+        text-align: center;
+        font-size: 20px;
+        margin:0;
+    }
+</style>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:U('userIndex')}">问卷列表</a></li>
+        <li class="active"><a href="javascript:void(0);"><if condition="$type eq 1">查看问卷<else />回答问卷</if></a></li>
+    </ul>
+    <div class="title">
+        <p>{$data.title}</p>
+    </div>
+    <if condition="$type eq 1">
+        <foreach name="data['questionItems']" key="k" item="vo">
+            <div class="well" data-id="{$vo.id}" data-type="{$vo.type}" style="width: 45%;margin-left: 21%;">
+                <p style="border: 1px solid #f5f5f5;border-bottom-color: #afaeae;">Q{$k+1}：{$vo.name}<if condition="$vo.type eq 1 ">&nbsp;&nbsp;(单选)<elseif condition="$vo.type eq 2"/>&nbsp;&nbsp;(多选)<else/>&nbsp;&nbsp;(填空)</if></p>
+                <if condition="$vo.type neq 3">
+                    <foreach name="vo['option']" key="k1" item="v">
+                        <div style="margin-bottom: 5px">
+                            <label>
+                                <if condition="$vo.type eq 1">
+                                    <input type="radio" <if condition="$vo['id'] eq $user[$k]['pid'] and $v['id'] eq $user[$k]['value']">checked</if> disabled data-id="{$v.id}" name="q{$vo.id}" value="{$v.name}" style="margin:0 5px 0 0"/>{$v.name}
+                                    <else/>
+                                    <input type="checkbox" <if condition="$vo['id'] eq $user[$k]['pid'] and in_array($v['id'],$user[$k]['value'])">checked</if> disabled class="choice" data-id="{$v.id}"  value="{$v.name}" style="margin:0 5px 0 0"/>{$v.name}
+                                </if>
+                            </label>
+                        </div>
+                    </foreach>
+                    <else/>
+                    <p>
+                        <textarea disabled style="width: 740px;height:90px;resize: vertical;">{$user[$k]['value']}</textarea>
+                    </p>
+                </if>
+            </div>
+        </foreach>
+        <div class="form-actions" style="text-align: center">
+            <a class="btn" href="javascript:history.back(-1);">{:L('BACK')}</a>
+        </div>
+        <else/>
+        <foreach name="data['questionItems']" key="k" item="vo">
+            <div class="well" data-id="{$vo.id}" data-type="{$vo.type}" style="width: 45%;margin-left: 21%;">
+                <p style="border: 1px solid #f5f5f5;border-bottom-color: #afaeae;">Q{$k+1}：{$vo.name}<if condition="$vo.type eq 1 ">&nbsp;&nbsp;(单选)<elseif condition="$vo.type eq 2"/>&nbsp;&nbsp;(多选)<else/>&nbsp;&nbsp;(填空)</if></p>
+                <if condition="$vo.type neq 3">
+                    <foreach name="vo['option']" item="v">
+                        <div style="margin-bottom: 5px">
+                            <label>
+                                <if condition="$vo.type eq 1">
+                                    <input type="radio" data-id="{$v.id}" name="q{$vo.id}" value="{$v.name}" style="margin:0 5px 0 0"/>{$v.name}
+                                    <else/>
+                                    <input type="checkbox" class="choice" data-id="{$v.id}"  value="{$v.name}" style="margin:0 5px 0 0"/>{$v.name}
+                                </if>
+                            </label>
+                        </div>
+                    </foreach>
+                    <else/>
+                    <p>
+                        <textarea style="width: 740px;height:90px;resize: vertical;"></textarea>
+                    </p>
+                </if>
+            </div>
+        </foreach>
+        <input type="hidden" class="uid" value="{:session('ADMIN_ID')}" />
+        <input type="hidden" class="qid" value="{$qid}" />
+        <div class="form-actions" style="text-align: center">
+            <button type="button" class="btn btn-primary submit">提交</button>
+            <a class="btn" href="javascript:history.back(-1);">{:L('BACK')}</a>
+        </div>
+    </if>
+</div>
+<script src="__PUBLIC__/js/jquery19.js"></script>
+<script src="__PUBLIC__/js/switch/bootstrap.min.js"></script>
+<script src="__PUBLIC__/js/switch/bootstrap-switch.js"></script>
+<script src="__PUBLIC__/js/common.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script>
+$(function(){
+    $('.submit').click(function(){
+        var dataBase = {},listItem = [],flag = true;
+        dataBase.qid = $('.qid').val();
+        dataBase.uid = $('.uid').val();
+        $('.well').each(function(i){
+            var list = [],level = {},obj = $(this);
+            level.pid = obj.data('id');
+            level.type = obj.data('type');
+            if(level.type != 3){
+                if(level.type == 2){
+                    var value = '';
+                    obj.find('.choice').each(function(o){
+                        if($(this).prop('checked')){
+                            value += $(this).data('id') + ',';
+                        }
+                    });
+                    level.value = value.substring(0,value.length-1);
+                }else{
+                    var name = 'q' + level.pid;
+                    level.value = obj.find('input[name='+name+']:checked').data('id');
+                }
+            }else{
+                level.value = obj.find('textarea').val();
+            }
+            if(!level.value){
+                flag = false;
+            }
+            list = level;
+            listItem.push(list);
+        });
+
+        if(!flag){
+            layer.alert('请完整回答问题再提交');
+            return false;
+        }
+        dataBase.listItem = listItem;
+        var str = JSON.stringify(dataBase);
+        layer.confirm('确定提交吗？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            $.post("{:U('answer')}",{data:str},function (res) {
+                if(res.status == 1){
+
+                        location.href = "{:U('questionnaire/userIndex')}"
+
+                }else{
+                    layer.alert(res.info);
+                }
+            });
+        });
+
+//        console.log(str)
+    })
+})
+</script>
+</body>
+</html>

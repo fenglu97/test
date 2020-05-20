@@ -1,0 +1,113 @@
+<admintpl file="header" />
+
+<script type="text/javascript" src="__TMPL__Public/assets/js/emoji-list-with-image.js"></script>
+<script type="text/javascript" src="__TMPL__Public/assets/js/punycode.js"/></script>
+<script type="text/javascript" src="__TMPL__Public/assets/js/emoji.js"/></script>
+
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="javascript:void(0);">评论列表</a></li>
+
+    </ul>
+    <form class="well form-search" method="post" action="{:U('Comment/dynamics_index')}">
+
+        <div class="search_type cc mb10">
+
+            <div class="mb10">
+
+					<span class="mr20">
+
+						评论人：
+						<input type="text" name="username" id="username" value="{$parameter['username']}" style="width:100px;" />
+							&nbsp;&nbsp;
+							时间：
+   <input type="text" name="start_time" id="start_time" value="{$parameter['start_time']}" class="input length_3 js-date" size="11" style="width:180px;"> 至
+   <input type="text" name="end_time" id="end_time" value="{$parameter['end_time']}" size="11" class="input length_3 js-date" style="width:180px;">
+   &nbsp;&nbsp;
+
+				<input type="submit" class="btn btn-primary" value="搜索" />
+					</span>
+            </div>
+
+        </div>
+
+    </form>
+    <form class="js-ajax-form" action="" method="post">
+        <div class="table-actions">
+            <button class="btn btn-danger btn-small js-ajax-submit" type="submit" data-action="{:U('Comment/del')}" data-subcheck="true" data-msg="你确定删除吗？">批量删除</button>
+        </div>
+    <table class="table table-hover table-bordered table-list" id="menus-table">
+        <thead>
+
+        <tr>
+
+            <th width="5%"><label><input type="checkbox" class="js-check-all" data-direction="x" data-checklist="js-check-x"></label></th>
+            <th width="10%">开车ID</th>
+            <th width="10%">评论人</th>
+            <th width="10%">回复人</th>
+            <th width="40%">内容</th>
+            <th width="5%">赞</th>
+            <th width="10%">时间</th>
+
+        </tr>
+
+        </thead>
+        <tbody>
+
+        <foreach name="list" item="vo">
+            <tr>
+                <td><input type="checkbox" class="js-check" data-yid="js-check-y" data-xid="js-check-x" name="ids[]" value="{$vo.id}"></td>
+                <td>{$vo.dynamics_id}</td>
+                <td>{$usernames[$vo['uid']]}</td>
+                <td>{$usernames[$vo['to_uid']]}</td>
+                <td class="content">{$vo.content}</td>
+                <td>{$vo.likes}</td>
+                <td>{$vo.create_time|date="Y-m-d H:i:s",###}</td>
+            </tr>
+        </foreach>
+        </tbody>
+
+    </table>
+
+    </form>
+</div>
+
+<div class="pagination">{$page}</div>
+<script src="__PUBLIC__/js/common.js"></script>
+<script>
+    $(document).ready(function() {
+
+        function parse(arg)
+        {
+            if (typeof ioNull !='undefined') {
+                return  ioNull.emoji.parse(arg);
+            }
+            return '';
+        }
+
+        $('.content').each(function(){
+            var html = $(this).html();
+
+            $(this).html(parse(html));
+        })
+
+        Wind.css('treeTable');
+        Wind.use('treeTable', function() {
+            $("#menus-table").treeTable({
+                indent : 20
+            });
+        });
+    });
+
+    setInterval(function() {
+        var refersh_time = getCookie('refersh_time_admin_menu_index');
+        if (refersh_time == 1) {
+            reloadPage(window);
+        }
+    }, 1000);
+    setCookie('refersh_time_admin_menu_index', 0);
+</script>
+</body>
+</html>

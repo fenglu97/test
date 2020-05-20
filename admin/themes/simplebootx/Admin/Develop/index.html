@@ -1,0 +1,170 @@
+<admintpl file="header" />
+<style>
+.game-item a {
+    background-color: transparent;
+    text-decoration: none;
+    color: #2c3e50;
+}
+.success{color:#009688}
+.error{color:#FF5722}
+.source{color:#2f92f9}
+.game-item div {
+    overflow: hidden;
+}
+
+.game-item h3 {
+    line-height: 30px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: auto;
+    margin: 0 0 5px 0;
+}
+
+
+.ellipsis {
+    width: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.game-item p {
+    color: #2c3e50;
+    margin: 0;
+    line-height: 24px;
+}
+
+.game-item p.last {
+    margin-top: 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #2c3e50;
+}
+
+.game-item .status {
+    line-height: 24px;
+    margin: 8px 0;
+}
+
+.game-item .status.success {
+    color: #41ba47;
+}
+
+.game-item {
+    border: 1px solid #2c3e50;
+    padding: 16px 16px 0;
+    margin-top: 32px;
+    background-color: white;
+    box-shadow: 3px 3px 4px rgba(44, 62, 80, 0.48);
+    width:20%;
+    float: left;
+    margin-right:2%;
+}
+.fa{margin-right:5px}
+.add{margin-left:40px;margin-top: -15px;}
+/*form{margin:0;float:left;}*/
+.pull-right{
+    height: 30px;
+    line-height: 0px;
+    padding: 7px 15px;
+}
+
+</style>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="javascript:void(0);">全部游戏</a></li>
+        <!--<li><a href="{:U('add')}">新增游戏</a></li>-->
+    </ul>
+    <div class="well" style="overflow: hidden">
+        <form class="" method="post" action="">
+            <select name="type" class="type">
+                <option value="-1" <if condition="$type eq -1">selected</if>>全部游戏</option>
+                <option value="0" <if condition="$type eq 0">selected</if>>未通过</option>
+                <option value="1" <if condition="$type eq 1">selected</if>>审核通过</option>
+            </select>
+            <input placeholder="游戏名" type="text" name="name" value="{$name}"/>
+            <input placeholder="游戏ID" type="text" name="appid" value="{$appid}"/>
+            <button class="btn btn-primary" style="margin-top: -12px;">搜索</button>
+            <a class="btn btn-primary add">创建游戏</a>
+        </form>
+
+        <div class="lists">
+            <foreach name="data" item="vo">
+                <div class="game-item">
+                    <a <if condition="$vo.source eq 2">href="javascript:void(0);" class="source"<else />href="{:U('edit',array('id'=>$vo['id']))}" </if> >
+                        <div>
+                            <h3 class="ellipsis" title="{$vo.game_name}">{$vo.game_name}</h3>
+                            <p class="ellipsis block">安卓版本：{$vo.android_version}</p>
+                            <p class="ellipsis block">苹果版本：{$vo.ios_version}</p>
+                        </div>
+                        <p>最后更新：{$vo.modifiy_time|date='Y-m-d H:i',###}</p>
+                        <p class="last">创建时间：{$vo.create_time|date='Y-m-d H:i',###}</p>
+                        <div class="status on">
+                            <if condition="$vo.is_audit eq 0">
+                                <i class="fa fa-share-alt error"></i><span class="error">未通过</span>
+                                <else />
+                                <i class="fa fa-share-alt success"></i><span class="success">审核通过</span>
+                            </if>&nbsp;&nbsp;&nbsp;
+                            <if condition="$vo.source eq 2">
+                                <i class="fa fa-external-link source"></i><span class="source">来源BI</span>
+                            </if>
+                            <!--<button class="btn btn-primary delete pull-right" data-id="{$vo.id}">删除</button>-->
+                        </div>
+                    </a>
+                </div>
+            </foreach>
+        </div>
+    </div>
+    <div class="pagination">{$page}</div>
+</div>
+<script src="__PUBLIC__/js/common.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script type="text/javascript">
+$(function(){
+//    $('.type').change(function(){
+//        location.href = "index.php?g=admin&m=develop&a=index&type="+$(this).val();
+//    });
+    $('.source').click(function(){
+        layer.alert('BI资源不可操作')
+    });
+    $('.delete').click(function(event){
+        event.preventDefault();
+        layer.confirm('确认删除该游戏吗？', {
+            btn: ['是的','不了'] //按钮
+        }, function(){
+            var id = $('.delete').attr('data-id');
+
+            $.post("{:U('del')}",{id:id},function(res){
+                if(res.status == 1){
+                    location.href = "index.php?g=admin&m=develop&a=index&type="+$('.type').val();
+                }else{
+                    layer.alert(res.info);
+                }
+            })
+        });
+    });
+    $('.add').click(function(){
+        var url = "{:U('add')}";
+        layer.prompt({title: '请输入游戏名', formType: 0,maxlength:20}, function(text, index){
+            layer.close(index);
+            $.post(url,{name:text},function(res){
+                if(res.status == 1){
+                    layer.confirm('继续完善游戏资料吗？', {
+                        btn: ['是的','等会'] //按钮
+                    }, function(){
+                        location.href = "index.php?g=admin&m=develop&a=edit&id="+res.info;
+                    }, function(){
+                        location.href = "index.php?g=admin&m=develop&a=index";
+                    });
+                }else{
+                    layer.alert(res.info,{icon: 5});
+                }
+            })
+        });
+    })
+})
+</script>
+</body>
+</html>

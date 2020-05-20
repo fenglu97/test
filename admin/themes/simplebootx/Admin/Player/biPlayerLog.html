@@ -1,0 +1,35 @@
+<admintpl file="header" />
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#">登陆日志</a></li>
+    </ul>
+    <table class="table table-hover table-bordered">
+        <thead>
+        <tr>
+            <th>账号</th>
+            <th>游戏</th>
+            <th>渠道</th>
+            <th>登陆时间</th>
+            <th>登录IP</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <foreach name="data" item="vo">
+            <tr>
+                <td>{$vo.username}</td>
+                <td>{$vo.game_name}</td>
+                <td>{$vo.channel_name}</td>
+                <td>{:date('Y-m-d H:i',$vo['time'])}</td>
+                <td>{$vo.ip}</td>
+
+            </tr>
+        </foreach>
+        </tbody>
+    </table>
+</div>
+<script src="__PUBLIC__/js/common.js"></script>
+</body>
+</html>

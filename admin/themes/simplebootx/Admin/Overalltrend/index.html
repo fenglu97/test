@@ -1,0 +1,499 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">    <!-- Set render engine for 360 browser -->
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script>
+        var GV = {
+            ROOT: "__ROOT__/",
+            WEB_ROOT: "__WEB_ROOT__/",
+            JS_ROOT: "public/js/",
+            APP: '{$Think.MODULE_NAME}'/*当前应用名*/
+        };
+    </script>
+    <!-- HTML5 shim for IE8 support of HTML5 elements -->    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>    <![endif]-->
+
+    <link href="__PUBLIC__/statistical/css/simplebootadmin.css" rel="stylesheet">
+    <link href="__PUBLIC__/statistical/css/default.css" rel="stylesheet"/>
+    <link href="__PUBLIC__/statistical/css/base.css" rel="stylesheet"/>
+    <link href="__PUBLIC__/statistical/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <script src="__PUBLIC__/js/jquery.js"></script>
+    <script src="__PUBLIC__/js/wind.js"></script>
+    <script src="__PUBLIC__/statistical/js/echarts.min.js"></script>
+
+    <script>
+
+        function get_page(page) {
+            var start_time = $("input#start_time").val();
+            var end_time = $("input#end_time").val();
+            ajax_data_info(start_time, end_time, page)
+        }
+
+        function ajax_data_info(start_time, end_time, page) {
+            $('.wait-load').show();
+            $.get("{:U('Overalltrend/ajax_data_info')}", {
+                    p: page,
+                    start_time: start_time,
+                    end_time: end_time
+                }, function (data) {
+                    l = data.data.length;
+                    $('#data-list').html('');
+                    html_list = '';
+                    for (var i = 1; i <= l; i++) {
+                        html_list += '<tr><td>' + data.data[l - i][0] + '</td><td>'+data.data[l - i][4]+'</td><td>'+data.data[l - i][5]+'</td><td>' + data.data[l - i][1] + '</td><td>' + data.data[l - i][2] + '</td><td>' + data.data[l - i][3] + '</td></tr>';
+                    }
+                    $('#data-list').html(html_list);
+
+                    $('.pageBox').html(data.page);
+                    $('.wait-load').hide();
+
+                }
+                , 'json');
+        }
+    </script>
+    <link rel="stylesheet" href="__PUBLIC__/statistical/css/trend_summary.css">
+    <link rel="stylesheet" href="__PUBLIC__/statistical/css/cached_report_zh.css">
+    <style>        .length_3 {
+        width: 180px;
+    }
+
+    form .input-order {
+        margin-bottom: 0px;
+        padding: 3px;
+        width: 40px;
+    }
+
+    .table-actions {
+        margin-top: 5px;
+        margin-bottom: 5px;
+        padding: 0px;
+    }
+
+    .table-list {
+        margin-bottom: 0px;
+
+    }
+
+    .pageBox {
+        text-align: right;
+        color: #525252;
+    }
+
+    .pageBox a:hover {
+        text-decoration: none;
+        background-color: #f6505c;
+    }
+
+    * {
+        font-family: "Microsoft YaHei" !important;
+    }
+
+    a:link, a:visited, a:hover, a:active {
+        text-decoration: none;
+        outline: none;
+    }
+
+    .pageBox a, .pageBox b {
+        display: inline-block;
+        padding: 0 8px;
+        margin-left: 5px;
+    }
+
+    a {
+        cursor: pointer;
+        color: #525252;
+    }
+
+    </style>
+
+    <!--[if IE 7]>
+    <link rel="stylesheet" href="__PUBLIC__/statistical/css/font-awesome-ie7.min.css">    <![endif]-->
+
+    <!-- Le javascript    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+
+    <script src="__PUBLIC__/statistical/js/bootstrap.min.js"></script>
+
+    <if condition="APP_DEBUG">
+        <style>        #think_page_trace_open {
+            z-index: 9999;
+        }    </style>
+    </if>
+</head>
+
+<body>
+
+<div class="wrap js-check-wrap" style="padding-top:8px;">
+    <div id="mainContainer" style="margin-top:5px;">
+        <div class="contentCol">
+            <!-- Hidden data -->
+            <input type="hidden" value="index" id="action_stats">
+            <input type="hidden" value="iphone">
+            <!-- App digest -->
+            <div class="mod mod1" id="app-digest">
+                <div class="mod-header radius clearfix">
+                    <h2>
+                        应用概要
+                    </h2>
+                </div>
+                <div class="mod-body clearfix">
+                    <div class="digest-block">
+                        <h4>新增用户(安装)</h4>
+                        <h1 style="font-size: 32px;">{$result[29][1]}</h1>
+                        <div class="rate">
+                            <span class=""><if condition="$xinzen_yesterday eq 0">100<else/><php>echo round(($xinzen_today-$xinzen_yesterday)/$xinzen_yesterday*100,2);</php></if>%</span>
+                        </div>
+                    </div>
+
+                    <div class="digest-block">
+                        <h4>活跃用户</h4>
+                        <h1 style="font-size: 32px;">{$result[29][2]}</h1>
+                        <div class="rate">
+                            <span class=""><if condition="$huoyue_yesterday eq 0">100<else/><php>echo round(($huoyue_today-$huoyue_yesterday)/$huoyue_yesterday*100,2);</php></if>%</span>
+                        </div>
+                    </div>
+
+                    <div class="digest-block">
+                        <h4>启动次数</h4>
+                        <h1 style="font-size: 32px;">{$result[29][3]}</h1>
+                        <div class="rate">
+                            <span class=""><if condition="$boot_yesterday eq 0">100<else/><php>echo round(($boot_today-$boot_yesterday)/$boot_yesterday*100,2);</php></if>%</span>
+                        </div>
+                    </div>
+
+                    <div class="digest-block">
+                        <h4>新增率</h4>
+                        <h1 style="font-size: 32px;">
+                            <php>echo round($xinzen_today/$huoyue_today*100,2)</php>%
+                        </h1>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Trends -->
+            <div class="mod mod1">
+                <div class="mod-header radius clearfix">
+                    <h2>
+                        整体趋势
+                    </h2>
+                    <div class="option">
+                        <div class="search_type cc mb10">
+                            <div class="mb10">
+                                时间：
+                                <input type="text" name="start_time" id="start_time" value="{$before_15_date}" class="input length_3 js-date" size="11"> 至
+                                <input type="text" name="end_time" id="end_time" value="{$today}" size="11" class="input length_3 js-date">
+                                <input type="button" id="btn-primary" value="搜索"/>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mod-body">
+                    <div class="content">
+                        <div class="tabpanel" id="js-trends-tab">
+                            <ul class="borders">
+                                <li class="on" attr="xinzen">新增用户(安装)</li>
+                                <li attr="huoyue">活跃用户</li>
+                                <li attr="boot">启动次数</li><!--v-repeat-->
+                            </ul>
+                        </div>
+                        <div class="chartpanel">
+                            <div v-show="isLoading" class="wait-load" style="display:none;">
+                                <img src='__PUBLIC__/statistical/img/ajax-loader.gif'/></div>
+                            <div id="main" style="width: 100%;height:400px;"></div>
+                        </div>
+
+                    </div>
+                    <div class="mod milestone js-um-milestone" data-chart="trends_chartcontainer">
+                        <div>
+                            <div class="ms-tab js-ms-tab hidden">
+                                <table class="ms-details" width="100%" border="0" cellspacing="0">
+                                    <tbody></tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <td colspan="3">
+                                            <a href="/apps/4100008dd65107258db11ef4/milestones" title="添加">
+                                                <b class="icon icon-plus"></b>添加
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+
+                        </div>
+                        <div class="posiLine" style="top:-97px;">
+                            <div class="line js-ms-flag"></div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="mod-bottom">
+                    <div class="hidden" id="totalDetails">
+                        <div class="mod parent-table" id="trend-table">
+                            <div class="mod-header" style="border-top:0px">
+                                <h2>
+                                    整体趋势数据明细
+                                </h2>
+                                <div class="option"></div>
+                            </div>
+
+                            <div class="mod-body">
+                                <table class="data-load" width="100%" border="0" cellspacing="0">
+                                    <thead>
+                                    <tr>
+                                        <th>日期</th>
+                                        <th>新增安卓用户</th>
+                                        <th>新增苹果用户</th>
+                                        <th>新增用户总数</th>
+                                        <th>活跃用户</th>
+                                        <th>启动次数</th><!--v-repeat-->
+                                    </tr>
+                                    </thead>
+                                    <tbody id="data-list">
+                                    <for start="1" end="31">
+                                        <tr>
+                                            <td>{$result[30-$i][0]}</td>
+                                            <td>{$result[30-$i][4]}</td>
+                                            <td>{$result[30-$i][5]}</td>
+                                            <td>{$result[30-$i][1]}</td>
+                                            <td>{$result[30-$i][2]}</td>
+                                            <td>{$result[30-$i][3]}</td>
+                                        </tr>
+                                    </for>
+                                    <!--v-repeat-->
+                                    </tbody>
+                                </table>
+                                <div class="wait-load" style="display: none;">
+                                    <img src="__PUBLIC__/statistical/img/ajax-loader.gif">
+                                </div>
+                            </div>
+
+                            <div class="mod-bottom clearfix" style="margin-bottom: 10px;">
+                                <div class="pageBox">
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="mod mod1 showdetails">
+                        <a href="#" class="expandCollapse" expand-id="totalDetails">展开明细数据</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+<script src="__PUBLIC__/js/common.js"></script>
+<script src="__PUBLIC__/js/datePicker/datePicker.js"></script>
+</html>
+
+<script>
+
+    $(document).ready(function () {
+
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+
+        $(".borders li").click(function () {
+
+            $(this).addClass('on').siblings().removeClass('on');
+            var start_time = $("input#start_time").val();
+            var end_time = $("input#end_time").val();
+            var type = $(this).attr('attr');
+            ajax_data(type, start_time, end_time);
+
+        });
+
+        function get_data(data) {
+            option = {
+                color: ['#4096B5'],
+                title: {
+                    text: ''
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
+                xAxis: {
+                    axisLine: {
+                        show: true,
+                        lineStyle: {
+                            width: 1,
+                            color: 'rbg(219,219,219)'
+                        }
+                    },
+                    data: data.map(function (item) {
+                        return item[0];
+                    })
+                },
+                yAxis: {
+                    axisLine: {
+                        show: true,
+                        lineStyle: {
+                            width: 1,
+                            color: 'rbg(219,219,219)'
+                        }
+                    },
+                    type: 'value'
+                },
+                series: [
+                    {
+                        name: '',
+                        type: 'line',
+                        stack: '总量',
+                        data: data.map(function (item) {
+                            return item[1];
+                        }),
+                    }
+                ]
+            };
+            // 使用刚指定的配置项和数据显示图表。
+            myChart.setOption(option);
+        }
+
+
+        data =<?php echo$result_json;?>;
+
+        get_data(data);
+
+        $('.rate span').each(function (index, data) {
+
+            if (parseInt($(this).html()) > 0) {
+                $(this).attr('class', 'asc');
+            }
+            if ($(this).html() == '0%') {
+
+                $(this).attr('class', 'euql');
+            }
+            if (parseInt($(this).html()) < 0) {
+                $(this).attr('class', 'desc');
+            }
+        });
+
+
+        $(".expandCollapse").click(function () {
+
+            if ($('#totalDetails').attr('class') == 'hidden') {
+                $('#totalDetails').attr('class', '');
+                $(this).html('收回');
+            }
+            else {
+                $('#totalDetails').attr('class', 'hidden');
+                $(this).html('展开明细数据');
+            }
+        });
+
+        $('#btn-primary').click(function () {
+
+            var start_time = $("input#start_time").val();
+            var end_time = $("input#end_time").val();
+
+            var type;
+
+            $('.borders li').each(function (index, data) {
+
+                if ($(this).attr('class') == 'on') {
+                    type = $(this).attr('attr');
+                }
+
+            });
+
+            ajax_data(type, start_time, end_time);
+
+            ajax_data_info(start_time, end_time, 1);
+
+
+        });
+
+        function ajax_data(type, start_time, end_time) {
+            $('.wait-load').show();
+            $.get("{:U('Overalltrend/ajax_data')}", {
+                type: type,
+                start_time: start_time,
+                end_time: end_time
+            }, function (data) {
+                // 基于准备好的dom，初始化echarts实例
+                myChart = echarts.init(document.getElementById('main'));
+                option = {
+                    color: ['#4096B5'],
+                    title: {
+                        text: ''
+                    },
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    toolbox: {
+                        feature: {
+                            saveAsImage: {}
+                        }
+                    },
+                    xAxis: {
+                        axisLine: {
+                            show: true,
+                            lineStyle: {
+                                width: 1,
+                                color: 'rbg(219,219,219)'
+                            }
+                        },
+                        data: data.map(function (item) {
+                            return item[0];
+                        })
+                    },
+                    yAxis: {
+                        axisLine: {
+                            show: true,
+                            lineStyle: {
+                                width: 1,
+                                color: 'rbg(219,219,219)'
+                            }
+                        },
+                        type: 'value'
+                    },
+                    series: [
+                        {
+                            name: '',
+                            type: 'line',
+                            stack: '总量',
+                            data: data.map(function (item) {
+                                return item[1];
+                            }),
+                        }
+                    ]
+                };
+                // 使用刚指定的配置项和数据显示图表。
+                myChart.setOption(option);
+                $('.wait-load').hide();
+
+            }, 'json');
+        }
+
+
+    })
+
+</script>

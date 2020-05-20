@@ -1,0 +1,233 @@
+/** 清除内外边距 **/
+body, h1, h2, h3, h4, h5, h6, hr, p, blockquote, /* structural elements 结构元素 */
+dl, dt, dd, ul, ol, li, /* list elements 列表元素 */
+pre, /* text formatting elements 文本格式元素 */
+form, fieldset, legend, button, input, textarea, /* form elements 表单元素 */
+th, td /* table elements 表格元素 */ {
+    margin: 0;
+    padding: 0;
+}
+/** 重置列表元素 **/
+ul, ol {list-style: none;}
+/** 重置文本格式元素 **/
+a {text-decoration: none; color: #424242}
+a:hover {text-decoration: none; color: #424242}
+fieldset, img {border: 0;} /* img 搭车：让链接里的 img 无边框 */
+button, input, select, textarea {font-size: 100%;} /* 使得表单元素在 ie 下能继承字体大小 */
+/*解决图片3px的问题*/
+img{ vertical-align: middle;}
+/*去除输入框的默认样式*/
+input{ outline: none;}
+/** 设置默认字体 **/
+html,body,
+button, input, select, textarea /* for ie */ {
+    font-family:微软雅黑;background-color: white;color: #434343;
+}
+html,body{
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+h1, h2, h3, h4, h5, h6 {font-size: 100%; font-weight: normal;}
+address, cite, dfn, em, var {font-style: normal;} /* 将斜体扶正 */
+code, kbd, pre, samp {font-family: courier new, courier, monospace; } /* 统一等宽字体 */
+
+
+.clear{ clear: both;}
+/*.clearfix{ overflow: hidden;}*/
+.clearfix:after{content:'';display:block;clear:both;height:0;overflow:hidden;visibility:hidden;}
+.clearfix{zoom:1;}
+.floatL{ float: left;}
+.floatR{ float: right;}
+.color0{ color: #000;}
+.color9{ color: #999;}
+.bgcolor{
+    background-color: #ff7900;
+}
+.header{
+    height: 2.8rem;
+    font-size: 1.2rem;
+    color: #fff;
+    background-color: #ff7900;
+    text-align: center;
+    line-height: 2.8rem;
+    position: relative;
+}
+.header .icon-le {
+    display: block;
+    position: absolute;
+    width: 1.5rem;
+    height: 1.5rem;
+    background: url("../images/18_icon_youjiantou_2.png") no-repeat;
+    margin: .8rem 0 .4rem .8rem;
+}
+#main{
+    background-color: #f0f0f0;
+}
+.user{
+    /*padding: 1rem;*/
+    background-color: #fff;
+}
+.user-inf{
+    padding: 1rem;
+}
+/*用户头像*/
+.user-inf .user-inf-hp{
+    width: 4rem;
+    height: 4rem;
+    margin-right: 1rem;
+    float: left;
+}
+.comment-list-flex{
+    display: flex;
+    /*flex-direction: column;*/
+    border-bottom: 1px solid #e5e5e5;
+}
+.user-inf .user-inf-right{
+    float: left;
+    margin-top: .7rem;
+    flex: 1;
+}
+.user-inf-name{
+    color: #000;
+}
+.user-nickname{
+    color: #2c95f7;
+}
+.vip{
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    background: url("../images/01_Iicon_VIP.png") no-repeat;
+}
+.user-inf-date{
+    color: #999;
+}
+
+.user-cont{
+    margin: .7rem 0;
+    word-wrap: break-word;
+}
+
+
+.user-imglist0 a img{
+    width: 50%;
+}
+.user-imglist1{
+    width: 23rem;
+    height: 11rem;
+    display: flex;
+    justify-content: space-between;
+}
+.user-imglist1 img{
+    width: 11rem;
+    height: 11rem;
+}
+.user-imglist2{
+    width: 23rem;
+    height: 7rem;
+}
+.user-imglist2 img{
+    width: 7rem;
+    height: 7rem;
+}
+.user-imglist3{
+    width: 23rem;
+    height: 23rem;
+    display: flex;
+    flex-wrap: wrap;
+    /*设置弹性盒子元素在主轴（横轴）方向上的对齐方式*/
+    justify-content: space-between;
+    /*设置弹性盒子元素在侧轴（纵轴）方向上的对齐方式*/
+    align-content: space-between;
+}
+.user-imglist3 img{
+    width: 11rem;
+    height: 11rem;
+}
+
+/*操作列表*/
+.operation-list{
+    overflow: hidden;
+    border-top: 1px solid #e5e5e5;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+}
+.operation-list li{
+    /*float: left;*/
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: .5rem 0;
+}
+.comment,.up,.down{
+    display: inline-block;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-right: 1rem;
+    background-size: contain;
+}
+/*评论图标*/
+.comment{
+    background: url("../images/08_icon_pinglun.png") no-repeat;
+}
+/*赞*/
+.up{
+    background: url("../images/05_icon_dianzan.png") no-repeat;
+}
+/*踩*/
+.down{
+    background: url("../images/06_icon_diancai.png") no-repeat;
+}
+.l{
+    border-right: .05rem solid #e5e5e5;
+}
+
+
+/*评论列表*/
+.comment-list{
+    margin-top: .6rem;
+    background-color: #fff;
+}
+/*功能列表*/
+.function-list{
+    display: flex;
+    align-items: center;
+    /*margin: .5rem 0;*/
+}
+.function-list p{
+    flex: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.function-list .up,.function-list .down{
+    margin-right: .1rem;
+}
+.function-list .function-list-date{
+    flex: 5;
+}
+
+/*更多按钮*/
+#more{
+    margin: 1rem;
+    background: #ff7900;
+    border-radius: .4rem;
+}
+#more a{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: .5rem 0;
+    color: #fff;
+}
+.icon-more{
+    display: inline-block;
+    width: 1.5rem;
+    height: 1.5rem;
+    background: url("../images/10_icon_zhuanfa.png") no-repeat;
+    margin-right: .5rem;
+}

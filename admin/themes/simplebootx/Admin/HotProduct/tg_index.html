@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <title>Title</title>
+ <link rel="stylesheet" href="__PUBLIC__/js/layui/layui/css/layui.css">
+ <style>
+  .layui-col-xs2,.layui-col-sm2,.layui-col-md2{ width: 20%;}
+  .mod{ width: 260px; font-size: 12px; background-color: #f1f1f1; margin: 0 auto;}
+  .mod .mod-img{ width: 100%; height: 160px; overflow: hidden;}
+  .mod .mod-img img{ width: 100%; height: 100%; vertical-align: top;}
+  .mod .mod-txt{ padding: 0 5px;}
+  .mod .mod-txt .mod-a{ text-align: center; margin-top: 5px; cursor: pointer;}
+  .mod .mod-txt a{ font-size: 14px; font-weight: bold; color: #01AAED;}
+  /*.mod a:link{ color: #222; text-decoration:none;}*/
+  .mod .mod-txt a:hover{ color: #FF9933;}
+  .mod .mod-txt a:active{ color: #FF9933;}
+  .mod .mod-txt a:visited{ color: #01AAED;}
+  .mod .mod-txt p{ color: #777; height: 24px; line-height: 24px; overflow: hidden;}
+  .mod .mod-txt .mod-txt-gamename{ font-size: 14px; color: #222;}
+  .mod .mod-txt .mod-txt-theme{ height: 48px;}
+  .mod .mod-txt .color-red{ color: red;}
+  .mod .mod-txt .color1{ color: #ff1c2a;}
+  .mod .mod-txt .color2{ color: #d200ff;}
+  .layui-colla-title{ height: 50px;}
+  .layui-colla-title .search{ float: left; width: 300px; margin-top: 6px; padding-left: 10px; height: 38px; line-height: 38px\9; border: 1px solid #e6e6e6; background-color: #fff; border-radius: 2px;}
+  .layui-colla-title .layui-btn{ float: left; margin-top: 7px; margin-left: 10px;}
+ </style>
+</head>
+<body>
+<div style="min-width: 1440px; margin: 10px 10px 100px;">
+ <div class="layui-collapse">
+  <div class="layui-colla-item">
+   <h2 class="layui-colla-title">
+    <input type="text" name="search" id="search" class="search" placeholder="请输入产品名">
+    <input type="text" name="theme" id="theme" class="search" placeholder="产品题材">
+    <input type="text" name="type" id="type" class="search" placeholder="产品类型">
+    <button class="layui-btn" id="searchBtn">搜索</button>
+   </h2>
+   <div class="layui-colla-content layui-show">
+    <div class="layui-fluid">
+     <div class="layui-row layui-col-space20" id="productList"></div>
+    </div>
+   </div>
+  </div>
+ </div>
+ <div class="layui-fluid">
+  <div class="layui-row layui-col-space">
+   <div class="layui-col-xs8 layui-col-sm8 layui-col-md8 layui-col-xs-offset4 layui-col-sm-offset4 layui-col-md-offset4">
+    <div id="newPage"></div>
+   </div>
+  </div>
+ </div>
+</div>
+ <script src="__PUBLIC__/js/jquery-1.10.2.js"></script>
+ <script src="__PUBLIC__/js/layui/layui/layui.js"></script>
+ <script src="__TMPL__Public/assets/js/template.js"></script>
+ <script type="text/html" id="hotProduct">
+  {{each data.list as v i}}
+  <div class="layui-col-xs2 layui-col-sm2 layui-col-md2 pageMark productPage{{ data.page }}">
+   <div class="mod">
+    <div class="mod-img">
+     <div class="layui-carousel" id="swiper{{ (data.page-1) + '' + (i+1) }}" lay-filter="swiper{{ (data.page-1) + '' + (i+1) }}">
+      <div carousel-item>
+       {{each v.imgs as value index}}
+       <div><a href="{{ value }}" download><img src="{{ value }}"></a></div>
+       {{/each}}
+      </div>
+     </div>
+    </div>
+    <div class="mod-txt">
+     <div class="mod-a"><a href="{{ v.imgs[0] }}" id="downloadImg{{ (data.page-1) + '' + (i+1) }}" download>点击图片后鼠标右键保存GIF宣传动图</a></div>
+     <div class="mod-a"><a class="mod-info" data-imgs-key="{{ data.page + '-' + i }}">点击查看产品的图片素材</a></div>
+     <p class=""><span>产品名字：</span><span class="mod-txt-gamename">{{ v.game_name }}</span></p>
+     <p class="mod-txt-theme"><span>产品题材：</span><span>{{ v.theme }}</span></p>
+     <p><span>产品类型：</span><span>{{ v.type }}</span></p>
+     <p><span>返利周期：</span><span>{{ v.rebate_cycle }}</span></p>
+     <p><span>BUG处理速度：</span><span>{{ v.troubleshooting }}</span></p>
+     <p><span>研发配合程度：</span><span>{{ v.yf_cooper_degree }}</span></p>
+     <p class="color{{ v.access_type }}"><span>接入类型：</span><span>{{ v.access_type==1?'独代':'联运' }}</span></p>
+     <p class="color-red"><span>昨日收入排名：</span><span>{{ v.yesterday_rank?v.yesterday_rank:'' }}</span></p>
+     <p class="color-red"><span>上周收入排名：</span><span>{{ v.lastweek_rank?v.lastweek_rank:'' }}</span></p>
+    </div>
+   </div>
+  </div>
+  {{/each}}
+ </script>
+ <script>
+     $(function () {
+         window.product = {
+             imgs: {}
+         };
+         layui.use(['jquery', 'layer', 'form', 'element','laydate'], function() {
+             var layer = layui.layer//重点处
+                 , form = layui.form
+                 , element = layui.element
+                 , laydate = layui.laydate;
+
+             var search = '',
+                 searchKey = false,
+                 theme = '',
+                 themeKey = false,
+                 type = '',
+                 typeKey = false,
+                 href = window.location.href,
+                 hrefSearch = window.location.search;
+             (function () {
+                 if (href.indexOf("?") != -1) {  //判断是否有参数
+                     var str = hrefSearch.substr(1); //从第一个字符开始 因为第0个是?号 获取所有除问号的所有符串
+                     var strArr = str.split("&");
+                     for(var i=0; i < strArr.length; i++){
+                         var strArrOnly = strArr[i].split("=");
+                         if(strArrOnly[0] == 'p_search'){
+                             searchKey = strArrOnly[0]+'='+strArrOnly[1];
+                             search = decodeURIComponent(strArrOnly[1]);
+                             $('#search').val(search);
+                         } else if(strArrOnly[0] == 'p_theme'){
+                             themeKey = strArrOnly[0]+'='+strArrOnly[1];
+                             theme = decodeURIComponent(strArrOnly[1]);
+                             $('#theme').val(theme);
+                         } else if(strArrOnly[0] == 'p_type'){
+                             typeKey = strArrOnly[0]+'='+strArrOnly[1];
+                             type = decodeURIComponent(strArrOnly[1]);
+                             $('#type').val(type);
+                         }
+                     }
+                 }
+                 getHotProduct(1, true);
+             })();
+
+             function getHotProduct(page, once) {
+                 $.ajax({
+                     type:'post',
+                     url: '/index.php?g=api&m=HotProduct&a=get_list',
+                     data:{
+                         page: page,
+                         page_size: 10,  //每页个数 默认为10
+                         search: search, //产品名称
+                         theme: theme, //产品题材
+                         type: type //产品类型
+                     },
+                     success:function(datas){
+                         if(datas.status == 1){
+                             if(once){
+                                 var count = parseInt(datas.data.count, 10);
+                                 newLaypage(count);
+                             }
+                             if($('.productPage'+ page).length){
+                                 $('#productList>.pageMark').hide();
+                                 $('.productPage'+ page).show();
+                             } else {
+                                 $('#productList>.pageMark').hide();
+                                 var data = {};
+                                 data.page = page;
+                                 data.list = datas.data.list;
+                                 var html = template('hotProduct',{"data":data});
+                                 //添加到页面
+                                 $('#productList').append(html);
+                                 var imgs = product.imgs[data.page] = [];
+                                 for(var i = 0; i < data.list.length; i++){
+                                     imgs[i] = data.list[i].imgs;
+                                     newSwiper(page-1 + String(i+1));
+                                 }
+                             }
+                         }
+                         if(datas.status == 0){
+                             alert(datas.msg);
+                         }
+                     },
+                     error:function(err){
+                         console.log(err)
+                     }
+                 });
+             }
+
+             //创建轮播
+             function newSwiper(id) {
+                 layui.use('carousel', function(){
+                     var carousel = layui.carousel;
+                     //建造实例
+                     carousel.render({
+                         elem: '#swiper' + id
+                         ,width: '100%' //设置容器宽度
+                         ,height: '100%' //设置容器高度
+                         ,arrow: 'hover' //显示箭头方式
+                         ,interval: 5000
+                         ,indicator: 'none' //指示器位置
+                         //,anim: 'updown' //切换动画方式
+                     });
+                     //监听轮播切换事件
+                     carousel.on('change(swiper'+id+')', function(obj){ //test1来源于对应HTML容器的 lay-filter="test1" 属性值
+//                    console.log(obj.index); //当前条目的索引
+//                    console.log(obj.item[0].firstChild.getAttribute('src')); //当前条目的元素对象
+                         var imgHref = obj.item[0].firstChild.firstChild.getAttribute('src');
+                         var img = document.getElementById('downloadImg'+id);
+                         img.setAttribute('href',imgHref);
+                     });
+                 });
+             }
+
+             //实例化分页按钮
+             function newLaypage(count) {
+                 layui.use('laypage', function(){
+                     var laypage = layui.laypage;
+                     //执行一个laypage实例
+                     laypage.render({
+                         elem: 'newPage' //注意，这里的 test1 是 ID，不用加 # 号
+                         ,count: count //数据总数，从服务端得到
+                         ,limit: 10   //每页显示的条数。laypage将会借助 count 和 limit 计算出分页数。 默认10
+                         ,jump: function(obj, first){
+                             //obj包含了当前分页的所有参数，比如：
+//                            console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+//                            console.log(obj.limit); //得到每页显示的条数
+                             //首次不执行
+                             if(!first){
+                                 //do something
+                                 getHotProduct(obj.curr);
+                             }
+                         }
+                     });
+                 });
+             }
+
+             //搜索商品
+             function searchProduct() {
+                 var searchValue = $('#search').val();
+                 var themeValue = $('#theme').val();
+                 var typeValue = $('#type').val();
+                 if(searchValue || themeValue || typeValue){
+                     if(href.indexOf("?") != -1){
+                         if(searchKey){
+                             href = href.replace(searchKey, 'p_search='+searchValue);
+                         } else {
+                             href = href + '&p_search=' + searchValue;
+                         }
+                         if(themeKey){
+                             href = href.replace(themeKey, 'p_theme='+themeValue);
+                         } else {
+                             href = href + '&p_theme=' + themeValue;
+                         }
+                         if(typeKey){
+                             href = href.replace(typeKey, 'p_type='+typeValue);
+                         } else {
+                             href = href + '&p_type=' + typeValue;
+                         }
+                         window.location.href = href;
+                     } else {
+                         window.location.href = href + '?p_search=' + searchValue + '&p_theme=' + themeValue + '&p_type=' + typeValue;
+                     }
+                 } else {
+//                    search = '';
+//                    theme = '';
+//                    type = '';
+                     if(href.indexOf("?") != -1){
+                         if(searchKey){
+                             href = href.replace(searchKey, 'p_search=');
+                         }
+                         if(themeKey){
+                             href = href.replace(themeKey, 'p_theme=');
+                         }
+                         if(typeKey){
+                             href = href.replace(typeKey, 'p_type=');
+                         }
+                         window.location.href = href;
+                     } else {
+                         window.location.href = href + '?p_search=&p_theme=&p_type=';
+                     }
+                 }
+             }
+//            $('#search').bind('keyup', function(event) {
+//                if (event.keyCode == "13") {
+//                    searchProduct();
+//                }
+//            });
+             $('#searchBtn').on('click', searchProduct);
+             $('#productList').on('click', '.mod-info', function () {
+                 var key = this.getAttribute('data-imgs-key').split('-');
+                 var imgs = product.imgs[key[0]][key[1]];
+                 var html = '';
+                 html += '<div style="padding: 15px;" id="layer-photos" class="layer-photos">';
+                 for(var i = 0; i < imgs.length; i++){
+                     html += '<img src="'+ imgs[i] +'" layer-src="'+ imgs[i] +'" style="width: 160px; margin:0 10px 10px 0; cursor: pointer;">';
+                 }
+                 html += '</div>';
+                 layer.open({
+                     type: 1,
+                     skin: 'layui-layer-molv', //加上边框
+                     area: ['900px', '500px'], //宽高
+                     content: html,
+                     closeBtn: 0, //不显示关闭按钮
+                     anim: 2,
+                     shadeClose: true //开启遮罩关闭
+                 });
+                 layer.photos({
+                     photos: '#layer-photos'
+                 });
+             });
+         });
+
+     });
+ </script>
+</body>
+</html>

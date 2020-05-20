@@ -1,0 +1,60 @@
+<admintpl file="header" />
+</head>
+<body>
+<div class="wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a>玩家归属</a></li>
+    </ul>
+    <form method="post" class="form-horizontal js-ajax-form" action="{:U('setting/upload_post')}">
+        <fieldset>
+            <div class="control-group">
+                <label class="control-label">账号或手机号</label>
+                <div class="controls">
+                    <input type="text" class="username" name="username"  >
+
+                </div>
+            </div>
+            <div class="control-group res" style="display: none">
+                <label class="control-label">查询结果</label>
+                <div class="controls">
+                    <p ><span class="text"></span>&nbsp;&nbsp;&nbsp;<span style="color: red;display: none" class="red">*此玩家禁止拉，逮到开除</span></p>
+                </div>
+            </div>
+        </fieldset>
+        <div class="form-actions">
+            <button type="button" class="btn btn-primary check">查询</button>
+        </div>
+    </form>
+</div>
+<script src="__PUBLIC__/js/common.js"></script>
+<script>
+$(function () {
+    $('.check').click(function () {
+        var val = $('.username').val();
+        if(val == ''){
+            alert('请输入账号或手机号');
+            return false;
+        }
+        $.post("{:U('checkPlayer')}",{val:val},function (res) {
+            if(res.status == 1){
+                if(res.info == 2 || res.info == 3){
+                    $msg = "自推广玩家";
+                    $('.red').show();
+
+                    $('.res').show().find('.text').text($msg);
+                }else{
+                    $msg = 'CPS玩家';
+                    $('.red').hide();
+                    $('.res').show().find('.text').text($msg);
+                }
+
+            }else{
+                $('.red').hide();
+                $('.res').show().find('.text').text(res.info);
+            }
+        })
+    })
+})
+</script>
+</body>
+</html>

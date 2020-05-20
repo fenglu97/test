@@ -1,0 +1,156 @@
+<admintpl file="header" />
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/chosen.css">
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/docsupport/prism.css">
+<style type="text/css" media="all">
+    /* fix rtl for demo */
+    .chosen-rtl .chosen-drop { left: -9000px; }
+    th{width:50px;}
+</style>
+</head>
+
+<body>
+
+<div class="wrap js-check-wrap">
+
+    <ul class="nav nav-tabs">
+
+        <li class="active"><a href="javascript:;">充值统计渠道排行</a></li>
+
+    </ul>
+
+    <form class="well form-search" method="post" action="{:U('pay_by_channel')}">
+
+        <div class="search_type cc mb10">
+
+            <div class="mb10">
+
+					<span class="mr20">渠道名称：
+
+					<select name="masterID" id="masterID" class="chosen-select appid" style="width:180px;" tabindex="1">
+                        <option value="">所有渠道</option>
+                        <foreach name="u8_channel" item="vo" key="key">
+                            <option value="{$key}" <if condition="$masterID eq $key">selected</if>>{$vo}</option>
+                        </foreach>
+                    </select>&nbsp;&nbsp;
+
+						游戏名称：
+
+  <select name="appID" id="appID" class="chosen-select appid" style="width:180px;" tabindex="1">
+      <option value="">所有游戏</option>
+      {$game_list}
+  </select>
+                                            					时间：
+   <input type="text" name="start_time" id="start_time" value="{$start_time}" class="input length_3 js-date" size="11" style="width:180px;" max="{$max}"> 至
+   <input type="text" name="end_time" id="end_time" value="{$end_time}" size="11" class="input length_3 js-date" style="width:180px;" max="{$max}">
+						<input type="submit" class="btn btn-primary" value="搜索" />
+
+					</span>
+
+            </div>
+
+        </div>
+
+    </form>
+
+    <script src="__PUBLIC__/js/chosen/chosen.jquery.js" type="text/javascript"></script>
+    <script src="__PUBLIC__/js/chosen/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+        var config = {
+            '.chosen-select'           : {},
+            '.chosen-select-deselect'  : {allow_single_deselect:true},
+            '.chosen-select-no-single' : {disable_search_threshold:10},
+            '.chosen-select-no-results': {no_results_text:'没有匹配的结果'},
+            '.chosen-select-width'     : {width:"95%"}
+        }
+        for (var selector in config) {
+            $(selector).chosen(config[selector]);
+        }
+        //$("#select_1").val('{$game_id}');
+        //$("#select_1").trigger("chosen:updated");
+
+    </script>
+
+    <table class="table table-hover table-bordered table-list">
+
+        <thead>
+
+        <tr>
+            <th>渠道名称</th>
+            <th>游戏名称</th>
+            <th>充值人数</th>
+            <th>总充值金额</th>
+            <th>新增用户</th>
+            <th>新增付费用户数</th>
+            <th>新增用户充值金额</th>
+            <th>付费Arpu</th>
+            <th>新增Arpu</th>
+        </tr>
+        <tr>
+            <th colspan="2">合计</th>
+            <th>{$heji['payUserNum']}</th>
+            <th>{:sprintf("%.2f",$heji['pay_amount'])}</th>
+            <th>{$heji['userNum']}</th>
+            <th>{$heji['newPayUserNum']}</th>
+            <th>{:sprintf("%.2f",$heji['newPayMoney'])}</th>
+            <th><php>echo round(($heji['pay_amount'])/($heji['payUserNum']),2)</php></th>
+            <th><php>echo round(($heji['newPayMoney'])/($heji['userNum']),2)</php></th>
+        </tr>
+        </thead>
+
+        <foreach name="list" item="vo">
+
+            <tr>
+                <td>{$u8_channel[$vo['channelID']]}</td>
+                <td>{$game_name}</td>
+                <td>{$vo['payUserNum']}</td>
+                <th>{:sprintf("%.2f",$vo['pay_amount'])}</th>
+                <td>{$vo['userNum']}</td>
+                <td>{$vo['newPayUserNum']}</td>
+                <td>{:sprintf("%.2f",$vo['newPayMoney'])}</td>
+                <td>{$vo['pay_arpu']}</td>
+                <td>{$vo['newuser_arpu']}</td>
+
+            </tr>
+
+        </foreach>
+    </table>
+
+</div>
+
+<script src="__ROOT__/public/js/common.js?"></script>
+
+<script>
+
+    setCookie('refersh_time', 0);
+
+    function refersh_window() {
+
+        var refersh_time = getCookie('refersh_time');
+
+        if (refersh_time == 1)
+        {
+            window.location.reload();
+        }
+    }
+
+    setInterval(function()
+    {
+        refersh_window()
+
+    }, 3000);
+
+    $(function()
+    {
+
+        $("#selected_cid").change(function() {
+
+            $("#cid_form").submit();
+
+        });
+
+    });
+</script>
+
+</body>
+
+</html>

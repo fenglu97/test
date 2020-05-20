@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <title></title>
+    <link rel="stylesheet" href="__TMPL__Public/assets/css/webdisplay.css"/>
+</head>
+<body>
+    <div class="header">
+        <span class="icon-le" ontouchend="back()"></span>详情
+    </div>
+    <div id="main"></div>
+    <div id="more">
+        <a id="openApp" class="openApp"><span class="icon-more"></span>手游盒子内打开</a>
+    </div>
+
+    <script src="__TMPL__Public/assets/js/md5.js"></script>
+    <script src="__TMPL__Public/assets/js/template.js"></script>
+
+    <script type="text/html" id="tpl">
+        {{if data.dynamics_info}}
+        <div class="user">
+            <div class="user-inf">
+                <img class="user-inf-hp" src="{{data.dynamics_info.icon_url}}" alt="头像">
+                <div class="user-inf-right">
+                    <p class="user-inf-name" style="color: #F46200">
+                        {{data.dynamics_info.nick_name}}
+                        {{if data.dynamics_info.vip == 1}}
+                        <span class="vip"></span>
+                        {{/if}}
+                    </p>
+                    <p class="user-inf-date">{{data.dynamics_info.create_time}}</p>
+                </div>
+                <div class="clear"></div>
+                <div>
+                    <p class="user-cont">{{data.dynamics_info.content}}</p>
+                    {{if data.dynamics_info.imgs}}
+                        {{if data.dynamics_info.imgs.length == 1}}
+                                <div class="user-imglist0">
+                                <a href=""><img src="{{data.dynamics_info.imgs[0]}}" alt="185sy"></a>
+                                </div>
+                        {{else if data.dynamics_info.imgs.length == 2}}
+                            <div class="user-imglist1">
+                            {{each data.dynamics_info.imgs as v i}}
+                                <a href=""><img src="{{v}}" alt="185sy"></a>
+                            {{/each}}
+                            </div>
+                        {{else if data.dynamics_info.imgs.length == 3}}
+                            <div class="user-imglist2">
+                            {{each data.dynamics_info.imgs as v i}}
+                                <a href=""><img src="{{v}}" alt="185sy"></a>
+                            {{/each}}
+                            </div>
+                        {{else if data.dynamics_info.imgs.length == 4}}
+                            <div class="user-imglist3">
+                            {{each data.dynamics_info.imgs as v i}}
+                                <a href=""><img src="{{v}}" alt="185sy"></a>
+                            {{/each}}
+                            </div>
+                        {{/if}}
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+        <ul class="operation-list">
+            <li class="l">
+                <a class="comment"></a>
+                <small>{{data.dynamics_info.comment}}</small>
+            </li>
+            <li class="l">
+                <a class="up"></a>
+                <small>{{data.dynamics_info.likes}}</small>
+            </li>
+            <li>
+                <a class="down"></a>
+                <small>{{data.dynamics_info.dislike}}</small>
+            </li>
+        </ul>
+        {{/if}}
+        <div class="comment-list">
+            {{each data.list as v i}}
+            <div class="user-inf comment-list-flex">
+                <img class="user-inf-hp" src="{{v.uid_iconurl}}" alt="头像">
+                <div class="user-inf-right">
+                    <p class="user-inf-name">
+                        {{if v.uid_vip == 1}}
+                        <span class="vip" ></span>
+                        {{/if}}
+                        {{v.uid_nickname}}：
+                    </p>
+                    <p class="user-cont">
+                        {{if v.touid_nickname}}
+                        回复&nbsp; <span class="user-nickname">{{v.touid_nickname}}</span>
+                            {{if v.touid_vip == 1}}
+                            <span class="vip" ></span>
+                            {{/if}}：
+                        {{/if}}
+                        {{v.content}}
+                    </p>
+                    <div class="function-list">
+                        <span class="function-list-date">{{v.create_time}}</span>
+                        <p class="l">
+                            <a class="up"></a>
+                            <small>{{v.likes}}</small>
+                        </p>
+                        <p>
+                            <a class="down"></a>
+                            <small>{{v.dislike}}</small>
+                        </p>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            {{/each}}
+        </div>
+    </script>
+
+    <script>
+        //	设备类型
+        (function() {
+            var u = navigator.userAgent;
+            var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+            if(isiOS && u.indexOf("Safari") < 0){
+                document.getElementById('openApp').innerHTML = '<span class="icon-more"></span>下载手游盒子';
+            }
+        })();
+        var key = 'e10adc3949ba59abbe56e057f20f883e';
+        var url = 'uid=0' + '&channel=185' + '&dynamics_id='+{$id}+'&type=2' + '&page=1';
+        var hash = hex_md5(url+key).toLocaleLowerCase();
+        url = '/index.php?g=api&m=comment&a=comment_list&'+ url + '&sign=' + hash;
+        var openApp = document.getElementsByClassName('openApp');
+
+        for(var i = 0, len = openApp.length; i < len; i++){
+            openApp[i].onclick = function () {
+                var loadDateTime = new Date();
+                setTimeout(function () {
+                    var timeOutDateTime = new Date();
+                    if (!loadDateTime || timeOutDateTime - loadDateTime < 1010) {
+                        window.location = 'http://www.185sy.com/box/';
+                    }
+                },1000);
+                window.location = 'sy185box://app.185sy.box/dynamic/details?dynamicId='+{$id};
+            }
+        }
+        var ajax = new XMLHttpRequest();
+        ajax.open('GET',url);
+        ajax.onreadystatechange = function () {
+            if(ajax.readyState == 4 && ajax.status == 200) {
+                var datas = ajax.responseText;
+                datas = JSON.parse(datas);
+//                格式化时间
+                var dynamics_info_data = parseInt(datas.data.dynamics_info.create_time);
+                datas.data.dynamics_info.create_time = formatDate(dynamics_info_data);
+                var list = datas.data.list;
+                for(var i=0,len=list.length; i<len; i++){
+                    var list_data = parseInt(list[i].create_time);
+                    datas.data.list[i].create_time = formatDate(list_data);
+                }
+                var html = template('tpl',{"data":datas.data});
+                var main = document.getElementById('main');
+                main.innerHTML = html;
+            }
+        }
+        ajax.send();
+
+        function back() {
+            window.history.back();
+        }
+        function formatDate(nows) {
+            var now=new Date(nows * 1000);
+            var year=now.getFullYear();
+            var month=now.getMonth()+1;
+            if(month < 10) {
+                month = '0' + month;
+            }
+            var date=now.getDate();
+            if(date < 10) {
+                date = '0' + date;
+            }
+            var hour=now.getHours();
+            var minute=now.getMinutes();
+            if(minute < 10) {
+                minute = '0' + minute;
+            }
+            var second=now.getSeconds();
+            if(second < 10) {
+                second = '0' + second;
+            }
+            return year+"-"+month+"-"+date+" "+hour+":"+minute+":"+second;
+        }
+    </script>
+</body>
+</html>

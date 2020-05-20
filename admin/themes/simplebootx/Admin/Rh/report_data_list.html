@@ -1,0 +1,134 @@
+<admintpl file="header" />
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/chosen.css">
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/docsupport/prism.css">
+<link rel="stylesheet" href="__PUBLIC__/js/switch/bootstrap-switch.css">
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="javascript:void(0);">玩家数据上报(联运)</a></li>
+    </ul>
+    <form class="well form-search" method="post" action="">
+        <div class="search_type cc mb10">
+            <div class="mb10">
+					<span class="mr20">
+						用户ID：
+						<input type="text" name="userID"  value="{$userID}" style="width:100px;" />&nbsp;&nbsp;
+                        设备号：
+						<input type="text" name="deviceID"  value="{$deviceID}" style="width:180px;" />&nbsp;&nbsp;
+                        角色名：
+						<input type="text" name="roleName"  value="{$roleName}" style="width:120px;" />&nbsp;&nbsp;
+						游戏名称：
+  <select name="appID" id="appID" class="chosen-select" style="width:180px;" tabindex="1">
+      <option value="">所有游戏</option>
+      <foreach name="gamenames" item="vo" key="key">
+          <option value="{$key}" <if condition="$appID eq $key">selected</if>>{$vo}</option>
+      </foreach>
+  </select>&nbsp;&nbsp;
+                       上报类型:
+                        <select name="opType" style="width:120px;" >
+                            <option value="">全部</option>
+                            <foreach name="opType_list" item="vo" key="k">
+                                <option value="{$k}" <if condition="$opType eq $k">selected</if>>{$vo}</option>
+                            </foreach>
+                        </select>&nbsp;&nbsp;
+                        时间：
+   <input type="text" name="time"value="{$time}" min="{$min}" max="{$max}" class="input length_3 js-date" size="11" style="width:180px;">
+				<input type="submit" class="btn btn-primary" value="搜索" />
+					</span>
+            </div>
+        </div>
+    </form>
+    <table class="table table-hover table-bordered table-list" id="menus-table">
+        <thead>
+
+        <tr>
+            <th width="6%">用户ID</th>
+            <th width="6%">上报类型</th>
+            <th width="6%">游戏</th>
+            <th width="8%">设备号</th>
+            <th width="8%">IP</th>
+            <th width="5%">区服ID</th>
+            <th width="6%">区服名</th>
+            <th width="6%">角色ID</th>
+            <th width="6%">角色名</th>
+            <th width="6%">角色等级</th>
+            <th width="8%">注册时间</th>
+            <th width="8%">上报时间</th>
+            <th width="6%">切换支付</th>
+        </tr>
+
+        </thead>
+        <tbody>
+
+        <foreach name="list" item="vo">
+            <tr>
+                <td>{$vo.userID}</td>
+                <td>{$opType_list[$vo['opType']]}</td>
+                <td>{$gamenames[$vo['appID']]}</td>
+                <td>{$vo.deviceID}</td>
+                <td>{$vo.ip}</td>
+                <td>{$vo.serverID}</td>
+                <td>{$vo.serverName}</td>
+                <td>{$vo.roleID}</td>
+                <td>{$vo.roleName}</td>
+                <td>{$vo.roleLevel}</td>
+                <td>{$vo.regTime}</td>
+                <td>{$vo.opTime}</td>
+                <td>
+                    <div class="switch change-box"  data-id="{$vo.userID}" data-on="success"  data-off="danger">
+                        <input class="box"  type="checkbox" <if condition="$switchPays[$vo['userID']] eq 1">checked</if> />
+                    </div>
+                </td>
+            </tr>
+        </foreach>
+        </tbody>
+
+    </table>
+
+    </form>
+    <div class="pagination">{$page}</div>
+</div>
+
+<script src="__PUBLIC__/js/chosen/chosen.jquery.js" type="text/javascript"></script>
+<script src="__PUBLIC__/js/chosen/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
+<script src="__PUBLIC__/js/switch/bootstrap.min.js"></script>
+<script src="__PUBLIC__/js/switch/bootstrap-switch.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script type="text/javascript">
+    var config = {
+        '.chosen-select'           : {},
+        '.chosen-select-deselect'  : {allow_single_deselect:true},
+        '.chosen-select-no-single' : {disable_search_threshold:10},
+        '.chosen-select-no-results': {no_results_text:'没有匹配的结果'},
+        '.chosen-select-width'     : {width:"95%"}
+    }
+    for (var selector in config) {
+        $(selector).chosen(config[selector]);
+    }
+    //$("#select_1").val('{$game_id}');
+    //$("#select_1").trigger("chosen:updated");
+
+    $('.change-box').on('switch-change',function(){
+        var val = $(this).find('input').is(':checked');
+        var userID = $(this).attr('data-id');
+        var status = val === false ? 0 : 1;
+
+        $.post("{:U('edit_userID')}",{userID:userID,status:status},function(res){
+            if(res.status != 1){
+                layer.confirm(res.info, {
+                    btn: ['确定'] //按钮
+                }, function(){
+                    location.reload();
+                });
+            }else{
+                location.reload();
+            }
+        })
+    });
+
+</script>
+
+<script src="__PUBLIC__/js/common.js"></script>
+</body>
+</html>

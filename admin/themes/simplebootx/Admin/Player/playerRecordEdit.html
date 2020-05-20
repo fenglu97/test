@@ -1,0 +1,44 @@
+<admintpl file="header" />
+</head>
+<body>
+	<div class="wrap">
+		<ul class="nav nav-tabs">
+			<li><a href="{:U('player/remark',array('uid'=>I('get.uid',0,'intval')))}">玩家备注</a></li>
+			<li class="active"><a href="{:U('player/playerRecordEdit',array('id'=>I('get.id',0,'intval'),'uid'=>I('get.uid',0,'intval')))}">{$text}备注</a></li>
+		</ul>
+		<form method="post" class="form-horizontal js-ajax-form" action="{:U('player/playerRecordPost',array('id'=>I('get.id',0,'intval'),'uid'=>I('get.uid',0,'intval')))}">
+			<fieldset>
+				<div class="control-group">
+					<label class="control-label">{:L('USERNAME')}</label>
+					<div class="controls">
+						<input type="text" name="user_login" value="{$username['username']}" disabled="disabled">
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">{:L('PLAYER_REMARK')}</label>
+					<div class="controls">
+						<textarea name="remark" rows="5" cols="57">{$remark['remark']|default=''}</textarea>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">跟进</label>
+					<div class="controls">
+						<label class="checkbox inline"><input type="radio" name="follow" value="1" {:$remark['follow']==1?"checked":""}>是&nbsp;&nbsp;<input type="radio" name="follow" value="0" {:$remark['follow']==0?"checked":""}>否</label>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">{:L('END_TIME')}</label>
+					<div class="controls">
+						<input type="text" class="js-datetime" name="add_time" value="{:!empty($remark['add_time'])?date('Y-m-d H:i',$remark['add_time']):date('Y-m-d H:i')}" style="width: 150px;" autocomplete="off">
+					</div>
+				</div>
+			</fieldset>
+			<div class="form-actions">
+				<button type="submit" class="btn btn-primary js-ajax-submit">{$text}</button>
+				<a class="btn" href="javascript:history.back(-1);">{:L('BACK')}</a>
+			</div>
+		</form>
+	</div>
+	<script src="__PUBLIC__/js/common.js"></script>
+</body>
+</html>

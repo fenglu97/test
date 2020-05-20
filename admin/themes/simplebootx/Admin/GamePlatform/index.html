@@ -1,0 +1,63 @@
+<admintpl file="header" />
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="{:U('index')}">游戏平台列表</a></li>
+        <li><a href="{:U('add')}">添加游戏平台</a></li>
+    </ul>
+    <form class="well form-search" method="post" action="">
+        <input type="text" name="name" style="width: 200px;" value="{$name}" placeholder="平台名称">
+        <input type="submit" class="btn btn-primary" value="搜索" />
+    </form>
+    <table class="table table-hover table-bordered table-list" id="menus-table">
+        <thead>
+        <tr>
+            <th>游戏平台名称</th>
+            <th>创建时间</th>
+            <th width="180">{:L('ACTIONS')}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <foreach name="list" item="vo">
+
+            <tr>
+                <td>{$vo['name']}</td>
+                <td>{$vo.create_time|date="Y-m-d H:i:s",###}</td>
+                <td>
+                    <a href="{:U('edit',array('id'=>$vo['id']))}">修改</a>
+                    &nbsp;&nbsp;
+                   <if condition="count($vo['files']) gt 0 "> <a href="{:U('file_list',array('id'=>$vo['id']))}">查看活动</a>
+                   <else /><font color="#cccccc">查看活动</font></if>
+                </td>
+            </tr>
+
+        </foreach>
+        </tbody>
+    </table>
+
+    </form>
+</div>
+
+<div class="pagination">{$page}</div>
+<script src="__PUBLIC__/js/common.js"></script>
+<script>
+    $(document).ready(function() {
+        Wind.css('treeTable');
+        Wind.use('treeTable', function() {
+            $("#menus-table").treeTable({
+                indent : 20
+            });
+        });
+    });
+
+    setInterval(function() {
+        var refersh_time = getCookie('refersh_time_admin_menu_index');
+        if (refersh_time == 1) {
+            reloadPage(window);
+        }
+    }, 1000);
+    setCookie('refersh_time_admin_menu_index', 0);
+</script>
+</body>
+</html>

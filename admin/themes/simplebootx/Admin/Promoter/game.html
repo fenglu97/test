@@ -1,0 +1,301 @@
+<admintpl file="header" />
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/chosen.css">
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/docsupport/prism.css">
+<style>
+    .do{width:40px;padding:5px;background-color: #996666;}
+    .a{padding:5px;background-color: #33485d;}
+    .shade{ display: none; position: fixed; top: 0; left: 0; z-index: 19891010; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.3);}
+    #downloadUp{ position: fixed; top: 50%; left: 50%; z-index: 100000000001; transform: translate(-50%, -50%); background-color: #ffffff; width: 400px;}
+    ul,li{ list-style-type: none; margin: 0; padding: 0;}
+    .fl{ float: left;}
+    .fr{ float: right;}
+    .clearfix{ *zoom:1;}
+    .clearfix:after{ content: "."; display: block; height: 0; visibility: hidden; clear: both;}
+    .red{ color: red;}
+    /*.tab li{ float: left; width: 50%; height: 38px; line-height: 38px; color: #ffffff; background-color: #4e9cef; font-size: 16px; text-align: center; position: relative;}*/
+    .tab li{ float: left; width: 33%; height: 38px; line-height: 38px; color: #ffffff; background-color: #4e9cef; font-size: 16px; text-align: center; position: relative;}
+    .tab li:nth-child(2){ width: 34%;}
+    .tab li:hover{ cursor: pointer; text-decoration: underline;}
+    .tab .tab-show{ background-color: #2c7dd4;}
+    .tab .tab-show:before{ content: ''; display: block; width: 0; height: 0; border: 6px solid transparent; border-top-color: #2c7dd4; position: absolute; left: 50%; top: 100%;}
+    .tab-content{ padding: 20px 30px; display: none; word-break: break-all; word-wrap: break-word;}
+    .tab-btns{ padding-top: 20px;}
+    .tab-content-andorid,.tab-content-ios{ height: 60px; overflow-y: auto; overflow-x: hidden; word-break: break-all; word-wrap: break-word;}
+    .tab-btn{ width: 140px; height: 36px; font-size: 12px; text-align: center; line-height: 36px; background-color: #ffffff; border: 1px solid #4e9cef; cursor: pointer;}
+    /*.tab-btn-andorid,.tab-btn-ios{ color: #ffffff; background-color: #4e9cef; float: left;}*/
+    .tab-btn-pass{ color: #ffffff; background-color: #4e9cef;}
+    /*.tab-btn-andorid:active,.tab-btn-ios:active{ background-color: #2c7dd4; border: 1px solid #2c7dd4;}*/
+    .tab-btn-pass:active{ background-color: #2c7dd4; border: 1px solid #2c7dd4;}
+    .tab-btn-x{ color: #4e9cef; background-color: #ffffff; border: 1px solid #4e9cef;}
+    .ios-repair{ display: none; width: 100%;}
+    .tab-btn-ios-repair{ width: 80px; height: 26px; line-height: 26px; font-size: 12px; background-color: #009688; color: #fff; text-align: center; border: none; margin: 0 auto; cursor: pointer;}
+    .tab-hint{ margin-top: 10px; font-size: 12px; text-align: center; color: red;}
+
+    .tab-btn-small .tab-btn{ width: 80px; height: 26px; line-height: 26px;}
+    .center{ margin: 0 auto;}
+</style>
+</head>
+<body>
+<div class="shade">
+    <div id="downloadUp">
+        <ul class="tab clearfix">
+            <li class="tab-show" data-index="0">详情页</li>
+            <li data-index="1">Android客户端</li>
+            <li data-index="2">IOS客户端</li>
+        </ul>
+        <div class="tab-content" style="display: block;">
+            <div class="tab-content-url">
+                <!--<div>-->
+                <!--<div></div>-->
+                <!--<div class="tab-btn-small clearfix">-->
+                <!--<button class="tab-btn tab-btn-pass tab-btn-url fr" data-clipboard-text="">复制</button>-->
+                <!--</div>-->
+                <!--</div>-->
+            </div>
+            <div class="tab-btns">
+                <!--<button class="tab-btn tab-btn-pass tab-btn-url" data-clipboard-text="">点击复制</button>-->
+                <div class="tab-btn tab-btn-x center">关闭</div>
+            </div>
+            <div class="tab-hint" style="display: none"></div>
+        </div>
+        <!--<div class="tab-content" style="display: block;">-->
+        <div class="tab-content">
+            <div class="tab-content-andorid">Android客户端</div>
+            <div class="tab-btns clearfix">
+                <button class="tab-btn tab-btn-pass tab-btn-andorid" data-clipboard-text="">点击复制</button>
+                <button class="tab-btn tab-btn-x fr">关闭</button>
+            </div>
+        </div>
+        <div class="tab-content">
+            <div class="tab-content-ios">IOS客户端</div>
+            <div class="tab-btns clearfix">
+                <button class="tab-btn tab-btn-pass tab-btn-ios" data-clipboard-text="">点击复制</button>
+                <button class="tab-btn tab-btn-x fr">关闭</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#">游戏列表</a></li>
+    </ul>
+    <form class="well form-search" method="post" action="">
+        <select name="cid" class="chosen-select cid" style="width:auto;height: 35px;" tabindex="1">
+            {:get_channel_list($cid)}
+        </select>
+        <select name="gid" class="chosen-select gid"  style="width:auto;height: 35px;" tabindex="1">
+            <option value="0">所有游戏</option>
+            {:get_game_list($gid,1,'all')}
+        </select>
+
+        <select name="access_type" class="access_type"  style="width:auto;height: 35px;" >
+            <option value="0" >接入类型</option>
+            <option value="1" <if condition="$access_type eq 1">selected</if>>独代</option>
+            <option value="2" <if condition="$access_type eq 2">selected</if>>联运</option>
+        </select>
+        <select name="game_type"  style="width:auto;height: 35px;" >
+            <option value="0" >全部游戏</option>
+            <foreach name="platform" item="v" key="k">
+                <option value="{$k}" <if condition="$game_type eq $k">selected</if> >{$v}</option>
+            </foreach>
+        </select>
+        <if condition="SESSION('ROLE_ID') eq 15">
+            <select name="game_platform" class="game_platform"  style="width:auto;height: 35px;" tabindex="1">
+                <option value="0">游戏平台</option>
+                <foreach name="game_platform_names" item="vo" key="k">
+                    <option value="{$k}" <if condition="$game_platform eq $k">selected</if>>{$vo}</option>
+                </foreach>
+            </select>
+        </if>
+
+        <input type="submit" class="btn btn-primary" value="搜索" />
+    </form>
+    <table class="table table-hover table-bordered">
+        <thead>
+        <tr>
+            <th width="3%">图标</th>
+            <th width="10%">游戏名</th>
+            <th width="6%">接入类型</th>
+            <th width="8%">游戏平台</th>
+            <th width="12%">客户端</th>
+            <th width="12%">游戏类型</th>
+            <th width="8%">折扣</th>
+            <th width="6%">推广链接</th>
+            <th width="6%">素材</th>
+            <th width="6%">礼包</th>
+            <th width="6%">VIP</th>
+        </tr>
+        </thead>
+        <tbody>
+        <foreach name="data" item="vo">
+            <tr>
+                <td>
+                    <img src="{$vo['logo']}" />
+                </td>
+                <td>{$vo.game_name}</td>
+                <td><if condition="$vo['access_type'] eq 1">独代<else />联运</if></td>
+                <if condition="SESSION('ROLE_ID') eq 15">
+                    <td>{$game_platform_names[$vo['game_platform']]}</td>
+                </if>
+                <td>{$vo.game_type}</td>
+                <td>{$vo.client}</td>
+                <td>{$vo.types}</td>
+                <td>
+                    <if condition="$vo['discount'] eq 0">10<else/>{$vo.discount}</if>折
+                </td>
+
+                <td><if condition="$vo.role eq 1">
+                    <a href="javascript:void(0);" class="btn  show-download btn-primary"
+                       data-ios='{$vo.ios_url}'
+                       data-andorid='{$vo.android_url}'
+                       data-url='{$vo.tg_url}'
+                       data-new-tg-url='{$vo.new_tg_url}'
+                    >推广链接</a>
+                    <else/>
+                    <a href="javascript:void(0);" class="btn  btn-danger">禁止推广</a>
+                </if></td>
+                <td>
+                    <a class="btn btn-primary" href="{:U('material',array('tag'=>$vo['tag']))}" target="_blank">素材</a>
+                </td>
+                <!--<td>-->
+                    <!--<eq name="vo.libao" value="1">-->
+                        <!--<a href="{:U('package/export_package',array('appid'=>$vo['id'],'cid'=>$cid))}" class="btn a btn-primary" >礼包</a>-->
+                    <!--</eq>-->
+                <!--</td>-->
+                <td>
+                    <eq name="vo.libao" value="1">
+                        <a href="{:U('package/export_package',array('appid'=>$vo['id'],'cid'=>$cid))}" class="btn a btn-primary" >礼包</a>
+                    </eq>
+                </td>
+                <td>
+                    <notempty name="vo.vip_url"><a class="btn  btn-primary" href="{$vo.vip_url}" target="_blank">VIP</a></notempty>
+                </td>
+            </tr>
+        </foreach>
+        </tbody>
+        </foreach>
+        </tbody>
+    </table>
+    <div class="pagination">{$page}</div>
+    <!--</form>-->
+</div>
+<script src="__PUBLIC__/js/jquery-1.10.2.js"></script>
+<script src="__PUBLIC__/js/clipboard.min.js"></script>
+<script src="__PUBLIC__/js/common.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script src="__PUBLIC__/js/chosen/chosen.jquery.js" type="text/javascript"></script>
+<script src="__PUBLIC__/js/chosen/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    var config = {
+        '.chosen-select'           : {},
+        '.chosen-select-deselect'  : {allow_single_deselect:true},
+        '.chosen-select-no-single' : {disable_search_threshold:10},
+        '.chosen-select-no-results': {no_results_text:'没有匹配的结果'},
+        '.chosen-select-width'     : {width:"95%"}
+    }
+    for (var selector in config) {
+        $(selector).chosen(config[selector]);
+    }
+
+</script>
+<script type="text/javascript">
+    $(function(){
+        $('.view').click(function(){
+            layer.alert($(this).attr('data-url'));
+        });
+
+        function bodyScroll(event){
+            event.preventDefault();
+        }
+
+        if(Clipboard.isSupported()){
+            var clipboard = new Clipboard('.copy');
+            clipboard.on('success', function(e){
+//                layer.alert("复制成功："+ e.text);
+                e.clearSelection();
+//                clipboard.destroy();
+            });
+            clipboard.on('error', function(e) {
+//                layer.alert(e.trigger.dataset["url"]);
+                clipboard.destroy();
+            });
+        } else {
+            $('.copy').click(function(){
+//                layer.alert(this.dataset["url"]);
+            });
+        }
+
+        $('.tab>li').on('click', function (event) {
+            $('.tab>li').removeClass('tab-show');
+            $(this).addClass('tab-show');
+            $('.tab-content').css('display', 'none');
+            $('.tab-content')[$(this).data('index')].style.display = 'block';
+//            $('.tab-btn-andorid').attr('data-clipboard-text', $('.tab-content')[$(this).data('index')].innerHTML);
+        })
+        $('.show-download').on('click', function(){
+
+            var tgUrl = $(this).attr('data-url');
+            var newTgUrl = $(this).attr('data-new-tg-url');
+            var iosData = $(this).attr('data-ios');
+            var andoridData = $(this).attr('data-andorid');
+            var html = '';
+            if(newTgUrl){
+                html = '<div>\n' +
+                    '<div>'+tgUrl+'</div>\n' +
+                    '<div class="tab-btn-small clearfix">\n' +
+                    '<div class="tab-btn tab-btn-pass fr copy" data-clipboard-text="'+tgUrl+'">点击复制</div>\n' +
+                    '</div>\n' +
+                    '</div>\n' +
+                    '<div>\n' +
+                    '<div>'+newTgUrl+'<span class="red">&nbsp;(推荐)</span></div>\n' +
+                    '<div class="tab-btn-small clearfix">\n' +
+                    '<div class="tab-btn tab-btn-pass fr copy" data-clipboard-text="'+newTgUrl+'">点击复制</div>\n' +
+                    '</div>\n' +
+                    '</div>';
+            } else {
+                html = '<div>\n' +
+                    '<div>'+tgUrl+'</div>\n' +
+                    '<div class="tab-btn-small clearfix">\n' +
+                    '<div class="tab-btn tab-btn-pass fr copy" data-clipboard-text="'+tgUrl+'">点击复制</div>\n' +
+                    '</div>\n' +
+                    '</div>';
+            }
+            $('.tab-content-url').html(html);
+            // $('.tab-btn-url').addClass('copy');
+            //Andorid
+            if(andoridData != ''){
+                //1.代表有包
+                $('.tab-content-andorid').html(andoridData);
+                $('.tab-btn-andorid').addClass('copy');
+                $('.tab-btn-andorid').attr('data-clipboard-text', String(andoridData));
+            } else{
+                $('.tab-content-andorid').html('安卓暂未上传母包');
+            }
+            //IOS
+            if(iosData != ''){
+                $('.tab-content-ios').html(iosData);
+                $('.tab-btn-ios').addClass('copy');
+                $('.tab-btn-ios').attr('data-clipboard-text', String(iosData));
+            }else {
+                $('.tab-content-ios').html('苹果暂未上传母包');
+            }
+            $('.shade').fadeIn(100);
+            //关闭滚动条
+            document.body.addEventListener('touchmove', bodyScroll, false);
+            $('body').css({'position':'fixed',"width":"100%"});
+        });
+        $('.tab-btn-x').on('click', function () {
+            $('.tab-btn-andorid').unbind('click');
+            $('.tab-btn-ios').unbind('click');
+
+            $('.shade').fadeOut(100);
+            $('.tab>li')[0].click();
+            document.body.removeEventListener('touchmove', bodyScroll, false);
+            $("body").css({"position":"initial","height":"auto"});
+        })
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="__PUBLIC__/js/layui/layui/css/layui.css">
+    <link rel="stylesheet" href="__TMPL__Public/assets/css/x_laydate_notice.css"/>
+</head>
+<body>
+<div style="padding: 50px;">
+    <div class="notice">
+        <div class="notice_left">
+            <div class="notice_labels">
+                <div class="layui-form notice_label">
+                    <select name="gamename" lay-verify="" lay-filter="gamename" lay-search id="gamenameSelect">
+                        <option value="">选择游戏</option>
+                    </select>
+                </div>
+                <div class="notice_label"><button class="layui-btn layui-btn-normal layui-btn-disabled" id="ptflhd">平台返利活动</button></div>
+                <div class="notice_label"><button class="layui-btn layui-btn-normal layui-btn-disabled" id="yxxxflhd">游戏线下返利活动</button></div>
+                <div class="notice_label"><button class="layui-btn layui-btn-normal layui-btn-disabled" id="mfhd">免费活动</button></div>
+            </div>
+            <!--日历-->
+            <div id="calendar"></div>
+        </div>
+        <div class="notice_right">
+            <p class="ps strong color_red">Ps：活动请勿过早告知玩家，因玩家需求或研发等原因可能会导致活动临时调整</p>
+            <dl class="notice_dl color_red">
+                <dt>红色为当月重要活动日，活动大致内容：</dt>
+                <dd>1.活动期间累计充值100元-999元返利70%；</dd>
+                <dd>2.活动期间累计充值1000元到2999元返利100%；</dd>
+                <dd>3.活动期间累计充值3000元到4999元返利150%；</dd>
+                <dd>4.活动期间累计充值5000元到6999元返利200%；</dd>
+                <dd>5.活动期间累计充值7000-9999元以上返利250%；</dd>
+                <dd>6.活动期间累计充值10000元以上返利300%；</dd>
+                <dd>7.活动期间累计充值20000元以上返利400%；</dd>
+                <dd style="font-weight: bold;">部分游戏不参与此活动，或者活动内容不同，详情请点击当日日历查看。</dd>
+            </dl>
+            <!--<dl class="notice_dl color_blue">-->
+            <!--<dt>蓝色为当月中度活动日，活动内容：</dt>-->
+            <!--<dd>活动期间累计充值100元-999元返利50%；</dd>-->
+            <!--<dd>活动期间累计充值1000元-4999元返利100%；</dd>-->
+            <!--<dd>活动期间累计充值5000元-9999元返利200%；</dd>-->
+            <!--<dd>活动期间累计充值10000元以上返利250%。</dd>-->
+            <!--</dl>-->
+            <dl class="notice_dl color_green">
+                <dt>绿色为当月一般活动日，活动大致内容：</dt>
+                <dd>单日单个游戏累计充值达到100元，额外返还100元对应的钻石/元宝</dd>
+                <dd>单日单个游戏累计充值达到300元，额外返还300元对应的钻石/元宝</dd>
+                <dd>单日单个游戏累计充值达到800元，额外返还800元对应的钻石/元宝</dd>
+                <dd>单日单个游戏累计充值达到1500元，额外返还1500元对应的钻石/元宝</dd>
+                <dd>单日单个游戏累计充值达到3000元，额外返还3000元对应的钻石/元宝</dd>
+                <dd>单日单个游戏累计充值达到5000元，额外返还5000元对应的钻石/元宝</dd>
+                <dd>单日单个游戏累计充值达到7000元，额外返还7000元对应的钻石/元宝</dd>
+                <dd>单日单个游戏累计充值达到10000元，额外返还10000元对应的钻石/元宝</dd>
+                <dd style="font-weight: bold;">部分游戏不参与此活动，或者活动内容不同，详情请点击当日日历查看。</dd>
+            </dl>
+        </div>
+    </div>
+    <div style="min-width: 1280px;">
+        <div id="commonActivity">
+            <div id="commonActivityTitle"></div>
+            <div id="commonActivityContent"></div>
+        </div>
+    </div>
+</div>
+
+<script src="__PUBLIC__/js/jquery-1.8.3.min.js"></script>
+<script src="__PUBLIC__/js/layui/layui/layui.js"></script>
+
+<!--<script src="__PUBLIC__/js/layer/layer.js"></script>-->
+<!--<script src="__PUBLIC__/js/laydate/laydate.js"></script>-->
+<script src="__TMPL__Public/assets/js/x_laydate_notice.js"></script>
+</body>
+</html>

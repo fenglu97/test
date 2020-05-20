@@ -1,0 +1,187 @@
+<admintpl file="header" />
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <div class="well" >
+        <p style="text-align: center;margin-bottom: 75px;">
+            <span style="height:45px;line-height:45px;font-size: 18px;display: block;float: left;width: 100%;">可提现金额：<span style="color:#d83423;font-size:26px" class="money">{$money|default=0}</span> 元
+                <if condition="$money egt $withdraw_cash and $is_contract gt 0">
+                    <button style="margin-left:46px" class="btn btn-primary withdraw">提现</button>
+                    <else/>
+                    <button style="margin-left:46px;background: #cccccc" class="btn btn-primary">提现</button>
+                </if>
+            </span>
+            <div class="well" style="background-color: #79a0a7;margin-top: 5%;color: white;">
+                <p>温馨提示：</p>
+                <if condition="$time gt 0">
+                    <p style="text-indent:2em;">1、提现开通时间为{$time|date='Y-m-d H:i:s',###}</p>
+                    <else/>
+                    <p style="text-indent:2em;">1、尚未开通自助提现功能，请联系管理员开通(仅一级渠道可开通)</p>
+                </if>
+                <p style="text-indent:2em;">2、分成比例{$fc|default = 0}%
+                <p style="text-indent:2em;">3、可提现金额{$withdraw_cash}元以上即可申请提现</p>
+                <p style="text-indent:2em;">4、提现金额请输入整数</p>
+                <p style="text-indent:2em;">5、提交申请后管理人员会核实信息，审核通过会马上到账</p>
+            </div>
+        </p>
+    </div>
+        <table class="table table-hover table-bordered">
+            <thead>
+            <tr>
+                <!--<th width="50">ID</th>-->
+                <th>工单号</th>
+                <th>转账单号</th>
+                <th>收款方式</th>
+                <th>收款账号</th>
+                <th>收款人</th>
+                <th>提现金额</th>
+                <!--<th>手续费</th>-->
+                <th>提现时间</th>
+                <th>状态</th>
+            </tr>
+            </thead>
+            <tbody>
+            <foreach name="data" item="vo">
+                <tr>
+                    <!--<td>{$vo.id}</td>-->
+                    <td>{$vo.orderID}</td>
+                    <td>{$vo.alipay_order}</td>
+                    <td>支付宝</td>
+                    <td>{:showInfo($vo['alipay'],'alipay')}</td>
+                    <td>{$vo.name}</td>
+                    <td>{$vo.money}</td>
+                    <!--<td>{$users[$vo['uid']]}</td>-->
+                    <td>{$vo.create_time|date="Y-m-d H:i:s",###}</td>
+                    <td><if condition="$vo['status'] eq 1"><span style="color:#30af30">审核成功</span><elseif condition="$vo['status'] eq 2" /><span style="color:dodgerblue">审核中</span><elseif condition="$vo['status'] eq 3"/><span style="color:#e22b2b">审核失败</span><else/><span style="color:#30af30">已打款</span></if></td>
+                </tr>
+            </foreach>
+            </tbody>
+        </table>
+        <div class="pagination">{$page}</div>
+</div>
+<script src="__PUBLIC__/js/common.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script type="text/javascript">
+$(function(){
+
+    $('.withdraw').click(function(){
+        var uid = "{:session('ADMIN_ID')}";
+        var maxMoney = "{$usableMoney}";
+        $.post("{:U('checkInfo')}",{uid:uid},function(res){
+            if(res.status == 1){
+                /* 弹窗html  start */
+                var html = '<div class="form-horizontal">';
+                html += '<div class="control-group" style="margin-top:30px;margin-bottom:0">';
+                html += '<div style="margin-bottom: 20px;">';
+                html += '<label class="control-label">账户姓名</label>';
+                html += '<div class="controls">';
+                html += '<input type="text" class="name" readonly value="'+res.info.user_truename+'">';
+                html += '</div></div>';
+
+                html += '<div style="margin-bottom: 20px;">';
+                html += '<label class="control-label">支付宝账号</label>';
+                html += '<div class="controls">';
+                html += '<input type="text" class="alipay" readonly value="'+res.info.alipay_account+'">';
+                html += '</div></div>';
+                html += '<div style="margin-bottom: 20px;">';
+                html += '<label class="control-label">提现金额</label>';
+                html += '<div class="controls">';
+                html += '<input type="number" max="'+maxMoney+'" class="cash">';
+                html += '</div></div>';
+                html += '<div style="margin-bottom: 20px;">';
+                html += '<label class="control-label">手机号码</label>';
+                html += '<div class="controls">';
+                html += '<input type="text" readonly value="'+res.info.mobile+'" class="mobile"><button style="margin-left:21px" class="btn btn-primary sendverify">发送验证码</button>';
+                html += '</div></div>';
+                html += '<div style="margin-bottom: 20px;">';
+                html += '<label class="control-label">验证码</label>';
+                html += '<div class="controls">';
+                html += '<input type="text" class="verify">';
+                html += '</div> </div> ';
+                html += '</div></div>';
+                /* 弹窗html  end */
+
+                /* 验证码点击事件 start */
+                $('body').one('click','.sendverify',function () {
+                    var obj = $(this);
+                    settime(obj);
+                    sendSms()
+                })
+
+                function sendSms() {
+                    $.post("{:U('sendSms')}",{mobile:res.info.mobile,uid:uid,msg:'提现'},function (res) {
+                        if(res.status != 1){
+                            layer.alert(res.info)
+                        }
+                    });
+                }
+
+                var countdown = 60;
+                function settime(obj){
+                    if (countdown == 0) {
+                        obj.removeAttr("disabled");
+                        obj.html("发送验证码");
+                        $('body').one('click','.sendverify',function () {
+                            var obj = $(this);
+                            settime(obj);
+                            sendSms()
+                        })
+                        countdown = 60;
+                        return;
+                    } else {
+                        obj.attr("disabled", true);
+                        obj.html("重新发送(" + countdown + ")");
+                        countdown--;
+                        setTimeout(function(){
+                            settime(obj)
+                        },1000)
+                    }
+                }
+                /* 验证码点击事件 end */
+
+                layer.open({
+                    title: '提现',
+                    type: 1,
+                    skin: 'layui-layer-molv', //加上边框
+                    area: ['560px', 'auto'], //宽高
+                    content: html,
+                    closeBtn: 1, //不显示关闭按钮
+                    anim: 2,
+                    btnAlign: 'c',
+                    shadeClose: false, //开启遮罩关闭
+                    btn: ['确认提交'],
+                    yes: function(index, layero){
+                        var code = $('.verify').val();
+                        var name = $('.name').val();
+                        var cash = $('.cash').val();
+                        var alipay = $('.alipay').val();
+                        var money = $('.money').html();
+                        if(cash == 0){
+                            layer.alert('请输入提现金额');
+                            return false;
+                        }
+                        if(!(/^(\+)?\d+$/.test(cash)) || cash > money){
+                            layer.alert('请输入正确的提现金额');
+                            return false;
+                        }
+                        var load = layer.load(0, {shade: [0.3,'black']});
+                        $.post("{:U('withdrawCash')}",{alipay:alipay,name:name,cash:cash,code:code},function(data){
+                            layer.close(load);
+                            layer.close(index)
+                            if(data.status == 1){
+                                location.reload();
+                            }else{
+                                layer.alert(data.info)
+                            }
+                        })
+                    }
+                });
+            }else{
+                layer.alert(res.info)
+            }
+        })
+    })
+})
+</script>
+</body>
+</html>

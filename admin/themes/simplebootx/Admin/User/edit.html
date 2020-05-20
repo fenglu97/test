@@ -1,0 +1,100 @@
+<admintpl file="header" />
+</head>
+<body>
+	<div class="wrap">
+		<ul class="nav nav-tabs">
+			<li><a href="{:U('user/index')}">{:L('ADMIN_USER_INDEX')}</a></li>
+			<li><a href="{:U('user/add')}">{:L('ADMIN_USER_ADD')}</a></li>
+			<li class="active"><a>编辑管理员</a></li>
+		</ul>
+		<form method="post" class="form-horizontal js-ajax-form" action="{:U('User/edit_post')}">
+			<fieldset>
+				<div class="control-group">
+					<label class="control-label">{:L('USERNAME')}</label>
+					<div class="controls">
+						<input type="text" name="user_login" value="{$user_login}">
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">{:L('PASSWORD')}</label>
+					<div class="controls">
+						<input type="text" name="user_pass" value="" placeholder="">
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">手机号</label>
+					<div class="controls">
+						<input type="text" name="mobile" value="{$mobile}" placeholder="">
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">游戏分组</label>
+					<div class="controls">
+						<select name="game_group">
+							<option value="">全部分组</option>
+							<foreach name="gamegroup" item="vo">
+								<option value="{$vo.value}" <if condition="$game_group eq $vo['value']">selected</if>>{$vo.name}</option>
+							</foreach>
+						</select>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">{:L('EMAIL')}</label>
+					<div class="controls">
+						<input type="text" name="user_email" value="{$user_email}">
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">统计有效注册生效时间</label>
+					<div class="controls">
+						<input type="text" placeholder="为空则以当前时间(推广用)" class="js-datetime date" name="effective" value="{$effective|date='Y-m-d H:i:s',###}" autocomplete="off">
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">手机登陆验证</label>
+					<div class="controls">
+						<php>$active_true_checked=($mobile_verify==1)?"checked":"";</php>
+						<label class="radio inline" for="active_true">
+							<input type="radio" name="mobile_verify" value="1" {$active_true_checked} />{:L('ENABLED')}
+						</label>
+						<php>$active_false_checked=($mobile_verify==0)?"checked":"";</php>
+						<label class="radio inline" for="active_false">
+							<input type="radio" name="mobile_verify" value="0" {$active_false_checked} />{:L('DISABLED')}
+						</label>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">玩家手机号</label>
+					<div class="controls">
+						<php>$active_true_checked=($mobile_enabled==1)?"checked":"";</php>
+						<label class="radio inline" for="active_true">
+							<input type="radio" name="mobile_enabled" value="1" {$active_true_checked} />显示
+						</label>
+						<php>$active_false_checked=($mobile_enabled==0)?"checked":"";</php>
+						<label class="radio inline" for="active_false">
+							<input type="radio" name="mobile_enabled" value="0" {$active_false_checked} />隐藏
+						</label>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">{:L('ROLE')}</label>
+					<div class="controls">
+						<foreach name="roles" item="vo">
+						<label class="checkbox inline">
+							<php>$role_id_checked=in_array($vo['id'],$role_ids)?"checked":"";</php>
+							<input value="{$vo.id}" type="radio" name="role_id" {$role_id_checked} <if condition="sp_get_current_admin_id() neq 1 && $vo['id'] eq 1">disabled="true"</if>>{$vo.name}
+						</label>
+						</foreach>
+					</div>
+				</div>
+			</fieldset>
+			<div class="form-actions">
+				<input type="hidden" name="id" value="{$id}" />
+				<button type="submit" class="btn btn-primary js-ajax-submit">{:L('SAVE')}</button>
+				<a class="btn" href="javascript:history.back(-1);">{:L('BACK')}</a>
+			</div>
+		</form>
+	</div>
+	<script src="__PUBLIC__/js/common.js"></script>
+</body>
+</html>

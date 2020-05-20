@@ -1,0 +1,719 @@
+<admintpl file="header"/>
+<link rel="stylesheet" href="__PUBLIC__/js/switch/bootstrap-switch.css">
+<link rel="stylesheet" href="__PUBLIC__/js/uploadifive/uploadifive.css">
+<style>
+    .copy{
+        float:right;
+        height: 25px;
+        line-height: 0px;
+        padding: 7px 10px;
+    }
+    .up-del{
+        width: 70px;
+        margin-left: -7px;
+        border-radius: 0px 4px 4px 0px;
+    }
+    .readonly{
+        width: 486px;
+        margin-left: 180px;
+
+        border: 1px solid #e5e7eb;
+        background: #f7f8fa;
+    }
+    .up_text{
+        height:20px;
+        margin-left:-7px;
+
+    }
+    .controls input{width:400px}
+    .float{float:left}
+    .checkboxs{width:596px}
+    .switch{margin-left:20px}
+    .select{height:36px}
+    .remark{width:90%}
+</style>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:U('game/index')}">游戏列表</a></li>
+        <li class="active"><a href="javascript:void(0);">完善游戏资料</a></li>
+    </ul>
+    <form class="form-horizontal js-ajax-forms" action="" method="post">
+        <fieldset>
+            <div class="control-group float">
+                <label class="control-label">游戏名<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <input type="text" maxlength="20" name="game_name" value="{$data.game_name}" id="game_name"/>
+                </div>
+            </div>
+            <div class="control-group float">
+                <label class="control-label">游戏简写<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <input type="text" maxlength="15" name="tag" value="{$data.tag}" />
+                </div>
+            </div>
+            <div class="control-group float">
+                <label class="control-label">安卓包名</label>
+                <div class="controls">
+                    <input type="text" maxlength="45" placeholder="上传母包后包名会自动填入，也可手动填写" class="android_package_name" name="android_package_name" value="{$data.android_package_name}" />
+                </div>
+            </div>
+            <div class="control-group float">
+                <label class="control-label">苹果包名</label>
+                <div class="controls">
+                    <input type="text" maxlength="45" placeholder="上传母包后包名会自动填入，也可手动填写" class="ios_package_name" name="ios_package_name" value="{$data.ios_package_name}" />
+                </div>
+            </div>
+            <div class="control-group float">
+                <label class="control-label">安卓版本</label>
+                <div class="controls">
+                    <input type="text" maxlength="20" class="android_version" name="android_version" value="{$data.android_version}" />
+                </div>
+            </div>
+            <div class="control-group float">
+                <label class="control-label">苹果版本</label>
+                <div class="controls">
+                    <input type="text" maxlength="20" class="ios_version" name="ios_version" value="{$data.ios_version}" />
+                </div>
+            </div>
+            <!--<div class="control-group float">-->
+                <!--<label class="control-label">安卓内部版本</label>-->
+                <!--<div class="controls">-->
+                    <!--<input type="text" maxlength="20" class="android_version_num" name="android_version_num" value="{$data.android_version_num}" />-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="control-group float">-->
+                <!--<label class="control-label">苹果内部版本</label>-->
+                <!--<div class="controls">-->
+                    <!--<input type="text" maxlength="20" class="ios_version_num" name="ios_version_num" value="{$data.ios_version_num}" />-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="control-group float">-->
+                <!--<label class="control-label">安卓母包地址</label>-->
+                <!--<div class="controls">-->
+                    <!--<input type="text" maxlength="250" class="android_url" name="android_url" value="{$data.android_url}" />-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="control-group float">-->
+                <!--<label class="control-label">苹果母包地址</label>-->
+                <!--<div class="controls">-->
+                    <!--<input type="text" maxlength="250" class="ios_url" name="ios_url" value="{$data.ios_url}" />-->
+                <!--</div>-->
+            <!--</div>-->
+            <div class="control-group float">
+                <label class="control-label">安卓包大小(MB)</label>
+                <div class="controls">
+                    <input type="text" maxlength="20" class="android_size" name="android_size" value="{$data.android_size}" />
+                </div>
+            </div>
+            <div class="control-group float">
+                <label class="control-label">苹果包大小(MB)</label>
+                <div class="controls">
+                    <input type="text" maxlength="20" class="ios_size" name="ios_size" value="{$data.ios_size}" />
+                </div>
+            </div>
+            <!--<div class="control-group float">-->
+                <!--<label class="control-label">安卓内部版本</label>-->
+                <!--<div class="controls">-->
+                    <!--<input type="text" maxlength="20" class="android_version_num" name="android_version_num" value="{$data.android_version_num}" />-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="control-group float">-->
+                <!--<label class="control-label">苹果内部版本</label>-->
+                <!--<div class="controls">-->
+                    <!--<input type="text" maxlength="20" class="ios_version_num" name="ios_version_num" value="{$data.ios_version_num}" />-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="control-group float">-->
+                <!--<label class="control-label">安卓母包地址</label>-->
+                <!--<div class="controls">-->
+                    <!--<input type="text" maxlength="250" class="android_url" name="android_url" value="{$data.android_url}" />-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="control-group float">-->
+                <!--<label class="control-label">苹果母包地址</label>-->
+                <!--<div class="controls">-->
+                    <!--<input type="text" maxlength="250" class="ios_url" name="ios_url" value="{$data.ios_url}" />-->
+                <!--</div>-->
+            <!--</div>-->
+            <div class="control-group float">
+                <label class="control-label">安卓支付地址</label>
+                <div class="controls">
+                    <input type="text" maxlength="250" name="android_payurl" value="{$data.android_payurl}" id="android_payurl"/>
+                </div>
+            </div>
+            <div class="control-group float">
+                <label class="control-label">苹果支付地址</label>
+                <div class="controls">
+                    <input type="text" maxlength="250" name="ios_payurl" value="{$data.ios_payurl}" id="ios_payurl"/>
+                </div>
+            </div>
+
+            <div class="control-group float">
+                <label class="control-label">充值比例<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <input type="text" maxlength="8" name="topup_scale" value="{$data.topup_scale}"/>
+                </div>
+            </div>
+            <div class="control-group float">
+                <label class="control-label">赠送比例<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <input type="text" maxlength="8" name="give_scale" value="{$data.give_scale}"/>
+                </div>
+            </div>
+            <div class="control-group float">
+                <label class="control-label">区服地址</label>
+                <div class="controls">
+                    <input type="text" maxlength="250" name="serverurl" value="{$data.serverurl}" id="serverurl"/>
+                </div>
+            </div>
+            <div class="control-group float">
+                <label class="control-label">返利地址</label>
+                <div class="controls">
+                    <input type="text" maxlength="250" name="bpayurl" value="{$data.bpayurl}" id="bpayurl"/>
+                </div>
+            </div>
+            <div class="control-group float">
+                <label class="control-label">排序</label>
+                <div class="controls">
+                    <input type="text" maxlength="5" name="sort" value="{$data.sort}" id="sort"/>
+                </div>
+            </div>
+
+            <!--<div class="control-group float select" style="width:596px">
+                <label class="control-label">游戏类型</label>
+                <div class="controls">
+                    <select name="type">
+                        <option value="0" <if condition="$data['type'] eq 0">selected</if>>无</option>
+                        <option value="1" <if condition="$data['type'] eq 1">selected</if>>最新</option>
+                        <option value="2" <if condition="$data['type'] eq 2">selected</if>>推荐</option>
+                        <option value="3" <if condition="$data['type'] eq 3">selected</if>>热门</option>
+                    </select>
+                </div>
+            </div>-->
+
+
+            <!--<div class="control-group float">
+                <label class="control-label">GM权限配置名称</label>
+                <div class="controls">
+                    <input type="text" maxlength="250" readonly  value="{$data.pri_name|default = 无}" />
+                </div>
+            </div>-->
+
+            <div class="control-group float">
+                <label class="control-label">返利配置名称</label>
+                <div class="controls">
+                    <input type="text" maxlength="250" readonly  value="{$data.op_name|default = 无}" />
+                </div>
+            </div>
+
+            <div class="control-group float">
+                <label class="control-label">返利备注</label>
+                <div class="controls">
+                    <input type="text" maxlength="250" name="notice"  value="{$data.notice}" />
+                </div>
+            </div>
+
+            <div class="control-group float">
+                <label class="control-label">联运备注</label>
+                <div class="controls">
+                    <input type="text" maxlength="250" name="rhnotice"  value="{$data.rhnotice}" />
+                </div>
+            </div>
+
+            <div class="control-group float">
+                <label class="control-label">充值折扣</label>
+                <div class="controls">
+                    <input type="text" maxlength="3" name="discount" class="discount"  value="{$data.discount}" />
+                </div>
+            </div>
+
+            <!--<div class="control-group float select" style="width:596px">
+                <label class="control-label">游戏分组</label>
+                <div class="controls">
+                    <select name="group">
+                        <foreach name="game_group" item="vo">
+                        <option value="{$vo['value']}" <if condition="$data['group'] eq $vo['value']">selected</if>>{$vo['name']}</option>
+                            </foreach>
+                    </select>
+                </div>
+            </div>-->
+
+
+
+            <div class="control-group float game_sdk" class="control-group float select" style="width:596px">
+                <label class="control-label">SDK平台</label>
+                <div class="controls">
+                    <select name="game_sdk">
+                        <foreach name="game_sdk" item="vo">
+                            <option value="{$vo.id}" <if condition="$vo['id'] eq $data['game_sdk']">selected</if>>{$vo.name}</option>
+                        </foreach>
+                    </select>
+                </div>
+            </div>
+
+
+
+            <!--<div class="control-group float" >
+                <label class="control-label">H5入口地址</label>
+                <div class="controls">
+                    <input type="text" maxlength="190" name="h5"  value="{$data.h5}" />
+                </div>
+            </div>-->
+
+            <!--<div class="control-group float">
+                <label class="control-label">推广达标等级</label>
+                <div class="controls">
+                    <input type="text" maxlength="5" name="reach_level"  value="{$data.reach_level}" />
+                </div>
+            </div>-->
+
+
+            <!--<div class="control-group float" style="width:596px">
+                <label class="control-label">首发时间</label>
+                <div class="controls">
+                    <input type="text" name="start_time"  value="<if condition='$data.start_time gt 0'>{$data['start_time']|date='Y-m-d H:i:s',###}</if>" size="11" class="input length_3 js-datetime" style="width:180px;">
+                </div>
+            </div>-->
+            <div class="control-group float" style="width:596px">
+                <label class="control-label">接入类型</label>
+                <div class="controls">
+                    <select name="access_type" class="access_type">
+                        <option value="1" <if condition="$data['access_type'] eq 1">selected</if>>独代自接</option>
+                        <option value="2" <if condition="$data['access_type'] eq 2">selected</if>>其他平台</option>
+                    </select>
+                </div>
+            </div>
+            <div class="control-group float" style="width:596px">
+                <label class="control-label">游戏类型</label>
+                <div class="controls">
+                    <select name="game_type">
+                        <foreach name="game_type" item="vo" key="k">
+                            <option value="{$k}" <if condition="$data['game_type'] eq $k">selected</if>>{$vo}</option>
+                        </foreach>
+                    </select>
+                </div>
+            </div>
+
+            <div class="control-group float game_platform" class="control-group float select" style="width:100%">
+                <label class="control-label">游戏平台</label>
+                <div class="controls">
+                    <select name="game_platform">
+                        <foreach name="game_platform" item="vo">
+                            <option value="{$vo.id}" <if condition="$vo['id'] eq $data['game_platform']">selected</if>>{$vo.name}</option>
+                        </foreach>
+                    </select>
+                </div>
+            </div>
+            <div class="control-group float checkboxs">
+                <label class="control-label">审核状态</label>
+                <div class="switch" data-on="success" data-off="danger">
+                    <input type="checkbox" <if condition="$data['is_audit'] eq 1">checked</if> name="is_audit"/>
+                </div>
+            </div>
+            <div class="control-group float checkboxs">
+                <label class="control-label">游戏上线</label>
+                <div class="switch" data-on="success" data-off="danger">
+                    <input type="checkbox" <if condition="$data['online'] eq 1">checked</if> name="online"/>
+                </div>
+            </div>
+            <div class="control-group float checkboxs">
+                <label class="control-label">强制更新</label>
+                <div class="switch" data-on="success" data-off="danger">
+                    <input type="checkbox" <if condition="$data['is_mandatory_update'] eq 1">checked</if> name="is_mandatory_update"/>
+                </div>
+            </div>
+            <div class="control-group float checkboxs">
+                <label class="control-label">开启充值</label>
+                <div class="switch" data-on="success" data-off="danger">
+                    <input type="checkbox" <if condition="$data['is_pay'] eq 1">checked</if> name="is_pay"/>
+                </div>
+            </div>
+            <div class="control-group float checkboxs">
+                <label class="control-label">游戏加速</label>
+                <div class="switch" data-on="success" data-off="danger">
+                    <input type="checkbox" <if condition="$data['is_accelerate'] eq 1">checked</if> name="is_accelerate"/>
+                </div>
+            </div>
+
+            <div class="control-group float checkboxs">
+                <label class="control-label">更新弹窗是否开启</label>
+                <div class="switch" data-on="success" data-off="danger">
+                    <input type="checkbox" <if condition="$data['update_alert'] eq 1">checked</if> name="update_alert"/>
+                </div>
+            </div>
+            <div class="control-group float checkboxs">
+                <label class="control-label">账号交易</label>
+                <div class="switch" data-on="success" data-off="danger">
+                    <input type="checkbox" <if condition="$data['trade'] eq 1">checked</if> name="trade"/>
+                </div>
+            </div>
+            <div class="control-group float checkboxs">
+                <label class="control-label">双端数据互通</label>
+                <div class="switch" data-on="success" data-off="danger">
+                    <input type="checkbox" <if condition="$data['double_platform'] eq 1">checked</if> name="double_platform"/>
+                </div>
+            </div>
+            <div class="control-group float checkboxs">
+                <label class="control-label">平台币支付开关</label>
+                <div class="switch" data-on="success" data-off="danger">
+                    <input type="checkbox" <if condition="$data['pay_platform_money'] eq 1">checked</if> name="pay_platform_money"/>
+                </div>
+            </div>
+            <div class="control-group float remark">
+                <label class="control-label">渠道类型</label>
+                <div  style="margin-left: 20px;display: inline-block;line-height: 30px;">
+                    <foreach name="channel" item="v" key="k">
+                        <label style="float:left;margin-right:15px">
+                            <input type="checkbox" name="channel[]" value="{$k}" <in name="k" value="$data['channel']">checked</in> />{$v}
+                        </label>
+                    </foreach>
+                </div>
+            </div>
+            <div class="control-group float remark">
+                <label class="control-label">安卓母包</label>
+                <div class="controls">
+                    <input type="file"  id="android_url" />
+                    <input type="text" maxlength="255" style="width:490px;padding-left:15px;" readonly name="android_url" class="up_text android_url" value="{$data.android_url}"/>
+                    <input type="button" value="清空" style="width: 70px;" data-name="android_url" class="up-del btn btn-primary test" />
+                </div>
+            </div>
+            <div class="control-group float remark">
+                <label class="control-label">苹果母包</label>
+                <div class="controls">
+                    <input type="file"  id="ios_url" />
+                    <input type="text" maxlength="255" style="width:490px;padding-left:15px;" readonly name="ios_url" class="up_text ios_url" value="{$data.ios_url}"/>
+                    <input type="button" value="清空" style="width: 70px;" data-name="ios_url" class="up-del btn btn-primary" />
+                </div>
+            </div>
+<!--            <div class="control-group float remark">-->
+<!--                <label class="control-label">苹果超级签名母包</label>-->
+<!--                <div class="controls">-->
+<!--                    <input type="file"  id="ios_super_url" />-->
+<!--                    <input type="text" maxlength="255" style="width:490px;padding-left:15px;" readonly name="ios_super_url" class="up_text ios_super_url" value="{$data.ios_super_url}"/>-->
+<!--                    <input type="button" value="清空" style="width: 70px;" data-name="ios_super_url" class="up-del btn btn-primary" />-->
+<!--                </div>-->
+<!--            </div>-->
+            <div class="control-group float remark">
+                <label class="control-label">游戏简介</label>
+                <div class="controls">
+                    <input type="file"  id="up_abstract" />
+                    <input type="text" maxlength="255" style="width:490px;padding-left:15px;" readonly name="abstract_url" id="abstract_url" class="up_text" value="{$data.abstract_url}"/>
+                    <input type="button" value="清空" style="width: 70px;" data-name="abstract_url" class="up-del btn btn-primary" />
+                </div>
+            </div>
+
+            <div class="control-group float remark">
+                <label class="control-label">VIP等级</label>
+                <div class="controls">
+                    <input type="file"  id="up_vip" />
+                    <input type="text" maxlength="255" style="width:490px;padding-left:15px;" readonly name="vip_url" id="vip_url" class="up_text" value="{$data.vip_url}"/>
+                    <input type="button" value="清空" style="width: 70px;" data-name="vip_url" class="up-del btn btn-primary" />
+                </div>
+            </div>
+            <div class="control-group float remark">
+                <label class="control-label">素材</label>
+                <div class="controls">
+                    <input type="file"  id="up_material" />
+                    <input type="text" maxlength="255" style="width:490px;padding-left:15px;" readonly name="material_url" id="material_url" class="up_text" value="{$data.material_url}"/>
+                    <input type="button" value="清空" style="width: 70px;" data-name="material_url" class="up-del btn btn-primary" />
+                </div>
+            </div>
+            <div class="control-group float remark">
+                <label class="control-label">备注</label>
+                <div class="controls">
+                    <textarea name="remark" rows="2" cols="20" id="remark" class="inputtext" style="height: 100px; width: 90%;">{$data.remark}</textarea>
+                </div>
+            </div>
+
+            <div class="control-group float remark">
+                <label class="control-label">游戏列表备注（自推广、CPS查看）</label>
+                <div class="controls">
+                    <textarea name="game_remark" rows="2" cols="20" id="game_remark" class="inputtext" style="height: 100px; width: 90%;">{$data.game_remark}</textarea>
+                </div>
+            </div>
+            <div class="form-actions readonly" style="padding:15px;overflow:auto;clear: both;">
+                <p>AppID：{$data.id}<button class="btn btn-primary allcopy copy" onclick="return false;" data-type="1">复制全部</button></p>
+                <p style="overflow: hidden;margin-bottom: 10px;">ServerKey：
+                    <span id="server_key">{$data.server_key}</span>
+                    <button class="btn btn-primary server_key copy" onclick="return false;" data-type="1">复制</button>
+                </p>
+                <p style="overflow: hidden;margin-bottom: 0;">ClientKey ：
+                    <span id="client_key">{$data.client_key}</span>
+                    <button class="btn btn-primary client_key copy" onclick="return false;" data-type="2">复制</button>
+                </p>
+            </div>
+
+            <?php $options = get_site_options(); ?>
+            <!--<div class="form-actions readonly" style="padding:15px;width:485px">
+                <p>SDK下载：</p>
+                <p style="margin:0 0 10px 0">（BT、满V版本推荐）
+                    <a class="btn btn-primary" title="" href="{$options['rh_android']}">安卓融合SDK</a>
+                    <a class="btn btn-primary" title="" href="{$options['rh_ios_rh']}">苹果融合SDK</a>
+                </p>
+            </div>-->
+
+            <span id="allcopy" style="display: none">AppID：{$data.id}|ServerKey：{$data.server_key}|ClientKey ：{$data.client_key}</span>
+            <span id="rhallcopy" style="display: none">RH_AppID：{$rh.rh_appID}|RH_ChannelID：{$rh.rh_channelID}|RH_AppKey：{$rh.rh_appKey}|RH_AppSecret：{$rh.rh_appSecret}</span>
+        </fieldset>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary js-ajax-submit">提交</button>
+            <a class="btn" href="javascript:history.back(-1);">{:L('BACK')}</a>
+        </div>
+        <input name="id" value="{$data.id}" type="hidden" />
+        <input name="name" value="{$data.game_name}" type="hidden" />
+        <input name="old_android_ver" value="{$data.android_version_num}" type="hidden" />
+        <input name="old_ios_ver" value="{$data.ios_version_num}" type="hidden" />
+		<input name="old_super_ver" value="{$data.super_version_num}" type="hidden" />
+        <input id="ios_up" name="ios_up" value="0" type="hidden" />
+		<input id="super_up" name="super_up" value="0" type="hidden" />
+        <input id="android_up" name="android_up" value="0" type="hidden" />
+    </form>
+</div>
+<script src="__PUBLIC__/js/jquery19.js"></script>
+<script src="__PUBLIC__/js/uploadifive/jquery.uploadifive.js"></script>
+<script src="__PUBLIC__/js/switch/bootstrap.min.js"></script>
+<script src="__PUBLIC__/js/switch/bootstrap-switch.js"></script>
+<script src="__PUBLIC__/js/common.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script src="__PUBLIC__/js/clipboard.min.js"></script>
+<script src="__PUBLIC__/js/copy.js"></script>
+<script src="__PUBLIC__/js/gameupload.js"></script>
+<script type="text/javascript">
+var addrh_url = "{:U('addRh')}";
+var tag = $(":input[name=tag]").val();
+var up_url = "{:U('upload')}";
+var root = "{:C('FTP_URL')}";
+var pack_url = "{:C('UPLOAD_URL')}";
+var super_url = "{:C('SUPER_UP_URL')}";
+var platform = "{:C('UP_PLATFORM')}";
+var android_pack_path = "{:C('ANDROID_PATH')}";
+var ios_pack_path = "{:C('IOS_PATH')}";
+var game_info = "{:U('getGameInfo')}";
+$(function(){
+    var username = "{:C('UP_USER')}";
+	var su_username = "{:C('SUPER_USER')}";
+    $('#uploadifive-android_url').click(function () {
+        var open = true;
+        tag = $(":input[name=tag]").val();
+        if(tag == ''){
+            layer.alert('先填写游戏简写后再上传');
+            return false;
+        }
+        $.ajax({
+            url:"{:U('getToken')}",
+            async:false,
+            success:function (res) {
+                if(res.info.state == 1){
+                    $('#android_url').data('uploadifive').settings.formData = {'paths':android_pack_path+platform+'/'+tag+'/'+tag+'.apk','token':res.info.token,'username':username};
+
+                }else{
+                    layer.alert(res.info.msg)
+                    open = false;
+                }
+            }
+        })
+
+        return open;
+    })
+
+    $('#uploadifive-ios_url').click(function () {
+        var open = true;
+        tag = $(":input[name=tag]").val();
+        if(tag == ''){
+            layer.alert('先填写游戏简写后再上传');
+            return false;
+        }
+        $.ajax({
+            url:"{:U('getToken')}",
+            async:false,
+            success:function (res) {
+                if(res.info.state == 1){
+                    $('#ios_url').data('uploadifive').settings.formData = {'paths':ios_pack_path+platform+'/'+tag+'/'+tag+'.ipa','token':res.info.token,'username':username};
+                }else{
+                    layer.alert(res.info.msg)
+                    open = false;
+                }
+            }
+        })
+
+        return open;
+    })
+
+    $('#uploadifive-ios_super_url').click(function () {
+        var open = true;
+        tag = $(":input[name=tag]").val();
+        if(tag == ''){
+            layer.alert('先填写游戏简写后再上传');
+            return false;
+        }
+        $.ajax({
+            url:"{:U('getSpuerToken')}",
+            async:false,
+            success:function (res) {
+                if(res.info.state == 1){
+                    $('#ios_super_url').data('uploadifive').settings.formData = {'paths':ios_pack_path+platform+'/'+tag+'/'+tag+'.ipa','token':res.info.token,'username':su_username};
+                }else{
+                    layer.alert(res.info.msg)
+                    open = false;
+                }
+            }
+        })
+
+        return open;
+    })
+
+    $('.up-del').click(function(){
+        var name = $(this).attr('data-name');
+        var id = $(':input[name=id]').val();
+        if(!id) return;
+        layer.confirm('确定清空吗？', {
+            btn: ['当然','再想想'] //按钮
+        }, function(){
+            $.post("{:U('url_del')}",{id:id,name:name},function(res){
+                if(res.status == 1){
+                    location.reload();
+                }else{
+                    layer.msg(res.info);
+                }
+            })
+        });
+
+    })
+
+    var access_type = $('.access_type').val();
+
+    if(access_type == 1)
+    {
+        $('.game_platform').hide();
+
+    }
+    else
+    {
+        $('.game_platform').show();
+    }
+
+    $('.access_type').change(function(){
+        if($(this).val() == 1)
+        {
+            $('.game_platform').hide();
+        }
+        else
+        {
+            $('.game_platform').show();
+        }
+    })
+
+    Wind.use('validate', 'ajaxForm', 'artDialog', function () {
+        var form = $('form.js-ajax-forms');
+
+        jQuery.validator.addMethod("urlCheck", function(value, element) {
+            return this.optional(element) || /^((http|https)?:\/\/)+/.test(value);
+        }, "地址必须以http或https开头");
+
+        //表单验证开始
+        form.validate({
+            //是否在获取焦点时验证
+            onfocusout: false,
+            //是否在敲击键盘时验证
+            onkeyup: false,
+            //当鼠标掉级时验证
+            onclick: false,
+            //验证错误
+            showErrors: function (errorMap, errorArr) {
+                //errorMap {'name':'错误信息'}
+                //errorArr [{'message':'错误信息',element:({})}]
+                try {
+                    layer.alert(
+                        errorArr[0].message,
+                        {icon:2},
+                        function(index){layer.close(index);$(errorArr[0].element).focus();}
+                    );
+                } catch (err) {
+
+                }
+            },
+            //验证规则
+            rules: {
+                'game_name': {required: true},
+                'tag':{required:true},
+//                'android_url':{required:true},
+//                'ios_url':{required:true},
+                'android_payurl': {urlCheck: true},
+                'ios_payurl': {urlCheck: true},
+                'serverurl': {urlCheck: true},
+                'bpayurl' : {urlCheck: true},
+                'topup_scale':{required:true},
+                'give_scale':{required:true},
+                'abstract_url':{urlCheck: true},
+                'vip_url':{urlCheck: true},
+                'material_url':{urlCheck: true}
+            },
+            //验证未通过提示消息
+            messages: {
+                'game_name': {required: '请输入游戏名'},
+                'tag':{required:'请输入游戏简写'},
+//                'android_url': {required:'地址请以http或https开头'},
+//                'ios_url': {required:'地址请以http或https开头'},
+                'android_payurl': {urlCheck:'地址请以http或https开头'},
+                'ios_payurl': {urlCheck:'地址请以http或https开头'},
+                'serverurl': {urlCheck:'地址请以http或https开头'},
+                'bpayurl' : {urlCheck:'地址请以http或https开头'},
+                'topup_scale':{required:'请输入充值比例'},
+                'give_scale':{required:'请输入赠送比例'},
+                'abstract_url':{urlCheck: '地址请以http或https开头'},
+                'vip_url':{urlCheck: '地址请以http或https开头'},
+                'material_url':{urlCheck: '地址请以http或https开头'}
+            },
+            //给未通过验证的元素加效果,闪烁等
+            highlight: false,
+            //是否在获取焦点时验证
+            onfocusout: false,
+            //验证通过，提交表单
+            submitHandler: function (forms) {
+                var discount = $('.discount').val();
+
+                if(discount != 0){
+                    if( discount > 10 || discount < 1){
+                        layer.alert('折扣请输入1-10之间数字，可以包含1位小数',{icon:2},function(index){layer.close(index);$('.discount').focus();});return false;
+                    }
+
+                }
+
+                $(forms).ajaxSubmit({
+                    url: form.attr('action'), //按钮上是否自定义提交地址(多按钮情况)
+                    dataType: 'json',
+                    beforeSubmit: function (arr, $form, options) {
+
+                    },
+                    success: function (data, statusText, xhr, $form) {
+                        if (data.status) {
+
+                            setCookie("refersh_time", 1);
+                            //添加成功
+                            layer.open({
+                                title: '消息',
+                                icon:1,
+                                content: data.info,
+                                btn:['停留本页','返回列表'],
+                                yes:function(index){
+                                    reloadPage(window);
+                                },
+                                btn2:function(index){
+                                    location.href = "index.php?g=admin&m=game&a=index";
+                                }
+                            });
+                        } else {
+                            layer.alert(data.info,{icon:2});
+                        }
+                    }
+                });
+            }
+        });
+    });
+
+})
+</script>
+</body>
+</html>

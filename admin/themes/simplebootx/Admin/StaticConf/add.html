@@ -1,0 +1,179 @@
+<admintpl file="header"/>
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/chosen.css">
+<style>
+    .switch{margin-left:20px}
+</style>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:U('index')}">三方统计配置</a></li>
+        <li class="active"><a href="javascript:void(0);">添加配置</li>
+    </ul>
+    <form class="form-horizontal js-ajax-forms" action="" method="post">
+        <fieldset>
+
+            <div class="control-group">
+                <label class="control-label">统计类型</label>
+                <div class="controls">
+                    <select name="type" style="width:120px">
+                        <foreach name="static_conf" item="vo" key="k">
+                            <option value="{$k}">{$vo}</option>
+                        </foreach>
+
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">渠道</label>
+                <div class="controls">
+                    <select id="channel" name="channel" id="select_1" required class="chosen-select" validate="required:true" style="width:220px;" tabindex="1">
+                        <option value="">所有渠道</option>
+                        {:get_channel_list('')}
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">游戏</label>
+                <div class="controls">
+                    <select id="appid" name="appid" id="select_1" required class="chosen-select" validate="required:true" style="width:220px;" tabindex="1">
+                        <option value="">所有游戏</option>
+                        {:get_game_list('')}
+                    </select>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">安卓KEY</label>
+                <div class="controls">
+              <input style="width:300px;"  type="text" name="android_key" value="" />
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">苹果KEY</label>
+                <div class="controls">
+                    <input  style="width:300px;" type="text" name="ios_key" value="" />
+                </div>
+            </div>
+
+        </fieldset>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary js-ajax-submit">提交</button>
+            <a class="btn" href="javascript:history.back(-1);">{:L('BACK')}</a>
+        </div>
+
+    </form>
+</div>
+<script src="__PUBLIC__/js/jquery19.js"></script>
+<script src="__PUBLIC__/js/switch/bootstrap.min.js"></script>
+<script src="__PUBLIC__/js/switch/bootstrap-switch.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script src="__PUBLIC__/js/common.js"></script>
+<script src="__PUBLIC__/js/chosen/chosen.jquery.js" type="text/javascript"></script>
+<script src="__PUBLIC__/js/chosen/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    var config = {
+        '.chosen-select'           : {},
+        '.chosen-select-deselect'  : {allow_single_deselect:true},
+        '.chosen-select-no-single' : {disable_search_threshold:10},
+        '.chosen-select-no-results': {no_results_text:'没有匹配的结果'},
+        '.chosen-select-width'     : {width:"95%"}
+    }
+    for (var selector in config) {
+        $(selector).chosen(config[selector]);
+    }
+    //$("#select_1").val('{$game_id}');
+    //$("#select_1").trigger("chosen:updated");
+
+</script>
+<script type="text/javascript">
+    $(function(){
+
+        Wind.use('validate', 'ajaxForm', 'artDialog', function () {
+            var form = $('form.js-ajax-forms');
+            //表单验证开始
+            form.validate({
+                //是否在获取焦点时验证
+                onfocusout: false,
+                //是否在敲击键盘时验证
+                onkeyup: false,
+                //当鼠标掉级时验证
+                onclick: false,
+                //验证错误
+                showErrors: function (errorMap, errorArr) {
+                    //errorMap {'name':'错误信息'}
+                    //errorArr [{'message':'错误信息',element:({})}]
+                    try {
+                        $(errorArr[0].element).focus();
+                        art.dialog({
+                            id: 'error',
+                            icon: 'error',
+                            lock: true,
+                            fixed: true,
+                            background: "#CCCCCC",
+                            opacity: 0,
+                            content: errorArr[0].message,
+                            cancelVal: '确定',
+                            cancel: function () {
+                                $(errorArr[0].element).focus();
+                            }
+                        });
+                    } catch (err) {
+
+                    }
+                },
+
+                //给未通过验证的元素加效果,闪烁等
+                highlight: false,
+                //是否在获取焦点时验证
+                onfocusout: false,
+                //验证通过，提交表单
+                submitHandler: function (forms) {
+                    $(forms).ajaxSubmit({
+                        url: form.attr('action'), //按钮上是否自定义提交地址(多按钮情况)
+                        dataType: 'json',
+                        beforeSubmit: function (arr, $form, options) {
+
+                        },
+                        success: function (data, statusText, xhr, $form) {
+                            if (data.status) {
+                                setCookie("refersh_time", 1);
+                                //添加成功
+                                Wind.use("artDialog", function () {
+                                    art.dialog({
+                                        id: "succeed",
+                                        icon: "succeed",
+                                        fixed: true,
+                                        lock: true,
+                                        background: "#CCCCCC",
+                                        opacity: 0,
+                                        content: data.info,
+                                        button: [{
+                                            name: '继续{:isset($info['id'])?'编辑':'添加'}？',
+                                            callback: function () {
+                                                reloadPage(window);
+                                                return true;
+                                            },
+                                            focus: true
+                                        }, {
+                                            name: '返回列表',
+                                            callback: function () {
+                                                location.href = "index.php?g=admin&m=StaticConf&a=index";
+                                                return true;
+                                            }
+                                        }]
+                                    });
+                                });
+                            } else {
+                                layer.alert(data.info);
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    })
+</script>
+</body>
+</html>

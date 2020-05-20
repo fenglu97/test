@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>注册</title>
+		<link rel="stylesheet" type="text/css" href="__TMPL__Public/assets/css/reset.css"/>
+		<link rel="stylesheet" type="text/css" href="__TMPL__Public/assets/css/jquery.validator.css"/>
+		<link rel="stylesheet" type="text/css" href="__TMPL__Public/assets/css/enroll.css"/>
+	</head>
+	<body>
+		<div class="title">新用户注册</div>
+		<form action="" method="post" id="enroll_form">
+			<p class="hint">请准确填写用户信息，下面标注*的必填。</p>
+			<ul>
+				<!--手机号-->
+				<li class="form-item">
+					<label for="mobile">*&nbsp;手机号:</label>
+					<input type="text" name="mobile" id="mobile" placeholder="请输入11位手机号" />
+				</li>
+				<!--验证码-->
+				<li class="form-item codeli">
+					<label for="code">*&nbsp;验证码:</label>
+					<input type="text" name="code" id="code"/>
+					<input type="button" class="codeBtn" value="获取验证码" />
+				</li>
+				<!--密码-->
+				<li class="form-item pwdli">
+					<label for="password">*&nbsp;密&emsp;码:</label>
+					<input type="password" name="password" id="password" placeholder=""/>
+					<p class="pwdHint">密码由英文、数字、下划线组成，不能包含特殊符号，最少6位，最多12位</p>
+				</li>
+				<!--确认密码-->
+				<li class="form-item">
+					<label for="pwdAgain">*&nbsp;确认密码:</label>
+					<input type="password" name="pwdAgain" id="pwdAgain" placeholder=""/>
+				</li>
+				<!--注册按钮-->
+				<li>
+					<input type="submit" name="" id="btn" value="点击注册" />
+				</li>
+			</ul>
+			<a class="hideBtn" href="{:U('tg_login')}"></a>
+		</form>
+		<script src="__PUBLIC__/js/jquery-1.8.3.min.js"></script>
+		<script src="__TMPL__Public/assets/js/jquery.validator.min.js"></script>
+		<script src="__TMPL__Public/assets/js/zh-CN.js"></script>
+		<script src="__TMPL__Public/assets/js/enroll.js"></script>
+	</body>
+</html>
+

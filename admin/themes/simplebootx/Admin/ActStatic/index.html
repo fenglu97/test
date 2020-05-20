@@ -1,0 +1,136 @@
+<admintpl file="header" />
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="{:U('index')}">盒子玩家行为统计</a></li>
+    </ul>
+    <form class="well form-search" method="post" action="{:U('index')}">
+
+        <div class="search_type cc mb10">
+            <div class="mb10">
+					<span class="mr20">
+                                          渠道名称：
+                    <admintpl file="channel" />
+					<select name="channel" id="cid" style="width:180px;" tabindex="1">
+                        <option value="">所有渠道</option>
+                        {:get_channel_list(I('channel'),$selected_channel_type)}
+                    </select>&nbsp;&nbsp;
+时间:
+  <input type="text" name="start_time" id="start_time" value="{$start_time}" class="input length_3 js-datetime" size="11" style="width:180px;" max="{$max}"> 至
+   <input type="text" name="end_time" id="end_time" value="{$end_time}" size="11" class="input length_3 js-datetime" style="width:180px;" max="{$max}">
+						<input type="submit" class="btn btn-primary" value="搜索" />
+                        <input type="button" class="btn btn-primary export" value="导出" />
+					</span>
+            </div>
+        </div>
+    </form>
+    <table class="table table-hover table-bordered table-list" id="menus-table">
+        <thead>
+        <tr>
+            <th>渠道</th>
+            <th>设备号</th>
+            <th>步骤1</th>
+            <th>步骤2</th>
+            <th>步骤3</th>
+            <th>步骤4</th>
+            <th>步骤5</th>
+            <th>步骤6</th>
+            <th>步骤7</th>
+            <th>步骤8</th>
+            <th>步骤9</th>
+            <th>步骤10</th>
+            <th>步骤11</th>
+            <th>步骤12</th>
+            <th>步骤13</th>
+            <th>步骤14</th>
+            <th>步骤15</th>
+            <th>步骤16</th>
+            <th>步骤17</th>
+            <th>步骤18</th>
+            <th>步骤19</th>
+            <th>步骤20</th>
+            <th>完成注册</th>
+            <th>上报时间</th>
+        </tr>
+        </tr>
+        </thead>
+        <tbody>
+        <foreach name="list" item="vo">
+
+            <tr>
+
+                <td>{$vo['name']}</td>
+
+                <td>{$vo['machine_code']}</td>
+                <td>{$vo['step1']}</td>
+                <td>{$vo['step2']}</td>
+                <td>{$vo['step3']}</td>
+                <td>{$vo['step4']}</td>
+                <td>{$vo['step5']}</td>
+                <td>{$vo['step6']}</td>
+                <td>{$vo['step7']}</td>
+                <td>{$vo['step8']}</td>
+                <td>{$vo['step9']}</td>
+                <td>{$vo['step10']}</td>
+                <td>{$vo['step11']}</td>
+                <td>{$vo['step12']}</td>
+                <td>{$vo['step13']}</td>
+                <td>{$vo['step14']}</td>
+                <td>{$vo['step15']}</td>
+                <td>{$vo['step16']}</td>
+                <td>{$vo['step17']}</td>
+                <td>{$vo['step18']}</td>
+                <td>{$vo['step19']}</td>
+                <td>{$vo['step20']}</td>
+                <td><if condition="$vo['is_register'] eq 1">是<else />否</if></td>
+                <td>{$vo.create_time|date="Y-m-d H:i:s",###}</td>
+            </tr>
+
+        </foreach>
+        </tbody>
+    </table>
+
+    </form>
+    <div class="pagination">{$page}</div>
+</div>
+
+
+<script src="__PUBLIC__/js/common.js"></script>
+<script>
+    $(document).ready(function() {
+        Wind.css('treeTable');
+        Wind.use('treeTable', function() {
+            $("#menus-table").treeTable({
+                indent : 20
+            });
+        });
+
+        $('.export').click(function(){
+
+            var start_time = $('input[name="start_time"]').val();
+            var end_time = $('input[name="end_time"]').val();
+            var channel = $('#cid').val();
+            var url =$('.form-search').attr('action');
+			if(url.indexOf("?") != -1)
+			{
+				location.href=url+'&start_time='+start_time+'&end_time='+end_time+'&channel='+channel+'&action=1';
+			}
+			else
+			{
+			    location.href=url+'?start_time='+start_time+'&end_time='+end_time+'&channel='+channel+'&action=1';
+			}
+
+        })
+    });
+
+    setInterval(function() {
+        var refersh_time = getCookie('refersh_time_admin_menu_index');
+        if (refersh_time == 1) {
+            reloadPage(window);
+        }
+    }, 1000);
+    setCookie('refersh_time_admin_menu_index', 0);
+</script>
+</body>
+</html>

@@ -1,0 +1,278 @@
+body,div,p,ul,li{ padding: 0; margin: 0;}
+body{ color: #4f4f4f; font-weight: 400;}
+textarea{ resize:none;}
+ul,li{ list-style:none;}
+img{ vertical-align: middle;}   /*解决图片3像素*/
+.color_orange{ color: #FF9900;}
+/*.color_orange{ color: #FB9337;}*/
+.strong{ font-weight: bold;}
+.fl{ float: left;}
+.fr{ float: right;}
+.clear:after{ content: "."; display: block; height: 0; clear: both; visibility: hidden;}
+.hide{ display: none;}
+.m_t_10px{ margin-top: 10px;}
+.m_t_20px{ margin-top: 20px;}
+.wrap {
+  padding: 20px 20px 70px;
+}
+.top{
+  /*margin: 10px 0;*/
+  padding: 20px 0;
+  background: url(../images/noise.white.png);
+  position: relative;
+}
+.top_title{
+  margin: 0 10px 10px;
+  color: #485b79;
+  font-weight: normal;
+  font-size: 18px;
+  /*font-family: 'RobotoBoldCondensed', Arial, Helvetica, sans-serif;*/
+}
+.top_list{ width: 100%;}
+.tl_note{
+  width: 17%;
+  float: left;
+  background: #FFF;
+  /*border: 1px solid #efefef;*/
+  -moz-box-shadow: 1px 1px 5px #888888;
+  box-shadow: 1px 1px 5px #b3b3b3;
+  margin: 0 1%;
+  padding: 0.5%;
+  font-size: 14px;
+  position: relative;
+}
+.tl_note:after { content: "."; display: block; height: 0; clear: both; visibility: hidden;}
+.tl_note_left{
+  width: 75%;
+  float: left;
+  text-align: left;
+  line-height: 30px;
+}
+.tl_note_right{
+  float: right;
+  /*margin-top: 18px;*/
+  /*position: relative;*/
+  position: absolute;
+  z-index: 10;
+  right: 2%;
+  top: 50%;
+  transform: translate3d(0, -50%, 0);
+}
+.icon_explain{
+  /*position: relative;*/
+  /*z-index: 10;*/
+  cursor: pointer;
+}
+.tl_note_right .icon_explain{
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  position: relative;
+  z-index: 10;
+  background: url("../images/ask_sym.png") no-repeat;
+  background-size: contain;
+}
+.menu{}
+.menu_title{
+  /*display: block;*/
+  padding: 0 10px;
+  height: 40px;
+  line-height: 40px;
+  font-size: 16px;
+  color: #3d506f;
+  background: #f1f1f1;
+  border: 1px solid #CCC;
+  border-bottom: 1px solid #f1f1f1;
+  /*display: table;*/
+  /*vertical-align: middle;*/
+}
+/*.menu_title .layui-input{*/
+  /*margin: 0 0 2px;*/
+/*}*/
+.menu_title input[type="text"],.menu_title select{
+  margin: 0;
+  padding: 0;
+  height: 30px;
+  line-height: 30px;
+  /*border: 1px solid #dce4ec;*/
+  /*padding: 6px 6px;*/
+  text-indent: 1px;
+  border: 1px solid #dce4ec;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  color: #999999;
+}
+.menu_tab{
+  width: 100%;
+  font-size: 12px;
+  color: #4f4f4f;
+  border-collapse:collapse;
+  table-layout:fixed;
+}
+.menu_tab thead{
+  background: #f7f7f7;
+  font-size: 14px;
+  line-height: 38px;
+  color: #3d506f;
+}
+.menu_tab tbody tr:hover{ background:#fff8f2;}
+.menu_tab tr td{
+  line-height:30px;
+  background: transparent;
+  border:1px solid #ccc;
+  margin: 0;
+  padding: 0;
+  /*vertical-align: baseline;*/
+  vertical-align: middle;
+  /*overflow-x: hidden;*/
+  /*background: transparent;*/
+  /*margin: 0;*/
+  /*!*vertical-align: baseline;*!*/
+  /*border:1px solid #ccc;*/
+  /*padding:1px 8px;*/
+  /*vertical-align:middle;*/
+  /*line-height:30px;*/
+  /*overflow:hidden;text-overflow:ellipsis;word-break:keep-all;white-space:nowrap;*/
+}
+.menu_tab tbody tr td{
+  overflow-x: hidden;
+}
+.menu_tab tr .menu_tab_fill{
+  padding: 1px 8px;
+}
+.menu_tab tr td .icon_explain{
+  display: inline-block;
+  width:15px;
+  height:15px;
+  margin-left:5px;
+  background: url("../images/ask_sym.png") no-repeat;
+  background-size: contain;
+  position: relative;
+}
+.menu_foot{line-height:37px;font-size:13px;width:100%;text-align: left; overflow: hidden;}
+.menu_foot>div{ margin:0 0.5%;}
+
+.glory{ display: inline-block;font-size:14px; margin:0;padding:8px 12px; text-align:center; line-height: 14px; font-weight:bold; white-space:nowrap;}
+.bg_color_1{ background:#f09ec1; color:#FFF;}
+.bg_color_2{ background:#f0cd99; color:#FFF;}
+.bg_color_3{ background:#9ed6f0; color:#FFF;}
+
+.btn_view{
+  display: inline-block;
+  height: 32px;
+  line-height: 32px;
+  padding: 0 14px;
+  margin: 9px 0;
+  background-color: #009688;
+  color: #fff;
+  white-space: nowrap;
+  text-align: center;
+  font-size: 14px;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+}
+.btn_edit{
+  display: inline-block;
+  height: 32px;
+  line-height: 32px;
+  padding: 0 14px;
+  margin: 9px 0;
+  background-color: #1E9FFF;
+  color: #fff;
+  white-space: nowrap;
+  text-align: center;
+  font-size: 14px;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.icon_explain_on{}
+.icon_explain_on:before{
+  display: inline-block;
+  content: "";
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid #FF9900;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  position: absolute;
+  z-index: 11;
+  left: 50%;
+  bottom: 0;
+  transform: translate3d(-50%,50%,0) ;
+}
+.icon_explain_on:after{
+  display: inline-block;
+  width: 150px;
+  font-size: 12px;
+  font-style: normal;
+  line-height: 20px;
+  text-align: left;
+  content: attr(data-explain);
+  padding: 5px;
+  border: 1px solid #FF9900;
+  background-color: #ffffff;
+  position: absolute;
+  z-index: 11;
+  left: 50%;
+  top: 120%;
+  transform: translate3d(-50%,0,0) ;
+}
+.layui-layer-wrap p{
+  margin: 0 0 10px;
+  color: #2c3e50;
+}
+.explain_triangle{
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid #FF9900;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  position: absolute;
+  z-index: 11;
+  left: 50%;
+  bottom: 0;
+  transform: translate3d(-50%,50%,0) ;
+  display: none;
+}
+.explain_cont{
+  width: 550px;
+  font-size: 14px;
+  font-style: normal;
+  line-height: 20px;
+  text-align: left;
+  /*content: attr(data-explain);*/
+  padding: 10px 10px 0;
+  border: 1px solid #FF9900;
+  background-color: #ffffff;
+  position: absolute;
+  z-index: 12;
+  left: 0;
+  top: 120%;
+  transform: translate3d(-20%,0,0);
+  display: none;
+}
+.explain_cont p{ margin-bottom: 10px;}
+.tab_width1{ width: 15%;}
+.tab_width2{ width: 25%;}
+.tab_width3{ width: 15%;}
+.tab_width4{ width: 25%;}
+.tab_width5{ width: 15%;}
+.tab_width10{ width: 10%;}
+.tab_width15{ width: 15%;}
+.tab_width20{ width: 20%;}
+.tab_width22{ width: 22%;}
+.tab_width25{ width: 25%;}
+.tab_width27{ width: 27%;}
+.tab_width30{ width: 30%;}

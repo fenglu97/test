@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>详情</title>
+    <link rel="stylesheet" href="__TMPL__Public/assets/css/reset.css"/>
+    <link rel="stylesheet" href="__TMPL__Public/assets/css/hr_public.css"/>
+</head>
+<body>
+<div style="min-width: 1440px; margin: 50px;">
+    <div style="margin-right: 10px;" id="tableBox">
+
+    </div>
+    <!--<div class="clear">-->
+        <!--<div class="fl add-table"  id="tableBox">-->
+
+        <!--</div>-->
+    <!--</div>-->
+    <div style="margin: 50px 0;">
+        <dl class="evaluation-list" id="evaluationList">
+            <dt>人事评价</dt>
+            <!--<dd>2018-07-23</dd>-->
+            <!--<dd>2018-07-24</dd>-->
+        </dl>
+    </div>
+    <div id="charts">
+        <div class="chart-view" id="moneyStaticBox">
+            <div class="tab">
+                <div class="tab-chart day">天</div>
+                <div class="tab-chart week">周</div>
+                <div class="tab-chart month">月</div>
+            </div>
+        </div>
+        <div class="chart-view" id="registerStaticBox">
+            <div class="tab">
+                <div class="tab-chart day">天</div>
+                <div class="tab-chart week">周</div>
+                <div class="tab-chart month">月</div>
+            </div>
+        </div>
+        <div class="chart-view" id="evaluationStaticBox">
+            <div class="tab">
+                <div class="tab-chart week">周</div>
+                <div class="tab-chart month">月</div>
+            </div>
+        </div>
+    </div>
+    <!--<dl class="evaluation-list" id="evaluationList">-->
+        <!--<dt>人事评价</dt>-->
+        <!--&lt;!&ndash;<dd>2018-07-23</dd>&ndash;&gt;-->
+        <!--&lt;!&ndash;<dd>2018-07-24</dd>&ndash;&gt;-->
+    <!--</dl>-->
+    <div id="evaluateTable" style="display: none;padding:20px">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>人事评分</th>
+                <th>人事评价</th>
+                <th>纪律扣分</th>
+                <th>纪律扣分原因</th>
+                <th>考核周</th>
+                <th>评价时间</th>
+            </tr>
+            </thead>
+            <tbody id="evaluateTableBody">
+            <!--<tr>-->
+            <!--<td>人事评分</td>-->
+            <!--<td>人事评价</td>-->
+            <!--<td>纪律扣分</td>-->
+            <!--<td>纪律扣分原因</td>-->
+            <!--<td>考核周</td>-->
+            <!--<td>评价时间</td>-->
+            <!--</tr>-->
+            </tbody>
+        </table>
+    </div>
+</div>
+<script src="__PUBLIC__/js/jquery.js"></script>
+<script src="__PUBLIC__/js/echarts.min.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script src="__PUBLIC__/js/laydate/laydate.js"></script>
+<script src="__TMPL__Public/assets/js/template.js"></script>
+<script type="text/html" id="tableTemplate">
+    <table class="hr-table" cellpadding="0">
+        <tr>
+            <td rowspan="10"><div style="width: 20px; margin: 0 auto;">基本情况</div></td>
+            <td colspan="3">姓名</td>
+            <td colspan="3">{{ data.info.name?data.info.name:'' }}</td>
+            <td>性别</td>
+            <td>{{ data.info.sex==1?'男':'女' }}</td>
+            <td colspan="2">民族</td>
+            <td colspan="3">{{ data.info.nation?data.info.nation:'' }}</td>
+        </tr>
+        <tr>
+            <td colspan="3">出生日期</td>
+            <td colspan="3">{{ data.info.birth }}</td>
+            <td colspan="2">年龄</td>
+            <td colspan="2">{{ data.info.age?data.info.age:'' }}</td>
+            <td colspan="3" rowspan="4">
+                {{if data.info.img}}
+                <img src="{{ data.info.img?data.info.img:'' }}" class="picture">
+                {{else}}
+                <div class="picture"></div>
+                {{/if}}
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">政治面貌</td>
+            <td colspan="3">{{ data.info.political_affiliation?data.info.political_affiliation:'' }}</td>
+            <td colspan="2">婚姻状况</td>
+            <td colspan="2">{{ data.info.marriage }}</td>
+        </tr>
+        <tr>
+            <td colspan="3">毕业学校</td>
+            <td colspan="3">{{ data.info.graduate_school?data.info.graduate_school:'' }}</td>
+            <td colspan="2">毕业时间</td>
+            <td colspan="2">{{ data.info.graduate_time }}</td>
+        </tr>
+        <tr>
+            <td colspan="3">学历</td>
+            <td colspan="3">{{ data.info.education?data.info.education:'' }}</td>
+            <td colspan="2">专业</td>
+            <td colspan="2">{{ data.info.major }}</td>
+        </tr>
+        <tr>
+            <td colspan="3">手机</td>
+            <td colspan="3">{{ data.info.mobile?data.info.mobile:'' }}</td>
+            <td colspan="2">身份证号码</td>
+            <td colspan="5">{{ data.info.id_card?data.info.id_card:'' }}</td>
+        </tr>
+        <tr>
+            <td colspan="3">QQ号码</td>
+            <td colspan="3">{{ data.info.qq?data.info.qq:'' }}</td>
+            <td colspan="2">微信号</td>
+            <td colspan="5">{{ data.info.weixin?data.info.weixin:'' }}</td>
+        </tr>
+        <tr>
+            <td colspan="3">紧急联系人<br>姓名and电话</td>
+            <td colspan="3">{{ data.info.agency_mobile?data.info.agency_mobile:'' }}</td>
+            <td colspan="2">Email</td>
+            <td colspan="5">{{ data.info.email?data.info.email:'' }}</td>
+        </tr>
+        <tr>
+            <td colspan="3">户籍详细地址</td>
+            <td colspan="10">{{ data.info.residence_address?data.info.residence_address:'' }}</td>
+        </tr>
+        <tr>
+            <td colspan="3">现居住详细地址</td>
+            <td colspan="10">{{ data.info.address?data.info.address:'' }}</td>
+        </tr>
+        <tr>
+            <td rowspan="6"><div style="width: 20px; margin: 0 auto;">入离职情况</div></td>
+            <td colspan="3">所属地区</td>
+            <td colspan="3">{{ data.info.channel_legion?data.info.channel_legion:'' }}</td>
+            <td colspan="2">所属团队</td>
+            <td colspan="5">{{ data.info.parent_channel?data.info.parent_channel:'' }}</td>
+        </tr>
+        <tr>
+            <td colspan="3">渠道号</td>
+            <td colspan="10" class="layui-form">{{ data.info.channel?data.info.channel:'' }}</td>
+        </tr>
+        <tr>
+            <td colspan="3">入职时间</td>
+            <td colspan="3">{{ data.info.hire_date?data.info.hire_date:'' }}</td>
+            <td colspan="2">离职时间</td>
+            <td colspan="5">{{ data.info.departure_time?data.info.departure_time:'' }}</td>
+        </tr>
+        <tr>
+            <td colspan="3">试用天数</td>
+            <td colspan="3">{{ data.info.trial_days?data.info.trial_days:'' }}</td>
+            <td colspan="2">转正时间</td>
+            <td colspan="5">{{ data.info.regular_time?data.info.regular_time:'' }}</td>
+        </tr>
+        <tr>
+            <td colspan="3">合同到期时间</td>
+            <td colspan="3">{{ data.info.contract_expiration?data.info.contract_expiration:'' }}</td>
+            <td colspan="2">档案所在地</td>
+            <td colspan="5">{{ data.info.archives_location?data.info.archives_location:'' }}</td>
+        </tr>
+        <tr>
+            <td colspan="3">离职原因</td>
+            <td colspan="10">{{ data.info.departure_reason?data.info.departure_reason:'' }}</td>
+        </tr>
+        <tr>
+            <td rowspan="4"><div style="margin: 0 5px;">评分扣分及评价</div></td>
+            <td colspan="3"><label for="evaluateTime">考核周</label></td>
+            <td colspan="10">
+                <!--<input type="text" class="layui-input" name="evaluate_time" id="evaluateTime" style="padding-left: 0;">-->
+                <div class="time-view">
+                    <div class="time-text"></div>
+                    <input type="text" class="layui-input time-input" name="time" id="evaluateTime" style="padding-left: 0;">
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">人事评分</td>
+            <td colspan="3" id="score">{{ data.lastweek_evaluation.score?data.lastweek_evaluation.score:'' }}</td>
+            <td colspan="2">纪律扣分</td>
+            <td colspan="5" id="deductMarks">{{ data.lastweek_evaluation.deduct_marks?data.lastweek_evaluation.deduct_marks:'' }}</td>
+        </tr>
+        <tr>
+            <td colspan="3">人事评价</td>
+            <td colspan="10" id="evaluation">{{ data.lastweek_evaluation.evaluation?data.lastweek_evaluation.evaluation:'' }}</td>
+        </tr>
+        <tr>
+            <td colspan="3">纪律扣分原因</td>
+            <td colspan="10" id="deductReason">{{ data.lastweek_evaluation.deduct_reason?data.lastweek_evaluation.deduct_reason:'' }}</td>
+        </tr>
+        <tr style="visibility: hidden;">
+            <td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+        </tr>
+    </table>
+</script>
+<script>
+    $(function () {
+        function timestampToTime(timestamp, type) {
+            type = type || '';
+            // if(timestamp.length < 13){
+            //     timestamp = timestamp * 1000;
+            // }
+            var date = new Date(timestamp);
+            var Y = date.getFullYear() + '-';
+            var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+            var D = (date.getDate() < 10 ? '0'+date.getDate() : date.getDate());
+
+            var hour = (date.getHours() < 10 ? '0'+date.getHours() : date.getHours());
+            var minute = (date.getMinutes() < 10 ? '0'+date.getMinutes() : date.getMinutes());
+            var second = (date.getSeconds() < 10 ? '0'+date.getSeconds() : date.getSeconds());
+            if(type === 'second'){
+                return Y+M+D+' '+hour+':'+minute+':'+second;
+            }
+            return Y+M+D;
+        }
+        var getWeekInterval = function (y, m, d) {
+            var date = '';
+            if(y && m && d){
+                date = new Date(y, parseInt(m, 10) - 1, d);
+            } else {
+                date = new Date();
+            }
+
+            var getDay = date.getDay() === 0 ? 7 : date.getDay();
+            var timestamp = date.getTime();
+            var startTime = timestamp - ((getDay-1) * 24 * 3600 * 1000);
+            var endTime = timestamp + ((7 - getDay) * 24 * 3600 * 1000);
+            return timestampToTime(startTime) + '至' + timestampToTime(endTime);
+        };
+        //员工流水统计
+        $.ajax({
+            type: 'post',
+            url: '/index.php?g=api&m=TgEmployees&a=info',
+            data: {
+                id: '{$id}' //员工ID
+            },
+            success: function(datas){
+                if(datas.status == 1){
+                    var data = datas.data;
+                    var info = data.info;
+                    if(info.birth && info.birth!=0) info.birth = timestampToTime(info.birth*1000);
+                    if(info.marriage) {
+                        //婚姻状况 1 未婚 2已婚 3离异
+                        if(info.marriage == 1){
+                            info.marriage = '未婚';
+                        } else if(info.marriage == 2){
+                            info.marriage = '已婚';
+                        } else if(info.marriage == 3){
+                            info.marriage = '离异';
+                        }
+                    }
+                    //毕业时间
+                    if(info.graduate_time && info.graduate_time!=0) info.graduate_time = timestampToTime(info.graduate_time*1000);
+                    //学历 1 专科 2 本科 3 硕士 4 博士 5其他
+                    if(info.education){
+                        if(info.education == 1){
+                            info.education = '专科';
+                        } else if(info.education == 2){
+                            info.education = '本科';
+                        } else if(info.education == 3){
+                            info.education = '硕士';
+                        } else if(info.education == 4){
+                            info.education = '博士';
+                        } else if(info.education == 5){
+                            info.education = '其他';
+                        }
+                    }
+                    //入职时间
+                    if(info.hire_date && info.hire_date!=0) info.hire_date = timestampToTime(info.hire_date*1000);
+                    //离职时间
+                    if(info.departure_time && info.departure_time!=0) info.departure_time = timestampToTime(info.departure_time*1000);
+                    //转正时间
+                    if(info.regular_time && info.regular_time!=0) info.regular_time = timestampToTime(info.regular_time*1000);
+                    //合同到期时间
+                    if(info.contract_expiration && info.contract_expiration!=0) info.contract_expiration = timestampToTime(info.contract_expiration*1000);
+                    var html = template('tableTemplate',{'data':{
+                        info: info,
+                        lastweek_evaluation: datas.data.lastweek_evaluation
+                    }});
+                    $('#tableBox').html(html);
+
+                    if(data.money_static){
+                        var moneyStatic = data.money_static,
+                            moneyStaticKey = [],
+                            moneyStaticValue = [];
+                        for(var key in moneyStatic){
+                            moneyStaticKey.push(key);
+                            moneyStaticValue.push(moneyStatic[key]);
+                        }
+                        var moneyStaticChart = newChart({
+                            id: 'moneyStaticBox',
+                            url: '/index.php?g=api&m=TgEmployees&a=money_static',//员工流水统计
+                            title: '流水',
+                            unit: '金额（元）',
+                            name: '流水',
+                            type: 1,
+                            data: moneyStaticValue,
+                            time: moneyStaticKey
+                        });
+                    } else {
+                        $('#moneyStaticBox').hide();
+                    }
+
+                    if(data.register_static){
+                        var registerStatic = data.register_static,
+                            registerStaticKey = [],
+                            registerStaticValue = [];
+                        for(var key in moneyStatic){
+                            registerStaticKey.push(key);
+                            registerStaticValue.push(registerStatic[key]);
+                        }
+                        newChart({
+                            id: 'registerStaticBox',
+                            url: '/index.php?g=api&m=TgEmployees&a=register_static',//员工注册统计
+                            title: '注册',
+                            unit: '人数',
+                            name: '注册人数',
+                            type: 1,
+                            data: registerStaticValue,
+                            time: registerStaticKey
+                        });
+                    } else {
+                        $('#registerStaticBox').hide();
+                    }
+
+                    if(data.evaluation_static){
+                        var evaluationStatic = data.evaluation_static,
+                            evaluationStaticKey = [],
+                            evaluationStaticValue = [];
+                        for(var key in evaluationStatic){
+                            evaluationStaticKey.push(key);
+                            evaluationStaticValue.push(evaluationStatic[key]);
+                        }
+                        newChart({
+                            id: 'evaluationStaticBox',
+                            url: '/index.php?g=api&m=TgEmployees&a=evaluation_static',//人事评分统计
+                            title: '人事评分',
+                            unit: '分数',
+                            name: '得分',
+                            type: 2,
+                            data: evaluationStaticValue,
+                            time: evaluationStaticKey
+                        });
+                    } else {
+                        $('#evaluationStaticBox').hide();
+                    }
+
+                    if(data.evaluation_list && data.evaluation_list.length > 0){
+                        var evaluationList = data.evaluation_list;
+                        var evaluationListHtml = '<dt>人事评价</dt>';
+                        for(var i = 0; i < evaluationList.length; i++){
+                            evaluationListHtml += '<dd data-id="'+ evaluationList[i].id +'">'+ timestampToTime(evaluationList[i].create_time*1000, 'second') +' 人事进行了评价'+'</dd>';
+                        }
+                        $('#evaluationList').html(evaluationListHtml);
+                        $('#evaluationList').show();
+                    } else {
+                        $('#evaluationList').hide();
+                    }
+
+                    var dateTimestamp = new Date().getTime() - (24 * 3600 * 1000 * 7);
+                    dateTimestamp = timestampToTime(dateTimestamp);
+                    var dateTimestampArr = dateTimestamp.split('-');
+                    $('.time-text').html(getWeekInterval(dateTimestampArr[0], dateTimestampArr[1], dateTimestampArr[2]));
+                    laydate.render({
+                        elem: '#evaluateTime'
+                        ,value: (function() {
+                            var date = new Date();
+                            var Y = date.getFullYear();
+                            var M = date.getMonth();
+                            var D = date.getDate();
+                            if(D > 7){
+                                Y = Y + '-';
+                                M = M + 1 + '-';
+                                D = D - 7;
+                                D = (D < 10 ? '0'+D : D);
+                            } else {
+                                if(M > 0){
+                                    D = new Date(Y, M, 0).getDate() + D - 7;
+                                    M = (M < 10 ? '0'+M : M) + '-';
+                                    Y = Y + '-';
+                                } else {
+                                    D = new Date(Y-1, 12, 0).getDate() + D - 7;
+                                    M = 12 + '-';
+                                    Y = Y - 1 + '-';
+                                }
+                            }
+                            return Y+M+D;
+                        })()
+                        ,done: function(value, date, endDate){
+//                            console.log(value); //得到日期生成的值，如：2017-08-18
+                            $.ajax({
+                                url: '/index.php?g=api&m=TgEmployees&a=evaluation_info',
+                                type: 'post',
+                                data:{
+                                    id: '{$id}',
+                                    time: value //考核周（一周的任意一天）
+                                },
+                                success: function (datas) {
+                                    if(datas.status == 1){
+                                        if(datas.data){
+                                            var data = datas.data;
+                                            $('#score').html(data.score);
+                                            $('#deductMarks').html(data.deduct_marks);
+                                            $('#evaluation').html(data.evaluation);
+                                            $('#deductReason').html(data.deduct_reason);
+
+                                            $('.time-text').html(data.period);
+                                        } else {
+                                            $('#score').html('');
+                                            $('#deductMarks').html('');
+                                            $('#evaluation').html('');
+                                            $('#deductReason').html('');
+
+                                            var valueArr = value.split('-');
+                                            $('.time-text').html(getWeekInterval(valueArr[0], valueArr[1], valueArr[2]));
+                                        }
+                                    }
+                                    if(datas.status == 0){
+                                        console.log(datas.msg);
+                                    }
+                                },
+                                error: function (err) {
+                                    console.log(err);
+                                }
+                            });
+                        }
+                    });
+                }
+                if(datas.status == 0){
+                    console.log(datas.msg);
+                }
+            },
+            error: function (err){
+                console.log(err)
+            }
+        });
+        $('#evaluationList').on('click', 'dd', function (event) {
+            var load = layer.load(2, {
+                time: 30*1000,
+                shade: [0.3, '#000']
+            });
+            $.ajax({
+                url: '/index.php?g=api&m=TgEmployees&a=evaluation_list',
+                type: 'post',
+                data:{
+                    id: '{$id}'
+//                        ,time: this.innerHTML //考核周（一周的任意一天）
+                },
+                success: function (datas) {
+                    layer.close(load);
+                    if(datas.status == 1){
+                        var data = datas.data;
+                        if(data && data.length > 0){
+                            var html = '';
+                            for(var i = 0; i < data.length; i++){
+                                html += '<tr>'+
+                                    '<td>'+data[i].score+'</td>'+
+                                    '<td>'+data[i].evaluation+'</td>'+
+                                    '<td>'+data[i].deduct_marks+'</td>'+
+                                    '<td>'+data[i].deduct_reason+'</td>'+
+                                    '<td>'+data[i].period+'</td>'+
+                                    '<td>'+timestampToTime(data[i].create_time*1000, 'second')+'</td>'+
+                                    '</tr>';
+                            }
+                            $('#evaluateTableBody').html(html);
+                        }
+                        layer.open({
+                            title: '人事评价表格',
+                            type: 1,
+                            skin: 'layui-layer-molv', //加上边框
+                            area: ['800px', 'auto'], //宽高
+                            content: $('#evaluateTable'),
+                            closeBtn: 0, //不显示关闭按钮
+                            anim: 2,
+                            btnAlign: 'c',
+                            shadeClose: false, //开启遮罩关闭
+                            btn: ['关闭'],
+                            yes: function(index, layero){
+                                layer.close(index)
+                            }
+                        });
+                    }
+                    if(datas.status == 0){
+                        console.log(datas.msg);
+                    }
+                },
+                error: function (err) {
+                    console.log(err);
+                    layer.close(load);
+                }
+            });
+        });
+
+        function newChart(param) {
+            var chartHtml = document.createElement('div');
+            chartHtml.className = 'chart';
+//            obj.box.appendChild(chartHtml);
+            $('#'+param.id).show();
+            document.getElementById(param.id).appendChild(chartHtml);
+            // 基于准备好的dom，初始化echarts实例
+            var myChart = echarts.init(chartHtml);
+            myChart.showLoading();	//加载动画
+            // 指定图表的配置项和数据
+            myChart.setOption({
+                title: {
+                    text: param.title
+                },
+                color: '#5793f3',
+                tooltip: {  //提示框组件
+                    trigger: 'axis',
+                    axisPointer: {  // 坐标轴指示器，坐标轴触发有效
+                        type: 'cross'   // 默认为直线，可选为：'line' | 'shadow'
+                    }
+                },
+                toolbox: {  //工具栏。内置有导出图片，数据视图，动态类型切换，数据区域缩放，重置五个工具。
+                    feature: {  //自定义工具按钮(只能以 my 开头)
+                        dataView: {show: true, readOnly: false},
+                        restore: {show: true},
+                        saveAsImage: {show: true}
+                    }
+                },
+                xAxis: {
+//                    name: '天',
+                    name: (function (type) {
+                        if(type == 1){
+                            return '天';
+                        } else if (type == 2){
+                            return '周';
+                        } else if (type == 3){
+                            return '月';
+                        }
+                    })(param.type),
+                    type: 'category',
+                    data: param.time
+                },
+                yAxis: [
+                    {
+                        type: 'value',
+                        name: param.unit
+                    }
+                ],
+                series: [
+                    {
+                        name: param.name,
+                        type: 'line',
+                        itemStyle : { normal: {label : {show: true}}},  //显示数值
+//                            yAxisIndex: 1,
+//                            symbolSize: 5,
+                        data: param.data
+                    }
+                ]
+            });
+            myChart.hideLoading(); // 隐藏加载动画
+
+
+            var dayFlag = true;
+            $('#'+param.id).on('click', '.day', function () {
+                if(dayFlag){
+                    dayFlag = false;
+                    myChart.showLoading();	//加载动画
+                    $('#moneyStaticBox .day').unbind('click');
+                    $.ajax({
+                        type: 'post',
+                        url: param.url,
+                        data: {
+                            id: '{$id}', //员工ID
+                            type: 1 //统计类型 1 天 2 周 3 月
+                        },
+                        success: function(datas){
+//                            console.log(datas);
+                            if(datas.status == 1){
+                                var moneyStatic = datas.data,
+                                    moneyStaticKey = [],
+                                    moneyStaticValue = [];
+                                for(var key in moneyStatic){
+                                    moneyStaticKey.push(key);
+                                    moneyStaticValue.push(moneyStatic[key]);
+                                }
+                                myChart.setOption({
+                                    xAxis: {
+                                        name: '天',
+                                        data: moneyStaticKey
+                                    },
+                                    series: [
+                                        {
+                                            data: moneyStaticValue
+                                        }
+                                    ]
+                                });
+                            }
+                            if(datas.status == 0){
+                                console.log(datas.msg);
+                            }
+                            myChart.hideLoading(); // 隐藏加载动画
+                            dayFlag = true;
+                        },
+                        error: function (err) {
+                            console.log(err);
+                            myChart.hideLoading(); // 隐藏加载动画
+                            dayFlag = true;
+                        }
+                    });
+                }
+            });
+
+            var weekFlag = true;
+            $('#'+param.id).on('click', '.week', function () {
+                if(weekFlag){
+                    weekFlag = false;
+                    myChart.showLoading();	//加载动画
+                    //员工流水统计
+                    $.ajax({
+                        type: 'post',
+                        url: param.url,
+                        data: {
+                            id: '{$id}', //员工ID
+                            type: 2 //统计类型 1 天 2 周 3 月
+                        },
+                        success: function(datas){
+//                            console.log(datas);
+                            if(datas.status == 1){
+                                var moneyStatic = datas.data,
+                                    moneyStaticKey = [],
+                                    moneyStaticValue = [];
+                                for(var key in moneyStatic){
+                                    moneyStaticKey.push(key);
+                                    moneyStaticValue.push(moneyStatic[key]);
+                                }
+                                myChart.setOption({
+                                    xAxis: {
+                                        name: '周',
+                                        data: moneyStaticKey
+                                    },
+                                    series: [
+                                        {
+                                            data: moneyStaticValue
+                                        }
+                                    ]
+                                });
+                            }
+                            if(datas.status == 0){
+                                console.log(datas.msg);
+                            }
+                            myChart.hideLoading(); // 隐藏加载动画
+                            weekFlag = true;
+                        },
+                        error: function (err) {
+                            console.log(err);
+                            myChart.hideLoading(); // 隐藏加载动画
+                            weekFlag = true;
+                        }
+                    });
+                }
+
+            });
+
+            var monthFlag = true;
+            $('#'+param.id).on('click', '.month', function () {
+                if(monthFlag){
+                    monthFlag = false;
+                    myChart.showLoading();	//加载动画
+                    $('#moneyStaticBox .month').unbind('click');
+                    $.ajax({
+                        type: 'post',
+                        url: param.url,
+                        data: {
+                            id: '{$id}', //员工ID
+                            type: 3 //统计类型 1 天 2 周 3 月
+                        },
+                        success: function(datas){
+//                            console.log(datas);
+                            if(datas.status == 1){
+                                var moneyStatic = datas.data,
+                                    moneyStaticKey = [],
+                                    moneyStaticValue = [];
+                                for(var key in moneyStatic){
+                                    moneyStaticKey.push(key);
+                                    moneyStaticValue.push(moneyStatic[key]);
+                                }
+                                myChart.setOption({
+                                    xAxis: {
+                                        name: '月',
+                                        data: moneyStaticKey
+                                    },
+                                    series: [
+                                        {
+                                            data: moneyStaticValue
+                                        }
+                                    ]
+                                });
+                            }
+                            if(datas.status == 0){
+                                console.log(datas.msg);
+                            }
+                            myChart.hideLoading(); // 隐藏加载动画
+                            monthFlag = true;
+                        },
+                        error: function (err) {
+                            console.log(err);
+                            myChart.hideLoading(); // 隐藏加载动画
+                            monthFlag = true;
+                        }
+                    });
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>

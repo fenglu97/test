@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>找回密码</title>
+		<link rel="stylesheet" type="text/css" href="__TMPL__Public/assets/css/reset.css"/>
+		<link rel="stylesheet" type="text/css" href="__TMPL__Public/assets/css/jquery.validator.css"/>
+		<link rel="stylesheet" type="text/css" href="__TMPL__Public/assets/css/findPwd.css"/>
+	</head>
+	<body>
+		<div class="title">找回密码</div>
+		<form action="" method="post" id="findPwd_form">
+			<p class="hint">请输入账户绑定的手机号码，设置新密码</p>
+			<ul>
+				<!--手机号-->
+				<li class="form-item">
+					<label for="mobile">手机号码:</label>
+					<input type="text" name="mobile" id="mobile" placeholder="请输入11位手机号" />
+				</li>
+				<!--验证码-->
+				<li class="form-item codeli">
+					<label for="code">验证码:</label>
+					<input type="text" name="code" id="code"/>
+					<input type="button" class="codeBtn" value="获取验证码" />
+				</li>
+				<!--密码-->
+				<li class="form-item pwdli">
+					<label for="password">输入新密码:</label>
+					<input type="password" name="password" id="password" placeholder=""/>
+				</li>
+				<!--确认密码-->
+				<li class="form-item">
+					<label for="pwdAgain">重复密码:</label>
+					<input type="password" name="pwdAgain" id="pwdAgain" placeholder=""/>
+				</li>
+				<!--注册按钮-->
+				<li>
+					<input type="submit" name="" id="btn" value="确定" />
+				</li>
+			</ul>
+			<a class="hideBtn" href="{:U('tg_login')}"></a>
+		</form>
+		<script src="__PUBLIC__/js/jquery-1.8.3.min.js"></script>
+		<script src="__TMPL__Public/assets/js/jquery.validator.min.js"></script>
+		<script src="__TMPL__Public/assets/js/zh-CN.js"></script>
+		<script src="__TMPL__Public/assets/js/findPwd.js"></script>
+	</body>
+</html>
+

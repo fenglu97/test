@@ -1,0 +1,100 @@
+<html>
+<head>
+    <title>支付页面</title>
+    <meta id="viewport" name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1; user-scalable=no;">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style type="text/css">
+        body {
+            text-align: center;
+            margin-left: 0px;
+            margin-top: 0px;
+            margin-right: 0px;
+            margin-bottom: 0px;
+            font-family: "Microsoft YaHei";
+            font-size: 16px;
+            color: #333333;
+        }
+        .btn_blue{display:inline-block;padding:0 20px;height:40px;line-height:40px;background:#2284D8;letter-spacing:2px;color:#ffffff;}
+        .btn_red{display:inline-block;padding:0 20px;height:40px;line-height:40px;background: #d83f53;letter-spacing:2px;color:#ffffff;}
+        .bg_gray{display:inline-block;width:100%;background:#f2f2f2;}
+        .bg_white{display:inline-block;width:100%;}
+        .text_in{display:inline-block;width:300px;height:30px;line-height:30px;padding: 0 0 0 70px;}
+        .header{
+            height: 3rem;
+            padding: 0 1em;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+        }
+        .header-title{
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+        .header-button{
+            width: 5rem;
+            display: flex;
+            align-items: center;
+            line-height: 1rem;
+        }
+        .header-button.header-left{
+            justify-content: flex-start;
+        }
+        .header-button.header-right{
+            justify-content: flex-end;
+        }
+    </style>
+</head>
+<body>
+<if condition="$data['sate'] eq 1">
+    <div align="center" class="btn_blue">{$data.msg}！</div>
+    <div class="bg_white">&nbsp</div>
+    <div class="bg_gray">
+        <div align="left" class="text_in">订单：&nbsp;&nbsp;{$data.order}</div>
+    </div>
+    <div class="bg_white">
+        <div align="left" class="text_in">金额：&nbsp;&nbsp;<font>{$data.money}</font> 元</div>
+    </div>
+    <div class="bg_gray">
+        <div align="left" class="text_in">状态：&nbsp;&nbsp;<font color="#228b22">{$data.status}</font></div>
+    </div>
+    <div class="bg_white">
+        <div align="left" class="text_in">时间：&nbsp;&nbsp;{$data.time|date="Y-m-d H:i:s",###}</div>
+    </div>
+    <div class="bg_gray">
+        <div align="left"  class="text_in">网络原因部分订单可能延时发货，</div>
+    </div>
+    <div class="bg_white">
+        <div align="left" class="text_in">请稍等片刻或联系客服。</div>
+    </div>
+    <div class="bg_gray">
+        <div align="left"  class="text_in">&nbsp</div>
+    </div>
+
+    <else/>
+    <div align="center" class="btn_blue">{$data.msg}！</div>
+
+</if>
+
+
+
+</body>
+<script src="__TMPL__Public/assets/js/jquery-1.10.2.js"></script>
+<script>
+//$(function () {
+//
+//    setInterval(function () {
+//        $.post("{:U('api/pay/checkOrder')}",{id:"{$data['orderID']}"},function (res) {
+//            if(res.status == 1){
+//                window.location.href="http://sdk.luckysy.cn/api/pay/vipSuccess?order="+"{$data['orderID']}";
+//            }
+//        })
+//    },3000);
+//})
+</script>
+</html>

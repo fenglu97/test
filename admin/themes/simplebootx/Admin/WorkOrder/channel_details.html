@@ -1,0 +1,483 @@
+<admintpl file="header"/>
+<link rel="stylesheet" href="__PUBLIC__/js/switch/bootstrap-switch.css">
+<link rel="stylesheet" href="__PUBLIC__/js/raty/jquery.raty.css">
+<link rel="stylesheet" href="__TMPL__Public/assets/css/index_fw.css"/>
+<style>
+    .switch{margin-left:20px}
+</style>
+<style>
+
+    .player{
+        width:50%;margin: 0 auto;margin-bottom: 75px
+    }
+    .player-arrow{
+        position: absolute;
+        width: 0;
+        height: 0;
+        border: 11px solid transparent;
+        border-bottom: 20px solid #66a4da;
+        right: 40px;
+        top: -31px;
+    }
+    .player-content{
+        background-color:#66a4da;padding:10px;border-radius: 15px;position: relative;
+    }
+    .player p{
+        color:white;margin:0
+    }
+    .player p:nth-child(3){text-align: right}
+    .player-user{
+        position: absolute;
+        right: 3px;
+        top: -61px;
+        background-color: #66a4da;
+        color: white;
+        padding: 10px;
+        border-radius: 10px;
+    }
+    .admin{
+        width:50%;margin: 0 auto;margin-bottom: 75px
+    }
+    .admin-arrow{
+        position: absolute;
+        width: 0;
+        height: 0;
+        border: 11px solid transparent;
+        border-bottom: 20px solid #13bd9c;
+        left: 40px;
+        top: -31px;
+    }
+    .admin-content{
+        background-color:#13bd9c;padding:10px;border-radius: 15px;position: relative;
+    }
+    .admin p{
+        color:white;margin:0
+    }
+    .admin p:nth-child(3){text-align: right}
+    .admin-user{
+        position: absolute;
+        left: 3px;
+        top: -61px;
+        background-color: #13bd9c;
+        color: white;
+        padding: 10px;
+        border-radius: 10px;
+    }
+    .desc{width:50%;margin: 0 auto;margin-bottom: 75px}
+    .desc div{background-color:#c34a5b;padding:10px;border-radius: 15px;color:white}
+    .desc div p:nth-child(2){text-indent: 2em}
+
+    img{margin:10px;width:100px;}
+    ul li:nth-child(even) {
+        background-color: #e9edee;
+    }
+    span{ word-wrap: break-word;}
+    .monthList{
+        position: fixed;
+        top: 250px;
+        left: 40px;
+        z-index: 999;
+        border: 1px solid #009f95;
+        background-color: #fff;
+        width: 240px;
+        text-align: center;
+        color: #2c3e50;
+        margin: 0;
+        padding-bottom: 20px;
+    }
+    .monthList li{
+        overflow: hidden;
+        font-weight: normal;
+    }
+    .monthList li span{
+        display: block;
+        width: 50%;
+        float: left;
+        padding: 8px 0;
+    }
+
+    /*服务评级*/
+    .star{
+        width: 22%;
+        /*height: 300px;*/
+        position: fixed;
+        z-index: 10000;
+        top: 100px;
+        right: 2%;
+        color: #0b7ebf;
+        border: 1px solid #0b7ebf;
+        background: #ffffff;
+        font-weight: normal;
+        overflow: hidden;
+    }
+    .star img{
+        width: auto;
+    }
+    .star .star_title{
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+        font-size: 18px;
+        text-align: center;
+        border-bottom: 1px solid #0b7ebf;
+    }
+    .star .star_cont{
+        height: 70px;
+    }
+    #star1{
+        width: 217px;
+        margin: 0 auto;
+    }
+    #star1 img{
+        width: 20px;
+        padding: 0;
+        margin: 10px;
+    }
+    .star .star_btn{
+        cursor: pointer;
+        margin: 0 auto;
+        width: 180px;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        font-size: 14px;
+        color: #ffffff;
+        background: #0b7ebf;
+        margin-bottom: 5px;
+    }
+    .star  .star_hint{
+        border-top: 1px solid #0b7ebf;
+        padding: 10px 5px;
+    }
+    .star_hint .star_hint_p{
+        font-size: 14px;
+        line-height: 20px;
+    }
+    /*服务反馈*/
+    #evaluate .evaluate_title{
+        margin: 5px 10px;
+    }
+    #evaluate_cont{
+        outline:none;
+        border: 1px solid #bbb;
+        display: block;
+        width: 86%;
+        height: 100px;
+        resize:none;
+        margin: 10px auto 15px;
+        font-size: 16px;
+    }
+
+    .starStatic{
+        width: 22%;
+        position: fixed;
+        z-index: 10001;
+        top: 100px;
+        right: 2%;
+        color: #0b7ebf;
+        border: 1px solid #0b7ebf;
+        background: #ffffff;
+        font-weight: normal;
+        /*padding: 10px;*/
+    }
+    .starStatic .list_title{
+        background-color: #0b7ebf;
+    }
+    .starStatic .star_grade{
+        overflow: hidden;
+        padding: 10px;
+        border-bottom: 1px solid #0b7ebf;
+    }
+    .starStatic .star_grade .star_grade_left{
+        float: left;
+        display: block;
+        width: 80px;
+        height: 40px;
+        line-height: 40px;
+    }
+    .starStatic .star_grade .star_grade_right{
+        width: 225px;
+        float: left;
+    }
+    .starStatic .star_grade .star_grade_right img{
+        width: 20px;
+        padding: 0;
+        margin: 10px;
+    }
+    .starStatic .star_cause{
+        padding: 10px;
+        overflow: hidden;
+    }
+    .starStatic .star_cause .star_cause_cont{
+        text-indent: 1em;
+    }
+</style>
+</head>
+<body>
+<ul class="monthList" style="top:100px;right:5%;width:20%;padding:0px;border-color:#0b7ebf;">
+    <li class="list_title" style="background-color: #0b7ebf;">
+        玩家信息
+    </li>
+    <li>
+        <span>游戏名</span>
+        <span>{$gamename}</span>
+    </li>
+    <li>
+        <span>游戏账号</span>
+        <span>{$info['username']}</span>
+    </li>
+    <li>
+        <span>游戏角色</span>
+        <span>{$info['role_name']}</span>
+    </li>
+    <li>
+        <span>游戏区服</span>
+        <span>{$info['server_name']}</span>
+    </li>
+    <li>
+        <span>玩家ID</span>
+        <span>{$info['yf_uid']}</span>
+    </li>
+</ul>
+<div id="dialog_large_image"></div>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:U('channel_index')}">工单列表</a></li>
+        <li class="active"><a href="javascript:void(0);">详情</a></li>
+    </ul>
+    <div class="well" style="">
+        <div class="desc">
+            <div>
+                <p>问题描述：</p>
+                <p>{$desc}</p>
+                <p>
+                    <foreach name="info['imgs']" item="vo">
+                        <img src="{$ftp_url}{$vo}" />
+                    </foreach>
+                </p>
+                <p style="text-align: right">{$info['create_time']|date='Y-m-d H:i:s',###}</p>
+            </div>
+
+        </div>
+        <foreach name="data" item="vo">
+            <if condition="$vo['type'] eq 1">
+                <div class="player">
+                    <div class="player-content">
+
+                        <p>{$vo.comment}</p>
+                        <p>
+                            <foreach name="vo['imgs']" item="v">
+                                <img src="{$ftp_url}{$v}" />
+                            </foreach>
+                        </p>
+                        <p>{$vo.create_time|date="Y-m-d H:i:s",###}</p>
+                        <div class="player-arrow"></div>
+                        <span class="player-user">{$info['username']}</span>
+                    </div>
+                </div>
+                <else/>
+                <div class="admin">
+                    <div class="admin-content">
+                        <p>{$vo.comment}</p>
+                        <p>
+                            <foreach name="vo['imgs']" item="v">
+                                <img src="{$ftp_url}{$v}" />
+                            </foreach>
+                        </p>
+                        <p>{$vo.create_time|date="Y-m-d H:i:s",###}</p>
+                        <div class="admin-arrow"></div>
+                        <span class="admin-user">{$vo.user_login} 回复：{$info['username']}</span>
+                    </div>
+                </div>
+            </if>
+        </foreach>
+        <if condition="$status neq 3">
+            <form class="form-horizontal js-ajax-forms" action="" method="post" enctype="multipart/form-data">
+                <div style="margin: 0 auto;width: 50%;">
+
+                    <p>图片</p>
+                    <p><input type="file" name="imgs[]" accept="image/gif,image/jpeg,image/jpg,image/png"/></p>
+                    <p><input type="file" name="imgs[]" accept="image/gif,image/jpeg,image/jpg,image/png"/></p>
+                    <p><input type="file" name="imgs[]" accept="image/gif,image/jpeg,image/jpg,image/png"/></p>
+
+                    <textarea  name="content" class="content" style="width: 98%" placeholder="回复"></textarea>
+                    <input type="hidden" name="id" value="{$id}" />
+                    <button class="btn btn-primary">提交</button>
+                </div>
+            </form>
+        </if>
+    </div>
+
+
+</div>
+<!--服务评级-->
+<if condition="(!$rate_info) and ($is_rate_pri eq 1)">
+<div class="star" id="star">
+    <div class="star_title">服务评级</div>
+    <div class="star_cont">
+        <div id="star1"></div>
+        <div id="star1_hint" style="text-align:center;"></div>
+    </div>
+    <div class="star_btn" id="star1_btn">提交评价并关闭工单</div>
+    <div class="star_hint">
+        <div class="star_hint_p">1星评价，态度极差（客服长时间不理，态度恶劣等）</div>
+        <div class="star_hint_p">2星评价，态度较差（问题处理不及时，答非所问等）</div>
+        <div class="star_hint_p">3星评价，服务一般（处理速度一般，勉强知道问题结果）</div>
+        <div class="star_hint_p">4星评价，服务良好（处理速度较快，客服认真跟进，能很好的知道问题结果等）</div>
+        <div class="star_hint_p">5星评价，服务极好（跟进速度很快，详细的解释原因，用语规范等）</div>
+    </div>
+</div>
+    </if>
+<if condition="$rate_info">
+<div class="starStatic">
+    <div class="list_title">评级</div>
+    <div class="star_grade">
+        <div class="star_grade_left">服务评级</div>
+        <div class="star_grade_right star{$rate_info['rate']}"></div>
+    </div>
+    <div class="star_cause">
+        <div class="star_cause_title" style="float:left;">原因：</div>
+        <div class="star_cause_cont">{$rate_info['reason']}</div>
+    </div>
+</div>
+    </if>
+<!--服务反馈-->
+<div id="evaluate" style="display: none">
+    <div class="evaluate_title">因您对服务评价为差，为了更好的帮助我们更好的改进客服服务，希望您认真填写此次服务较差的原因（必填，50字内）：</div>
+    <textarea name="" maxlength="50" id="evaluate_cont"></textarea>
+</div>
+<script src="__PUBLIC__/js/jquery19.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script src="__PUBLIC__/js/raty/jquery.raty.js"></script>
+<script src="__PUBLIC__/js/common.js"></script>
+<script type="text/javascript">
+    $(function(){
+        function openPhotos (parent) {
+            layer.photos({
+                photos: parent,
+            });
+        }
+        $('img').click(function () {
+            openPhotos($(this).parent('p'));
+        })
+
+        $('form').submit(function(){
+            var id = "{$id}";
+            var content = $('.content').val();
+            if(content == ''){
+                layer.alert('请输入回复内容');
+                return false;
+            }
+        })
+    })
+    $(function () {
+        var star1_score = 0; //评分
+        var starFlag = true; //变量标识
+        $('#star1').raty({
+            number: 5, //多少个星星设置
+            targetType: 'hint', //类型选择，number是数字值，hint，是设置的数组值
+            path: '__PUBLIC__/js/raty/images',
+//            hints: ['差', '一般', '好', '非常好', '全五星'],
+            hints: ['极差', '差', '一般', '良好', '极好'],
+            cancelOff: 'cancel-off.png',
+            cancelOn: 'cancel-on.png',
+            size: 24,
+            starHalf: 'star-half.png',
+            starOff: 'star-off.png',
+            starOn: 'star-on.png',
+            target: '#star1_hint',
+            cancel: false,
+            targetKeep: true,
+            targetText: '请选择评分',
+            click: function(score, evt) {
+                star1_score = score;
+//                alert('ID: ' + $(this).attr('id') + "\nscore: " + score + "\nevent: " + evt.type);
+            }
+        });
+        $('.star0').raty({ readOnly: true, score: 0 });
+        $('.star1').raty({ readOnly: true, score: 1 });
+        $('.star2').raty({ readOnly: true, score: 2 });
+        $('.star3').raty({ readOnly: true, score: 3 });
+        $('.star4').raty({ readOnly: true, score: 4 });
+        $('.star5').raty({ readOnly: true, score: 5 });
+        $('#star1_btn').click(function () {
+            if(starFlag){
+                starFlag = false;
+                if(star1_score > 0 && star1_score < 6){
+                    console.log(star1_score);
+                    if(star1_score <= 2){
+                        layer.open({
+                            title: '服务反馈',
+                            type: 1,
+//                            skin: 'layui-layer-molv', //加上边框
+                            area: ['450px', 'auto'], //宽高
+                            content: $('#evaluate'),
+                            closeBtn: 1, //不显示关闭按钮
+                            anim: 2,
+                            btnAlign: 'c',
+                            shadeClose: false, //开启遮罩关闭
+                            btn: ['提交'],
+                            yes: function(index, layero){
+                                if($('#evaluate_cont').val()){
+                                    doRate($('#evaluate_cont').val());//发起请求
+                                    layer.close(index);//关闭弹框
+                                } else {
+                                    layer.open({
+                                        title: '提示'
+                                        ,content: '请填写内容'
+                                        ,btnAlign: 'c'
+                                    });
+                                }
+                            },
+                            cancel: function (index) {
+                                starFlag = true;
+                            }
+                        });
+                    }
+                    if(star1_score > 2){
+                        doRate();//发起请求
+                    }
+                }
+            }
+        });
+        function doRate(isReason) {
+            var load = layer.load(2, {time: 10*1000}); //加载动画，并且设定最长等待10秒
+            var isReason = isReason || '';
+            $.ajax({
+                type:'GET',
+                url: '/index.php?g=api&m=question&a=do_rate',
+                data:{
+                    id:'{$id}',
+                    rate: star1_score, //评分
+                    reason: isReason //理由
+                },
+                success:function(datas){
+                    if(datas.status == 1){
+                        location.reload();//刷新页面
+                    } else if(datas.status == 0){
+                        layer.open({
+                            title: '提示'
+                            ,content: datas.msg
+                            ,btnAlign: 'c'
+                            ,yes: function(index, layero){
+                                layer.close(load);//关闭加载动画
+                                clearTimeout(timer);
+                                location.reload();//刷新页面
+                            }
+                        });
+                        var timer = setTimeout(function() {
+                            layer.close(load);//关闭加载动画
+                            clearTimeout(timer);
+                            location.reload();//刷新页面
+                        },2000);
+                    }
+                },
+                error:function(err){
+                    console.log(err);
+                }
+            });
+        }
+    })
+</script>
+</body>
+</html>

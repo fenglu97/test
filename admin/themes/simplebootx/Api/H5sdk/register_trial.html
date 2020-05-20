@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>一键注册</title>
+    <link rel="stylesheet" href="__TMPL__Public/assets/css/reset.css"/>
+    <link rel="stylesheet" href="__TMPL__Public/assets/css/new_public.css"/>
+    <style>
+        .storeImg{
+            width: 94.5%;
+            padding: 3.2% 3%;
+            border-radius: 10rem;
+            background-color: #01AAED;
+            color: white;
+            text-align: center;
+
+            margin-top: 10%;
+            margin-bottom: 6%;
+        }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <div class="toast is-placemiddle" style="padding: 10px; display: none;">
+        <span class="toast-text" style="padding-top: 0;">提示信息</span>
+    </div>
+    <div class="header">
+        <div class="header-button header-left">
+            <!--<i class="icon-left"></i>-->
+            <!--<span>返回</span>-->
+        </div>
+        <div class="header-title">一键注册</div>
+        <div class="header-button header-right"></div>
+    </div>
+    <div class="main">
+        <div class="form">
+            <form>
+                <div class="form-item">
+                    <!--<label class="form-item-label">账号</label>-->
+                    <div class="form-item-content">
+                        <label class="form-item-label">
+                            <i class="icon-user"></i>
+                        </label>
+                        <input class="form-item-input gray" type="text" name="username" placeholder="用户名" readonly="true">
+                        <!--<div class="form-item-input gray">SY4184278</div>-->
+                        <i class="icon-clear"></i>
+                    </div>
+                </div>
+
+                <div class="form-item">
+                    <!--<label class="form-item-label">账号</label>-->
+                    <div class="form-item-content">
+                        <label class="form-item-label">
+                            <i class="icon-password"></i>
+                        </label>
+                        <input class="form-item-input gray" type="text" name="password" placeholder="密码" readonly="true">
+                        <!--<div class="form-item-input gray">298109</div>-->
+                        <i class="icon-clear"></i>
+                    </div>
+                </div>
+                <div class="form-item">
+                    <!--<a class="a flex1" href="/api/H5sdk/register_mobile.html">手机号注册</a>-->
+                    <a class="a" href="/api/H5sdk/login_account.html">账号登录</a>
+                </div>
+                <div class="storeImg">截屏保存</div>
+                <div class="form-item">
+                    <button class="button button-primary is-round submit" type="button">进入游戏</button>
+
+                    <div class="test"></div>
+                    <!--&emsp;-->
+                    <!--<button class="button" type="button">取消</button>-->
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--<script src="__PUBLIC__/js/jquery.js"></script>
+<script src="__PUBLIC__/js/md5.js"></script>
+<script src="__TMPL__Public/assets/js/base64.js"></script>
+<script src="__TMPL__Public/assets/js/api.js"></script>-->
+<!--<script charset="utf-8" type="text/javascript">
+    document.write('<script src="__PUBLIC__/js/jquery.js?v='+(new Date()).getTime()+'"><\/script>');
+</script>
+<script charset="utf-8" type="text/javascript">
+    document.write('<script src="__PUBLIC__/js/md5.js?v='+(new Date()).getTime()+'"><\/script>');
+</script>-->
+<script charset="utf-8" type="text/javascript" defer="defer">
+    document.write('<script src="__PUBLIC__/js/jquery.js?v='+(new Date()).getTime()+'"><\/script>');
+</script>
+<script charset="utf-8" type="text/javascript" defer="defer">
+    document.write('<script src="__PUBLIC__/js/md5.js?v='+(new Date()).getTime()+'"><\/script>');
+</script>
+<script charset="utf-8" type="text/javascript" defer="defer">
+    document.write('<script src="__TMPL__Public/assets/js/base64.js?v='+(new Date()).getTime()+'"><\/script>');
+</script>
+<script charset="utf-8" type="text/javascript">
+    document.write('<script src="__TMPL__Public/assets/js/osvalue.js?v='+(new Date()).getTime()+'"><\/script>');
+</script>
+<script>
+    $(function () {
+
+        $('input[name="username"]').val('等待系统分配账号');
+        $('input[name="password"]').val('等待系统分配账号');
+
+        /*从本地获取信息*/
+        /*let userInfo = null;
+        if (Api.config.system===1){
+            userInfo = window.Android.getAccount();
+        }
+        else if (Api.config.system===2){
+            window.iOSGetDataCallBack = function (data) {
+                userInfo = data;
+            };
+            window.webkit.messageHandlers.wz_callOC.postMessage({
+                method: 'iOSGetData',
+                param: {
+                    key: 'userInfo'
+                }
+            });
+        }*/
+
+        if(Api.config.system === 2){
+            window.appIosCallback = function (data) {
+                var iosInfo = JSON.parse(Base64.decode(data));
+                Api.config.iosInfo = JSON.parse(Base64.decode(data));
+                Api.config.appid = iosInfo.getAppId;
+                Api.config.appkey = iosInfo.getAppKey;
+                Api.config.channel = iosInfo.getChannel;
+                Api.config.maker = iosInfo.getMaker;
+                Api.config.mobile_model = iosInfo.getMobileModel;
+                Api.config.machine_code = iosInfo.getMachineCode;
+                Api.config.system_version = iosInfo.getVersionName;
+                Api.config.getAdLinkUrl = iosInfo.getAdLinkUrl;
+                Api.config.getAdImageUrl = iosInfo.getAdImageUrl;
+                Api.config.isDisplayAd = iosInfo.isDisplayAd;
+                Api.config.isRegisterEnabled = iosInfo.isRegisterEnabled;
+                Api.config.isNameAuthEnabled = iosInfo.isNameAuthEnabled;
+                Api.config.isPlatformMoneyEnabled = iosInfo.isPlatformMoneyEnabled;
+                Api.config.isBindMobileEnabled = iosInfo.isBindMobileEnabled;
+                Api.config.getDiscount = iosInfo.getDiscount;
+                getAccountState()
+            };
+            window.webkit.messageHandlers.wz_callOC.postMessage({
+                method : 'getAppInfo'
+            });
+        } else {
+            getAccountState();
+        }
+
+
+
+        $(".storeImg").on("click",function () {
+            if (Api.config.system === 1){
+                window.Android.cutScreen();
+            }
+            else if (Api.config.system === 2){
+                window.IOSScreenCaptureCallBack = function (data) {
+                    toast(data);
+                };
+                window.webkit.messageHandlers.wz_callOC.postMessage({
+                    method : 'screenCapture'
+                });
+                toast("保存成功");
+            }
+        });
+
+        function toast(msg){
+            msg = msg || '提示';
+            $('.toast').children('.toast-text').html(msg);
+            $('.toast').fadeIn();
+            var toastTimer =  setTimeout(function () {
+                $('.toast').fadeOut();
+                clearTimeout(toastTimer);
+            }, 2000);
+        }
+
+
+        function bindSubmit() {
+            $('.submit').on('click', function () {
+                var username = $('input[name="username"]').val();
+                var password = $('input[name="password"]').val();
+                submitForm({
+                    username: username,
+                    password: password
+                });
+            });
+        }
+        function getAccountState() {
+            var account = Api.util.cookie.get('185_account_trial');
+            // $(".test").html(account);
+            if(account){
+                getAccount(account);
+                // account = JSON.parse(account);
+                // $('input[name="username"]').val(account.username);
+                // $('input[name="password"]').val(account.password);
+
+                // bindSubmit();
+            } else if(Api.config.system === 2){
+                window.iOSGetDataCallBack = function (data) {
+                    if(data && data != 'null'){
+                        getAccount(data);
+                    } else {
+                        registerTrial(bindSubmit);
+                    }
+                };
+                window.webkit.messageHandlers.wz_callOC.postMessage({
+                    method: 'iOSGetData',
+                    param: {
+                        key: '185_account_trial'
+                    }
+                });
+            } else {
+                registerTrial(bindSubmit);
+            }
+        }
+        function getAccount(account) {
+            if(account){
+                account = JSON.parse(account);
+                $('input[name="username"]').val(account.username);
+                $('input[name="password"]').val(account.password);
+                bindSubmit();
+            }
+        }
+
+     /*   function storeCapture() {
+            toast("截屏")
+        }*/
+
+        function registerTrial(callback) {
+            var password = Math.random().toFixed(6).slice(2, 8);
+            var options = {
+                password: password,
+                appid: Api.config.appid, //应用ID
+                channel: Api.config.channel, //渠道ID
+                system: Api.config.system, //系统
+                maker: Api.config.maker, //厂商
+                mobile_model: Api.config.mobile_model, //手机型号
+                machine_code: Api.config.machine_code, //设备号
+                system_version: Api.config.system_version //系统版本
+            };
+
+            options.sign = Api.util.getSign(options, Api.config.appkey);
+            $.ajax({
+                url: Api.config.host + '/index.php?g=api&m=user&a=register_by_trial',
+                type: 'post',
+                data: options,
+                success: function (res) {
+                    if(res.status === 1){
+                        var data = res.data;
+                        $('input[name="username"]').val(data.username);
+                        $('input[name="password"]').val(password);
+                        Api.util.cookie.set('185_account_trial', JSON.stringify({
+                            username: data.username,
+                            password: password
+                        }));
+                        Api.util.iosCookie.set('185_account_trial', JSON.stringify({
+                            username: data.username,
+                            password: password
+                        }));
+                        // if (Api.config.system === 1){
+                        //     // $(".test").html("999999999999999999999");
+                        //     window.Android.cutScreen();
+                        // }
+                        /*Api.util.cookie.set('185_userdata', JSON.stringify(data));
+                        Api.util.cookie.set('185_account_username', JSON.stringify({
+                            username: data.username,
+                            password: password
+                        }));
+                        Api.util.iosCookie.set('185_account_username', JSON.stringify({
+                            username: data.username,
+                            password: password
+                        }));*/
+                        callback();
+                    } else if(res.msg){
+                        toast(res.msg);
+                    }
+                },
+                error: function (err) {
+                    toast(err);
+                }
+            })
+        }
+
+        var submitFormFlag = true;
+        function submitForm(vals) {
+            if(!submitFormFlag){
+                return
+            }
+            submitFormFlag = false;
+            var options = {
+                username: vals.username,
+                type: 1, //1.用户账号 2.手机登录
+                password: vals.password,
+                appid: Api.config.appid, //应用ID
+                channel: Api.config.channel, //渠道ID
+                system: Api.config.system, //系统
+                machine_code: Api.config.machine_code //设备号
+            };
+            options.sign = Api.util.getSign(options, Api.config.appkey);
+            $.ajax({
+                url: Api.config.host + '/index.php?g=api&m=user&a=login',
+                type: 'post',
+                data: options,
+                success: function (res) {
+                    console.log(res);
+                    if(res.status === 1){
+                        var data = res.data;
+                        Api.util.cookie.set('185_userdata', JSON.stringify(data));
+                        Api.util.cookie.set('185_account_username', JSON.stringify({
+                            username: vals.username,
+                            password: vals.password
+                        }));
+                        Api.util.iosCookie.set('185_account_username', JSON.stringify({
+                            username: vals.username,
+                            password: vals.password
+                        }));
+                        Api.util.cookie.unset('185_account_trial');
+                        Api.util.iosCookie.set('185_account_trial', '');
+                        Api.util.cookie.set('pre_login', "username");
+                        /*将输入框信息保存到本地*/
+                        /*let userMobile = "";
+                        if (userInfo) {
+                            userMobile = JSON.parse(userInfo).mobile?JSON.parse(userInfo).mobile:"";
+                        }*/
+                        if (Api.config.system===1){
+                            window.Android.setAccount("mowanshouyou",vals.username,"",vals.password);
+                        }
+                        else if (Api.config.system===2){
+                            Api.util.iosCookie.set('userInfo', JSON.stringify({
+                                account: vals.username,
+                                mobile:"",
+                                password: vals.password
+                            }));
+                        }
+                        location.href = '/api/H5sdk/account_list.html';
+                    } else if(res.msg){
+                        toast(res.msg);
+                    }
+                    submitFormFlag = true;
+                },
+                error: function (err) {
+                    submitFormFlag = true;
+                    console.log(err);
+                    toast(err);
+                }
+            })
+        }
+    })
+</script>
+</body>
+</html>

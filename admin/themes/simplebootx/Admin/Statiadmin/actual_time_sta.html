@@ -1,0 +1,181 @@
+<admintpl file="header"/>
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/chosen.css">
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/docsupport/prism.css">
+<style type="text/css" media="all">
+    /* fix rtl for demo */
+    .chosen-rtl .chosen-drop {
+        left: -9000px;
+    }
+
+</style>
+</head>
+
+<body>
+
+<div class="wrap js-check-wrap">
+
+    <ul class="nav nav-tabs">
+
+        <li class="active"><a href="javascript:;">盒子渠道留存</a></li>
+
+    </ul>
+
+    <form class="well form-search" method="post" action="{:U('Statiadmin/actual_time_sta')}">
+
+        <div class="search_type cc mb10">
+
+            <div class="mb10">
+                时间：
+
+                <input type="text" name="start_time" id="start_time" value="{$parameter['start_time']}"
+                       class="js-date_other" size="11" style="width:180px;" max="{$max}"> 至
+                <input type="text" name="end_time" id="end_time" value="{$parameter['end_time']}" size="11"
+                       class="js-date_other" style="width:180px;" max="{$max}">
+
+                渠道：
+                 <admintpl file="channel" />
+                <select name="channel_id" id="cid">
+                    <option value="">所有渠道</option>
+                     {:get_channel_list(I('channel_id'),$selected_channel_type)}
+                </select>
+                <input type="submit" class="btn btn-primary" value="搜索"/>
+
+                </span>
+
+
+            </div>
+
+        </div>
+
+    </form>
+
+    <script src="__PUBLIC__/js/chosen/chosen.jquery.js" type="text/javascript"></script>
+    <script src="__PUBLIC__/js/chosen/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
+
+    <script type="text/javascript">
+        var config = {
+            '.chosen-select': {},
+            '.chosen-select-deselect': {allow_single_deselect: true},
+            '.chosen-select-no-single': {disable_search_threshold: 10},
+            '.chosen-select-no-results': {no_results_text: '没有匹配的结果'},
+            '.chosen-select-width': {width: "95%"}
+        }
+        for (var selector in config) {
+            $(selector).chosen(config[selector]);
+        }
+        //$("#select_1").val('{$game_id}');
+        //$("#select_1").trigger("chosen:updated");
+
+    </script>
+
+
+    <table class="table table-hover table-bordered table-list">
+
+        <thead>
+
+        <tr>
+
+            <th>日期</th>
+
+            <th>新增用户(安装)</th>
+            <th>活跃用户</th>
+            <th colspan="9">留存率</th>
+        </tr>
+        <tr>
+
+            <th colspan="3"></th>
+            <th>1天后</th>
+            <th>2天后</th>
+            <th>3天后</th>
+            <th>4天后</th>
+            <th>5天后</th>
+            <th>6天后</th>
+            <th>7天后</th>
+            <th>14天后</th>
+            <th>30天后</th>
+
+        </tr>
+
+        </thead>
+
+        <foreach name="data" item="vo">
+
+            <tr>
+
+                <td>{$vo.first_time|date="Y-m-d",###}</td>
+
+                <td>
+                    <php> echo ceil($vo['installs'] *
+                        ($xinzen_multi[$vo['first_time']]?$xinzen_multi[$vo['first_time']]:1));
+                    </php>
+                </td>
+
+                <td>{$vo['huoyue']}</td>
+                <td>{$vo['one_day']}</td>
+                <td>{$vo['two_day']}</td>
+                <td>{$vo['three_day']}</td>
+                <td>{$vo['four_day']}</td>
+                <td>{$vo['five_day']}</td>
+                <td>{$vo['six_day']}</td>
+                <td>{$vo['seven_day']}</td>
+                <td>{$vo['fourteen_day']}</td>
+                <td>{$vo['thirty_day']}</td>
+
+
+            </tr>
+
+        </foreach>
+
+
+    </table>
+
+
+    <div class="pagination">{$pager}</div>
+
+
+</div>
+
+<script src="__PUBLIC__/js/common.js"></script>
+<script src="__PUBLIC__/js/datePicker/datePicker.js"></script>
+<script>
+    var dateTimeInput = $("input.date");
+    dateTimeInput.datePicker({
+        time: false
+    });
+
+    setCookie('refersh_time', 0);
+
+    function refersh_window() {
+
+        var refersh_time = getCookie('refersh_time');
+
+        if (refersh_time == 1) {
+
+            window.location.reload();
+
+        }
+
+    }
+
+    setInterval(function () {
+
+        refersh_window()
+
+    }, 3000);
+
+    $(function () {
+
+        $("#selected_cid").change(function () {
+
+            $("#cid_form").submit();
+
+        });
+
+    });
+
+
+</script>
+
+</body>
+
+</html>

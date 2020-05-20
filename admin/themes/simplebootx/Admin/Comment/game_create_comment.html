@@ -1,0 +1,54 @@
+<admintpl file="header" />
+<link rel="stylesheet" href="__PUBLIC__/js/switch/bootstrap-switch.css">
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="javascript:void(0);">游戏灌水</a></li>
+    </ul>
+    <form class="well form-search" method="post" action="">
+        <input type="text" name="keywords" style="width: 200px;" value="{$keywords}" placeholder="游戏名">
+
+        <input type="submit" class="btn btn-primary" value="搜索" />
+
+    </form>
+    <form class="js-ajax-form" method="post">
+        <table class="table table-hover table-bordered">
+            <thead>
+            <tr>
+                <th>游戏名</th>
+                <th>游戏简写</th>
+                <th style="width:180px">发布时间</th>
+                <th width="80">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <foreach name="data" item="vo">
+                <tr>
+                    <td>{$vo.game_name} <if condition="$vo.source eq 2">&nbsp;&nbsp;<i class="fa fa-external-link" style="color:#2f92f9"></i> <span  style="color:#2f92f9">来源BI</span></if> </td>
+                    <td>{$vo.tag}</td>
+                    <td class="time">{$vo.add_time|date='Y-m-d H:i',###}</td>
+                    <td>                
+                         <if condition="$vo.created_comment eq 0">
+                         <a class="js-ajax-dialog-btn" data-msg="您确定要进行操作吗" href="{:U('create_comment',array('appid'=>$vo['id']))}">灌水</a>
+                         <else />
+                          <span style="color:#cccccc;">已灌水</span>
+                         </if>
+
+                    </td>
+                </tr>
+            </foreach>
+            </tbody>
+        </table>
+        <div class="pagination">{$page}</div>
+    </form>
+</div>
+<script src="__PUBLIC__/js/jquery19.js"></script>
+<script src="__PUBLIC__/js/switch/bootstrap.min.js"></script>
+<script src="__PUBLIC__/js/switch/bootstrap-switch.js"></script>
+<script src="__PUBLIC__/js/common.js"></script>
+<script type="text/javascript">
+
+</script>
+</body>
+</html>

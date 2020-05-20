@@ -1,0 +1,70 @@
+<admintpl file="header" />
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="javascript:void(0);">玩家邮件</a></li>
+        <li class=""><a href="{:U('add')}">添加玩家邮件</a></li>
+    </ul>
+    <form class="well form-search" method="post" action="">
+        标题:
+        <input type="text" name="title" style="width: 200px;" value="{$title}" placeholder="">
+        时间:
+        <input type="text" name="start" class="js-date date" value="{$start}" style="width: 120px;" autocomplete="off">-
+        <input type="text" name="end" class="js-date date" value="{$end}" style="width: 120px;" autocomplete="off">
+        <input type="submit" class="btn btn-primary" value="搜索" />
+    </form>
+    <form class="js-ajax-form" method="post">
+        <div class="table-actions">
+            <button class="btn btn-danger btn-small js-ajax-submit" type="submit" data-action="{:U('del')}" data-subcheck="true" data-msg="{:L('DELETE_CONFIRM_MESSAGE')}">批量删除</button>
+        </div>
+        <table class="table table-hover table-bordered">
+            <thead>
+            <tr>
+                <th width="15"><label><input type="checkbox" class="js-check-all" data-direction="x" data-checklist="js-check-x"></label></th>
+                <!--<th width="50">ID</th>-->
+                <th>标题</th>
+                <th>类型</th>
+                <th>附件类型</th>
+                <th>附件数量</th>
+                <th>发布时间</th>
+                <th>过期时间</th>
+                <th>发布人</th>
+                <th width="120">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <foreach name="data" item="vo">
+                <tr>
+                    <td><input type="checkbox" class="js-check" data-yid="js-check-y" data-xid="js-check-x" name="id[]" value="{$vo.id}"></td>
+                    <td>{$vo.title}</td>
+                    <td><if condition="$vo.action eq 1">文本<else />附件</if></td>
+                    <td><if condition="$vo.attach_type eq 1">平台币<elseif condition="$vo.attach_type eq 2"/>金币<else />无附件</if></td>
+                    <td>{$vo.attach_count}</td>
+                    <td class="time">{$vo.create_time|date='Y-m-d H:i',###}</td>
+                    <td class="time">{$vo.end_time|date='Y-m-d H:i',###}</td>
+                    <td class="user">{$vo.user_login}</td>
+                    <td>
+                        <a href="{:U('edit',array('id'=>$vo['id']))}" class="edit">编辑</a>
+                        <a href="{:U('del',array('id'=>$vo['id']))}" class="js-ajax-delete">删除</a>
+                    </td>
+                </tr>
+            </foreach>
+            </tbody>
+        </table>
+        <div class="pagination">{$page}</div>
+    </form>
+</div>
+<script src="__PUBLIC__/js/common.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script src="__PUBLIC__/js/datePicker/datePicker.js"></script>
+<script type="text/javascript">
+    $(function(){
+        var dateTimeInput = $("input.date");
+        dateTimeInput.datePicker({
+            time: false
+        });
+    })
+</script>
+</body>
+</html>

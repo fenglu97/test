@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加</title>
+    <link rel="stylesheet" href="__PUBLIC__/js/layui/layui/css/layui.css">
+    <link rel="stylesheet" href="__TMPL__Public/assets/css/reset.css"/>
+    <link rel="stylesheet" href="__TMPL__Public/assets/css/hr_public.css"/>
+    <style>
+        /*i{ font-style: normal;}*/
+        /*.fl{ float: left;}*/
+        /*.fr{ float: right;}*/
+        /*.clear{ zoom: 1;}*/
+        /*.clear:after{ content: "."; display: block; width: 0; height: 0; clear: both; visibility: hidden;}*/
+        /*.must{ position: relative; width: 0;}*/
+        /*.must:after{ content: "*"; color: #e4393c; position: absolute; right: 100%; top: 50%; transform: translate(0, -50%);}*/
+        /*img{ vertical-align: top;}*/
+        /*table, th, td{ border: 1px solid #555;}*/
+        /*.hr-table{ border-collapse:collapse; font-size: 13px;}*/
+        /*.hr-table td{ text-align: center; vertical-align: middle; width: 42px; height: 40px;}*/
+        /*.hr-table td input{ width: 100%; outline:none; border: none; text-align: center;}*/
+        /*.picture-box{ position: relative;}*/
+        /*.file { position: relative; display: inline-block; background: #D0EEFF; border: 1px solid #99D3F5; border-radius: 4px; font-size: 16px; width: 100px; height: 30px; line-height: 30px; overflow: hidden; color: #1E88C7;}*/
+        /*.file input { position: absolute; font-size: 100px; right: 0; top: 0; opacity: 0; width: 100%; height: 100%;}*/
+        /*.file:hover { background: #AADFFD; border-color: #78C3F3; color: #004974;}*/
+        /*.picture-img{ width: 100%; height: 100%; display: none;}*/
+        /*.picture-clear{ display: inline-block; width: 20px; height: 20px; border-radius: 0 3px 0 3px; background: url(__TMPL__Public/assets/images/hr_clear.png) no-repeat; background-size: 100% 100%; cursor: pointer; position: absolute; z-index: 1; top: 0; right: 0;}*/
+        /*.hr-table td .picture{ width: 100%; height: 163px;}*/
+        /*.hr-table .submit{ display: inline-block; width: auto; height: 30px; line-height: 30px; padding: 0 18px; background-color: #1E9FFF; color: #fff; white-space: nowrap; text-align: center; font-size: 14px; border: none; border-radius: 2px; cursor: pointer;}*/
+        /*.hr-table .submit:hover{ background-color: #2EAAFF;}*/
+
+        /*.add-table{ margin-right: 10px; padding-top: 30px; position: relative;}*/
+        /*.msg{ position: absolute; top: 5px; left: 0; width: 100%;}*/
+        /*.msg-error { position: relative; background: #ffebeb; color: #e4393c; border: 1px solid #faccc6; padding: 5px 10px 5px 40px; height: 12px; line-height: 12px; font-size: 12px; display: none;}*/
+        /*.msg-error:after{ content: ''; position: absolute; top: 50%; left: 10px; display: block; margin-top: -8px; width: 16px; height: 16px; overflow: hidden; background: url("__TMPL__Public/assets/images/msg_error.png") no-repeat; background-size: 100% 100%;}*/
+    </style>
+</head>
+<body>
+<div class="clear" style="min-width: 1440px; margin: 20px;">
+    <div class="fl add-table">
+        <div class="msg">
+            <div class="msg-error" id="msgError"></div>
+        </div>
+        <form action="/index.php?g=api&m=TgEmployees&a=add" method="post" enctype="multipart/form-data" class="layui-form" id="addForm">
+            <table class="hr-table" cellpadding="0">
+                <tr>
+                    <td rowspan="10"><div style="width: 20px; margin: 0 auto;">基本情况</div></td>
+                    <td colspan="3"><label for="name"><i class="must"></i>姓名</label></td>
+                    <td colspan="3"><input type="text" name="name" id="name" maxlength="15"></td>
+                    <td colspan="1"><label for="nation"><i class="must"></i>民族</label></td>
+                    <td colspan="1"><input type="text" name="nation" id="nation"></td>
+                    <td colspan="2"><label for="sex"><i class="must"></i>性别</label></td>
+                    <td colspan="3">
+                        <select name="sex" id="sex" lay-verify="" lay-filter="sex">
+                            <option value="0" selected>请选择</option>
+                            <option value="1">男</option>
+                            <option value="2">女</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3"><label for="birth"><i class="must"></i>出生日期</label></td>
+                    <td colspan="3">
+                        <input type="text" class="layui-input" name="birth" id="birth" style="padding-left: 0;">
+                    </td>
+                    <td colspan="2"><label for="age"><i class="must"></i>年龄</label></td>
+                    <td colspan="2">
+                        <!--<input type="text" name="age" id="age">-->
+                        <input type="text" name="age" id="age">
+                    </td>
+                    <td colspan="3" rowspan="4" class="picture-box" id="pictureBox">
+                        <div class="file" id="fileImg">选择图片
+                            <input type="file" name="img" id="img" multiple="multiple" accept="image/gif, image/jpeg, image/png, image/jpg">
+                        </div>
+                        <div class="picture-img" id="pictureImg">
+                            <img src="" class="picture">
+                            <i class="picture-clear"></i>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3"><label for="politicalAffiliation"><i class="must"></i>政治面貌</label></td>
+                    <td colspan="3"><input type="text" name="political_affiliation" id="politicalAffiliation"></td>
+                    <td colspan="2"><label for="marriage"><i class="must"></i>婚姻状况</label></td>
+                    <td colspan="2">
+                        <select name="marriage" id="marriage" lay-verify="" lay-filter="marriage">
+                            <option value="0" selected>请选择</option>
+                            <option value="1">未婚</option>
+                            <option value="2">已婚</option>
+                            <option value="3">离异</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3"><label for="graduateSchool"><i class="must"></i>毕业学校</label></td>
+                    <td colspan="3"><input type="text" name="graduate_school" id="graduateSchool"></td>
+                    <td colspan="2"><label for="graduateTime"><i class="must"></i>毕业时间</label></td>
+                    <td colspan="2">
+                        <input type="text" class="layui-input" name="graduate_time" id="graduateTime" style="padding-left: 0;">
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3"><label for="education"><i class="must"></i>学历</label></td>
+                    <td colspan="3">
+                        <select name="education" id="education" lay-verify="" lay-filter="education">
+                            <option value="0" selected>请选择</option>
+                            <option value="1">专科</option>
+                            <option value="2">本科</option>
+                            <option value="3">硕士</option>
+                            <option value="4">博士</option>
+                            <option value="5">其他</option>
+                        </select>
+                    </td>
+                    <td colspan="2"><label for="major"><i class="must"></i>专业</label></td>
+                    <td colspan="2"><input type="text" name="major" id="major"></td>
+                </tr>
+                <tr>
+                    <td colspan="3"><label for="mobile">手机</label></td>
+                    <td colspan="3">
+                        <input type="text" name="mobile" id="mobile" maxlength="11">
+                    </td>
+                    <td colspan="2"><label for="idCard">身份证号码</label></td>
+                    <td colspan="5"><input type="text" name="id_card" id="idCard"></td>
+                </tr>
+                <tr>
+                    <td colspan="3"><label for="qq">qq号码</label></td>
+                    <td colspan="3">
+                        <input type="text" name="qq" id="qq">
+                    </td>
+                    <td colspan="2"><label for="weixin">微信号</label></td>
+                    <td colspan="5"><input type="text" name="weixin" id="weixin"></td>
+                </tr>
+                <tr>
+                    <td colspan="3"><label for="agencyMobile">紧急联系人<br>姓名and电话</label></td>
+                    <td colspan="3"><input type="text" name="agency_mobile" id="agencyMobile"></td>
+                    <td colspan="2"><label for="email">Email</label></td>
+                    <td colspan="5"><input type="email" name="email" id="email"></td>
+                </tr>
+                <tr>
+                    <td colspan="3"><label for="residenceAddress">户籍详细地址</label></td>
+                    <td colspan="10"><input type="text" name="residence_address" id="residenceAddress" maxlength="100"></td>
+                </tr>
+                <tr>
+                    <td colspan="3"><label for="address">现居住详细地址</label></td>
+                    <td colspan="10"><input type="text" name="address" id="address" maxlength="100"></td>
+                </tr>
+                <tr>
+                    <td rowspan="5"><div style="width: 20px; margin: 0 auto;">入离职情况</div></td>
+                    <td colspan="3"><label for="channelLegion"><i class="must"></i>所属地区</label></td>
+                    <td colspan="3">
+                        <select name="channel_legion" id="channelLegion" lay-verify="" lay-filter="channelLegion">
+                            <option value="0" selected>选择地区</option>
+                        </select>
+                    </td>
+                    <td colspan="2"><label for="parentChannel"><i class="must"></i>所属团队</label></td>
+                    <td colspan="5">
+                        <select name="parent_channel" id="parentChannel" lay-verify="" lay-filter="parentChannel">
+                            <option value="0" selected>选择团队</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3"><label for="channel"><i class="must"></i>渠道号</label></td>
+                    <td colspan="10">
+                        <select name="channel" id="channel" lay-verify="" lay-filter="channel">
+                            <option value="0" selected>选择渠道号</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3"><label for="hireDate"><i class="must"></i>入职时间</label></td>
+                    <td colspan="3">
+                        <input type="text" class="layui-input" name="hire_date" id="hireDate" style="padding-left: 0;">
+                    </td>
+                    <!--<td colspan="2">离职时间</td>-->
+                    <!--<td colspan="5"></td>-->
+                    <td colspan="2"><label for="trialDays">试用天数</label></td>
+                    <td colspan="5">
+                        <input type="text" name="trial_days" id="trialDays">
+                    </td>
+                </tr>
+                <tr>
+                    <!--<td colspan="3"><label for="trialDays">试用天数</label></td>-->
+                    <!--<td colspan="3">-->
+                        <!--<input type="text" name="trial_days" id="trialDays">-->
+                    <!--</td>-->
+                    <!--<td colspan="2"><label for="regularTime">转正时间</label></td>-->
+                    <!--<td colspan="5">-->
+                        <!--<input type="text" class="layui-input" name="regular_time" id="regularTime" style="padding-left: 0;">-->
+                    <!--</td>-->
+                    <td colspan="3"><label for="regularTime">转正时间</label></td>
+                    <td colspan="3">
+                        <input type="text" class="layui-input" name="regular_time" id="regularTime" style="padding-left: 0;">
+                    </td>
+                    <td colspan="2"><label for="contractExpiration">合同到期时间</label></td>
+                    <td colspan="5">
+                        <input type="text" class="layui-input" name="contract_expiration" id="contractExpiration" style="padding-left: 0;">
+                    </td>
+                </tr>
+                <tr>
+                    <!--<td colspan="3"><label for="contractExpiration">合同到期时间</label></td>-->
+                    <!--<td colspan="3">-->
+                        <!--<input type="text" class="layui-input" name="contract_expiration" id="contractExpiration" style="padding-left: 0;">-->
+                    <!--</td>-->
+                    <td colspan="3"><label for="archivesLocation">档案所在地</label></td>
+                    <td colspan="10">
+                        <input type="text" name="archives_location" id="archivesLocation" style="padding-left: 0;">
+                    </td>
+                </tr>
+                <!--<tr>-->
+                    <!--<td colspan="3">离职原因</td>-->
+                    <!--<td colspan="10"></td>-->
+                <!--</tr>-->
+                <!--<tr>-->
+                    <!--<td rowspan="3"><div style="margin: 0 5px;">评分扣分及评价</div></td>-->
+                    <!--<td colspan="3">人事评分</td>-->
+                    <!--<td colspan="3"></td>-->
+                    <!--<td colspan="2">纪律扣分</td>-->
+                    <!--<td colspan="5"></td>-->
+                <!--</tr>-->
+                <!--<tr>-->
+                    <!--<td colspan="3">上周人事评价</td>-->
+                    <!--<td colspan="10"></td>-->
+                <!--</tr>-->
+                <!--<tr>-->
+                    <!--<td colspan="3">纪律扣分原因</td>-->
+                    <!--<td colspan="10"></td>-->
+                <!--</tr>-->
+                <tr>
+                    <td colspan="14">
+                        <!--<input type="button" value="提交" class="btn">-->
+                        <input type="submit" name="submit" class="button" value="提交">
+                    </td>
+                </tr>
+                <tr style="visibility: hidden;">
+                    <td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+<script src="__PUBLIC__/js/jquery.js"></script>
+<script src="__PUBLIC__/js/layui/layui/layui.js"></script>
+<script src="__PUBLIC__/js/validate.js"></script>
+<script>
+    $(function () {
+        layui.use(['jquery', 'layer', 'form', 'element','laydate'], function() {
+            var layer = layui.layer//重点处
+                , form = layui.form
+                , element = layui.element
+                , laydate = layui.laydate;
+
+            //上传图片
+            $('#pictureImg').on('click','.picture-clear',function () {
+                $('#pictureImg').hide();
+                $('#img').val('');
+                $('#fileImg').show();
+            });
+            $('#img').on('change', function(e) {
+                var files = e.target.files || e.dataTransfer.files;
+                if (!files.length) return;
+                this.picValue = files[0];
+                imgPreview(this.picValue);
+            });
+            function imgPreview (file) {
+                var _this = this;
+                // 看支持不支持FileReader
+                if (!file || !window.FileReader) return;
+                if (/^image/.test(file.type)) {
+                    // 创建一个reader
+                    var reader = new FileReader();
+                    // 将图片2将转成 base64 格式
+                    reader.readAsDataURL(file);
+
+                    // 读取成功后的回调
+                    reader.onloadend = function () {
+                        var result = this.result;
+//                    var img = new Image();
+                        var html = '<img src="'+ result +'" class="picture"><i class="picture-clear"></i>';
+                        $('#pictureImg').html(html);
+                        $('#fileImg').hide();
+                        $('#pictureImg').show();
+                    }
+                }
+            };
+
+
+
+            //性别
+            form.on('select(sex)', function(data){
+//                console.log(data.value);
+            });
+            //出生日期
+            laydate.render({elem: '#birth'});
+            //婚姻状况
+            form.on('select(marriage)', function(data){
+//                console.log(data.value);
+            });
+            //毕业时间
+            laydate.render({elem: '#graduateTime'});
+            //学历
+            form.on('select(education)', function(data){
+//                console.log(data.value);
+            });
+            //入职时间
+            laydate.render({elem: '#hireDate'});
+            //转正时间
+            laydate.render({elem: '#regularTime'});
+            //合同到期时间
+            laydate.render({elem: '#contractExpiration'});
+            $.ajax({
+                type: 'get',
+                url: '/index.php?g=api&m=TgEmployees&a=channel_legion_list',
+                data: {},
+                success: function(datas){
+                    if(datas.status == 1){
+                        if(datas.data){
+                            var list = datas.data;
+                            var dom = '';
+                            var parentChannelData = {},
+                                channelData = {},
+                                parentChannelList = [];
+                            for(var i = 0; i < list.length; i++){
+                                dom = '<option value="'+ list[i].id +'">'+ list[i].name +'</option>';
+                                parentChannelData[list[i].id] = list[i].parent_channel;
+                                $('#channelLegion').append($(dom)[0]);
+                                parentChannelList = list[i].parent_channel;
+                                for(var j = 0; j < parentChannelList.length; j++){
+                                    channelData[parentChannelList[j].id] = parentChannelList[j].channel;
+                                }
+                            }
+//                            console.log(parentChannelData);
+//                            console.log(channelData);
+                            form.render('select');
+                            //地区
+                            form.on('select(channelLegion)', function(data){
+//                                console.log(data.value); //得到被选中的值
+                                var dom = '<option value="0" selected>选择团队</option>';
+                                if(data.value != 0){
+                                    var list = parentChannelData[data.value];
+                                    for(var i = 0; i < list.length; i++){
+                                        dom += '<option value="'+ list[i].id +'">'+ list[i].name +'</option>';
+                                    }
+                                } else {
+                                    $('#channel').html('<option value="0" selected>选择渠道号</option>');
+                                }
+                                $('#parentChannel').html(dom);
+                                form.render('select');
+                            });
+                            //团队
+                            form.on('select(parentChannel)', function(data){
+//                                console.log(data.value); //得到被选中的值
+                                var dom = '<option value="0" selected>选择渠道号</option>';
+                                if(data.value != 0){
+                                    var list = channelData[data.value];
+                                    if(list && list.length > 0){
+                                        for(var i = 0; i < list.length; i++){
+                                            dom += '<option value="'+ list[i].id +'">'+ list[i].name +'</option>';
+                                        }
+                                    } else {
+                                        layer.open({
+                                            title: '提示'
+                                            ,content: '请联系团队负责人添加备用渠道号'
+                                        });
+                                    }
+
+                                }
+                                $('#channel').html(dom);
+                                form.render('select');
+                            });
+                            //渠道号
+                            form.on('select(channel)', function(data){
+                                // console.log(data.elem); //得到select原始DOM对象
+//                                console.log(data.value); //得到被选中的值
+                                // console.log(data.othis); //得到美化后的DOM对象
+                            });
+                        }
+                    }
+                    if(datas.status == 0){
+                        console.log(datas.msg);
+                    }
+                },
+                error: function (err){
+                    console.log(err)
+                }
+            });
+
+
+
+            // 在键盘按下并释放及提交后验证提交表单
+            $("#addForm").validate({
+//                debug: true,
+                rules: {
+                    name: {
+                        required: true,
+                        minlength: 2,
+                        maxlength: 15
+                    },
+                    nation: "required", //民族
+                    sex: "isSex",
+                    birth: "required",
+                    age: "required",
+                    political_affiliation: "required", //政治面貌
+                    marriage: "isMarriage",//婚姻状况
+                    graduate_school: "required", //毕业学校
+                    graduate_time: "required", //毕业时间
+                    education: "isEducation",//学历
+                    major: "required", //专业
+                    img: {
+                        accept: "JPG|JPEG|PNG|GIF"
+                    },
+                    mobile: "isMobile",//手机号
+                    id_card: "isIdCard",
+                    qq: {
+                        digits: true
+                    },
+                    weixin: {
+                        minlength: 6,
+                        maxlength: 20
+                    },
+                    agency_mobile: { //紧急联系人姓名and电话
+                        minlength: 11,
+                        maxlength: 30
+                    },
+                    residence_address: { //户籍地址
+                        maxlength: 100
+                    },
+                    address: { //现居住地址
+                        maxlength: 100
+                    },
+                    email: {
+                        email: true
+                    },
+                    channel_legion: "isChannelLegion",//所属地区
+                    parent_channel: "isParentChannel",//所属团队
+                    channel: "isChannel",//渠道号
+                    hire_date: "required", //入职时间
+                    trial_days: {
+                        digits: true
+                    },
+                    archives_location: { //档案所在地
+                        maxlength: 100
+                    }
+                },
+                messages: {
+                    name: {
+                        required: "请输入姓名",
+                        minlength: "姓名必需由2-15个字符组成",
+                        maxlength: "姓名必需由2-15个字符组成"
+                    },
+                    nation: {
+                        required: "请填写民族"
+                    },
+                    birth: {
+                        required: "请选择出生日期"
+                    },
+                    age: {
+                        required: "请填写年龄"
+                    },
+                    political_affiliation: {
+                        required: "请填写政治面貌"
+                    },
+                    graduate_school: {
+                        required: "请填写毕业学校"
+                    },
+                    graduate_time: {
+                        required: "请选择毕业时间"
+                    },
+                    major: {
+                        required: "请填写专业"
+                    },
+                    qq: {
+                        digits: "请填写无特殊字符的数字"
+                    },
+                    weixin: {
+                        minlength: "微信号不能少于6个字符",
+                        maxlength: "微信号不能大于20个字符"
+                    },
+                    agency_mobile: {
+                        minlength: "紧急联系人姓名and电话不能小于11个字符",
+                        maxlength: "紧急联系人姓名and电话不能大于30个字符"
+                    },
+                    residence_address: {
+                        maxlength: "户籍地址不能大于100个字符"
+                    },
+                    address: {
+                        maxlength: "现居住地址不能大于100个字符"
+                    },
+                    hire_date: {
+                        required: "请填写入职时间"
+                    },
+                    trial_days: {
+                        digits: "请输入整数数字"
+                    },
+                    archives_location: {
+                        maxlength: "档案所在地不能大于100个字符"
+                    }
+                },
+                success: function(label) {
+                    $('#msgError').hide();
+                },
+                errorContainer: "#msgError",
+//            errorLabelContainer: "#msgError",
+                errorPlacement: function(error, element) {
+                    $('#msgError').html(error);
+                },
+                showErrors :function(errorMap,errorList){
+//                    console.log(errorList)
+                    if(errorList[0]){
+                        if(errorList[0].message){
+                            $('#msgError').html(errorList[0].message);
+                            $('#msgError').show();
+                        }
+                    }
+                },
+                submitHandler: function(form) {
+                    $('#msgError').hide();
+                    var load = layer.load(2, {
+                        time: 30*1000,
+                        shade: [0.3, '#000'],
+//                shadeClose : true
+                    });
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('post', '/index.php?g=api&m=TgEmployees&a=add');
+                    //3.设置请求头(get请求可以省略,post不发送数据也可以省略)
+                    // 如果使用的时 formData可以不写 请求头 写了 无法正常上传文件
+                    //  xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+                    xhr.onreadystatechange = function () {
+                        // 这步为判断服务器是否正确响应
+                        if (xhr.readyState == 4 && xhr.status == 200) {
+                            layer.close(load); //关闭加载遮罩
+                            var datas = JSON.parse(xhr.responseText)
+                            if(datas.status == 1){
+//                                layer.msg(datas.msg);
+//                                location.href = location.href;
+                                layer.open({
+                                    title: '信息'
+                                    ,content: '提交成功' //开启遮罩关闭
+                                    ,closeBtn: 0
+                                    ,btn: ['确定']
+                                    ,btnAlign: 'c'
+                                    ,yes: function(index, layero){
+                                        location.href = location.href;
+                                        layer.close(index);
+                                    }
+                                });
+                            }
+                            if(datas.status == 0){
+                                layer.msg(datas.msg);
+                            }
+                        } else {
+                            layer.close(load);
+                        }
+                    };
+                    // XHR2.0新增 上传进度监控
+                    xhr.upload.onprogress = function (event) {
+                        //  console.log(event);
+                        var percent = event.loaded / event.total * 100 + '%';
+//                        console.log(percent);
+                        // 设置 进度条内部step的 宽度
+//                    document.querySelector('.step').style.width = percent;
+                    }
+                    // XHR2.0新增
+                    var formData = new FormData(document.getElementById('addForm'));
+//                    console.log('-----------------------')
+//                    console.log(formData.get("img"));
+                    //4.请求主体发送(get请求为空，或者写null，post请求数据写在这里，如果没有数据，直接为空或者写null)
+                    xhr.send(formData);
+                }
+            });
+            $.validator.addMethod("isSex",function(value,element,params){
+                if(value == 0 || !value){
+                    return false;
+                } else {
+                    return true;
+                }
+            }, "请选择性别");
+            $.validator.addMethod("isMarriage",function(value,element,params){
+                if(value == 0 || !value){
+                    return false;
+                } else {
+                    return true;
+                }
+            }, "请选择婚姻状况");
+            $.validator.addMethod("isChannelLegion",function(value,element,params){
+                if(value == 0 || !value){
+                    return false;
+                } else {
+                    return true;
+                }
+            }, "请选择所属地区");
+            $.validator.addMethod("isEducation",function(value,element,params){
+                if(value == 0 || !value){
+                    return false;
+                } else {
+                    return true;
+                }
+            }, "请选择最高学历");
+            $.validator.addMethod("isParentChannel",function(value,element,params){
+                if(value == 0 || !value){
+                    return false;
+                } else {
+                    return true;
+                }
+            }, "请选择所属团队");
+            $.validator.addMethod("isChannel",function(value,element,params){
+                if(value == 0 || !value){
+                    return false;
+                } else {
+                    return true;
+                }
+            }, "请选择渠道号");
+            //手机号验证
+            $.validator.addMethod("isMobile", function(value, element) {
+                var tel = /^1\d{10}$/;
+                return this.optional(element) || (tel.test(value));
+            }, "请正确填写您的手机号码");
+            //身份证号码验证
+            $.validator.addMethod("isIdCard", function(value, element) {
+                var tel1 = /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
+                var tel2 = /^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$/;
+                return this.optional(element) || (tel1.test(value)) || (tel2.test(value));
+            }, "请正确填写15或18位身份证号码");
+        });
+    });
+</script>
+</body>
+</html>

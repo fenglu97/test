@@ -1,0 +1,269 @@
+<admintpl file="header" />
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/chosen.css">
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/docsupport/prism.css">
+<script type="text/javascript" src="__TMPL__Public/assets/js/emoji-list-with-image.js"></script>
+<script type="text/javascript" src="__TMPL__Public/assets/js/punycode.js"/></script>
+<script type="text/javascript" src="__TMPL__Public/assets/js/emoji.js"/></script>
+<link rel="stylesheet" href="__PUBLIC__/js/switch/bootstrap-switch.css">
+<script src="__PUBLIC__/js/switch/bootstrap.min.js"></script>
+<script src="__PUBLIC__/js/switch/bootstrap-switch.js"></script>
+
+</head>
+<body>
+<div class="wrap js-check-wrap">
+	<ul class="nav nav-tabs">
+		<li class="active"><a href="javascript:void(0);">评论列表</a></li>
+
+	</ul>
+	<form class="well form-search" method="post" action="{:U('Comment/game_index',array('id'=>$id))}">
+
+		<div class="search_type cc mb10">
+
+			<div class="mb10">
+
+					<span class="mr20">
+
+						游戏名称： 
+
+  <select name="appid" id="appid" class="chosen-select appid" style="width:180px;" tabindex="1">
+	  <option value="">所有游戏</option>
+	  {$game_list}
+  </select>
+
+		&nbsp;&nbsp;评论人：
+						<input type="text" name="username" id="username" value="{$parameter['username']}" style="width:100px;" />
+							&nbsp;&nbsp;
+		灌水： 
+
+  <select name="is_fake" style="width:100px;" tabindex="1">
+	  <option value="">请选择</option>
+	  <option value="0" <php>if($parameter['is_fake'] ==='0'){echo 'selected';}</php>>不是</option>
+	  <option value="1"<if condition="$parameter['is_fake'] eq 1">selected</if>>是</option>
+
+  </select>
+							&nbsp;&nbsp;	
+							时间：
+   <input type="text" name="start_time" id="start_time" value="{$parameter['start_time']}" class="input length_3 js-date" size="11" style="width:180px;"> 至 
+   <input type="text" name="end_time" id="end_time" value="{$parameter['end_time']}" size="11" class="input length_3 js-date" style="width:180px;">
+   &nbsp;&nbsp;	
+
+				<input type="submit" class="btn btn-primary" value="搜索" />
+					</span>
+			</div>
+
+		</div>
+
+	</form>
+	<script src="__PUBLIC__/js/chosen/chosen.jquery.js" type="text/javascript"></script>
+	<script src="__PUBLIC__/js/chosen/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		var config = {
+			'.chosen-select'           : {},
+			'.chosen-select-deselect'  : {allow_single_deselect:true},
+			'.chosen-select-no-single' : {disable_search_threshold:10},
+			'.chosen-select-no-results': {no_results_text:'没有匹配的结果'},
+			'.chosen-select-width'     : {width:"95%"}
+		}
+		for (var selector in config) {
+			$(selector).chosen(config[selector]);
+		}
+
+
+	</script>
+
+	<form class="js-ajax-form" action="" method="post">
+		<div class="table-actions">
+			<button class="btn btn-danger btn-small js-ajax-submit" type="submit" data-action="{:U('game_del')}" data-subcheck="true" data-msg="你确定删除吗？">批量删除</button>
+		</div>
+		<table class="table table-hover table-bordered table-list" id="menus-table">
+			<thead>
+
+			<tr>
+				<th width="3%"><label><input type="checkbox" class="js-check-all" data-direction="x" data-checklist="js-check-x"></label></th>
+				<th width="6%">游戏</th>
+				<th width="6%">评论人</th>
+				<th width="6%">回复人</th>
+				<th width="30%">内容</th>
+				<th width="5%">灌水</th>
+				<th width="5%">赞</th>
+				<th width="8%">时间</th>
+				<th width="6%">置顶</th>
+				<th width="10%">操作</th>
+
+			</tr>
+
+			</thead>
+			<tbody>
+
+			<foreach name="list" item="vo">
+				<tr>
+					<td><input type="checkbox" class="js-check" data-yid="js-check-y" data-xid="js-check-x" name="ids[]" value="{$vo.id}"></td>
+					<td>{$game_names[$vo['dynamics_id']]}</td>
+					<td><if condition="$vo['is_fake'] eq 1">{$fake_usernames[$vo['uid']]}<else />{$usernames[$vo['uid']]}</if></td>
+					<td><if condition="$vo['is_fake'] eq 0">{$usernames[$vo['to_uid']]}<else />{$fake_usernames[$vo['to_uid']]}</if></td>
+					<td class="content">{$vo.content}</td>
+					<td><if condition="$vo['is_fake'] eq 0">不是<else />是</if></td>
+					<td>{$vo.likes}</td>
+					<td>{$vo.create_time|date="Y-m-d H:i:s",###}</td>
+					<td>
+						<div class="switch change-box"  data-id="{$vo.id}" data-bonus="{$vo.bonus}" data-on="success" data-off="danger">
+							<input class="box"  type="checkbox" <if condition="$vo['order'] eq 1">checked</if> />
+						</div>
+					</td>
+					<td>
+						<a href="#" class="info" data-id="{$vo.id}">详情</a>&nbsp;&nbsp;
+						<a href="{:U('Comment/comment_info',array('comment_id'=>$vo['id']))}" >查看全部 <span style="color:#c33b34">{$child_comment_counts[$vo['id']]|default=0}</span> 个回复</a>&nbsp;&nbsp;
+					</td>
+
+				</tr>
+			</foreach>
+
+
+			</tbody>
+
+		</table>
+		<div class="table-actions">
+			<button class="btn btn-danger btn-small js-ajax-submit" type="submit" data-action="{:U('game_del')}" data-subcheck="true" data-msg="你确定删除吗？">批量删除</button>
+		</div>
+	</form>
+</div>
+
+<div class="pagination">{$page}</div>
+<script src="__PUBLIC__/js/common.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script>
+	$(document).ready(function() {
+
+		$('.change-box').on('switch-change',function(){
+			var val = $(this).find('input').is(':checked');
+			var user_bonus = $(this).attr('data-bonus');
+			id = $(this).attr('data-id');
+
+			action = val === false ? 0 : 1;
+			if(action == 1 && user_bonus ==0)
+			{
+				select_html = '';
+				for(i = 1;i<=20;i++)
+				{
+					money = i*50;
+					select_html+='<option value="'+money+'">'+money+'</option>';
+				}
+				var html = '<div style="width:250px;margin:20px 0px 0px 50px">' +
+						'奖励金额：<select name="bonus" id="bonus"  class="chosen-select" style="width:180px;" tabindex="1">'+select_html+'</select>' +
+						'</div>';
+				layer.open({
+					title:'置顶',
+					type: 1,
+					skin: 'layui-layer-molv', //样式类名
+					area: ['350px', 'anto'], //宽高
+					closeBtn: 0, //不显示关闭按钮
+					anim: 2,
+					shadeClose: true, //开启遮罩关闭
+					content: html,
+					btn: ['确定','取消'],
+					btnAlign:'c',
+					yes:function(){
+						layer.confirm('确定要置顶吗', {
+							btn: ['确定','我再想想'] //按钮
+						}, function(){
+							bonus = $("#bonus").val();
+							$.post("{:U('top')}",{id:id,action:action,bonus:bonus},function(res){
+								if(res.status != 1){
+									layer.alert(res.info);
+									setTimeout('location.href = "index.php?g=admin&m=comment&a=game_index"',1500);
+								}else{
+									setTimeout('location.href = "index.php?g=admin&m=comment&a=game_index"',600);
+								}
+							},'json')
+						}, function(){
+							layer.close();
+							location.reload();
+						//	setTimeout('location.href = "index.php?g=admin&m=comment&a=game_index"',600);
+						});
+
+
+					},
+					btn2:function(){
+						location.reload();
+						//	setTimeout('location.href = "index.php?g=admin&m=comment&a=game_index"',600);
+					},
+				});
+			}
+			else
+			{
+				$.post("{:U('top')}",{id:id,action:action},function(res){
+					if(res.status != 1){
+						layer.alert(res.info);
+						setTimeout('location.href = "index.php?g=admin&m=comment&a=game_index"',1500);
+					}else{
+						setTimeout('location.href = "index.php?g=admin&m=comment&a=game_index"',600);
+					}
+				},'json');
+			}
+
+		});
+
+		function parse(arg)
+		{
+			if (typeof ioNull !='undefined') {
+				return  ioNull.emoji.parse(arg);
+			}
+			return '';
+		}
+
+		$('.content').each(function(){
+			var html = $(this).html();
+
+			$(this).html(parse(html));
+		})
+
+		Wind.css('treeTable');
+		Wind.use('treeTable', function() {
+			$("#menus-table").treeTable({
+				indent : 20
+			});
+		});
+
+		$('.info').click(function(){
+			var id = $(this).attr('data-id');
+			$.post("{:U('info')}",{id:id},function(res){
+				if(res.status == 1){
+					var html = '<p style="padding: 0 15px;margin-top: 20px">'+parse(res.info.content)+'</p>';
+					if(res.info.imgs){
+						html += '<div style="padding: 0 15px;" id="layer-photos-demo" class="layer-photos-demo">';
+						$.each(res.info.imgs,function(i,j){
+							html += '<img layer-src="'+"{:C('FTP_URL')}"+j+'" src="'+"{:C('FTP_URL')}"+j+'" style="width: 200px;margin:0px 10px 10px 0px" />'
+						});
+						html += '</div>';
+					}
+
+					layer.open({
+						type: 1,
+						skin: 'layui-layer-molv', //加上边框
+						area: ['700px', '600px'], //宽高
+						content: html,
+						closeBtn: 0, //不显示关闭按钮
+						anim: 2,
+						shadeClose: true //开启遮罩关闭
+					});
+					layer.photos({
+						photos: '#layer-photos-demo'
+					});
+				}else{
+					layer.alert(res.info)
+				}
+			})
+		});
+
+	});
+
+	setInterval(function() {
+		var refersh_time = getCookie('refersh_time_admin_menu_index');
+		if (refersh_time == 1) {
+			reloadPage(window);
+		}
+	}, 1000);
+	setCookie('refersh_time_admin_menu_index', 0);
+</script>
+</body>
+</html>

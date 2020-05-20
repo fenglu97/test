@@ -1,0 +1,7 @@
+{
+    "require": {
+        "alibabacloud/client": "^1.5",
+      "ext-curl": "*",
+      "ext-json": "*"
+    }
+}

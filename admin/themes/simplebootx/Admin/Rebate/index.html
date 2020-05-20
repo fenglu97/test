@@ -1,0 +1,171 @@
+<admintpl file="header" />
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="javascript:void(0);">返利列表</a></li>
+        <li><a href="{:U('add')}">新增返利</a></li>
+    </ul>
+    <form class="well form-search" method="post" action="{:U('Rebate/index')}">
+        操作人:
+        <input type="text" name="founder" class="founder" style="width: 130px;" value="{$founder}" placeholder="">
+        账号:
+        <input type="text" name="username" class="username" style="width: 130px;" value="{$username}" placeholder="">
+        游戏:
+        <select name="appid" style="width:auto" class="appid">
+            <option value="-1">所有游戏</option>
+            {:get_game_list($appid,1,'all')}
+        </select>
+        订单状态:
+        <select name="status" style="width:auto" class="status">
+            <option value="-1" <if condition="$status eq -1">selected</if>>所有状态</option>
+            <option value="1" <if condition="$status eq 1">selected</if>>成功</option>
+            <option value="2" <if condition="$status eq 2">selected</if>>未请求</option>
+            <option value="0" <if condition="$status eq 0">selected</if>>失败</option>
+        </select>
+        审核状态:
+        <select name="review" style="width:auto" class="review">
+            <option value="-1" <if condition="$review eq -1">selected</if>>所有状态</option>
+            <option value="1" <if condition="$review eq 1">selected</if>>通过</option>
+            <option value="2" <if condition="$review eq 2">selected</if>>未审核</option>
+            <option value="0" <if condition="$review eq 0">selected</if>>失败</option>
+        </select>
+        创建时间:
+        <input type="text" name="start" class="js-date date start" value="{$start}" style="width: 120px;" autocomplete="off">至
+        <input type="text" name="end" class="js-date date end" value="{$end}" style="width: 120px;" autocomplete="off">
+
+        <input type="submit" class="btn btn-primary" value="搜索" />
+        <input type="button" class="btn btn-primary export" value="导出" />
+    </form>
+    <form class="js-ajax-form" method="post">
+        <table class="table table-hover table-bordered">
+            <thead>
+            <tr>
+                <!--<th width="15"><label><input type="checkbox" class="js-check-all" data-direction="x" data-checklist="js-check-x"></label></th>-->
+                <!--<th width="50">ID</th>-->
+                <th>订单号</th>
+                <th>账号</th>
+                <th>游戏</th>
+                <th>区服</th>
+                <!--<th>渠道</th>-->
+                <th>金额</th>
+                <th>返利类型</th>
+                <th>订单状态</th>
+                <th>创建时间</th>
+                <th>是否需要审核</th>
+                <th>审核状态</th>
+                <th>审核时间</th>
+                <th>创建人</th>
+                <th width="50">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <foreach name="data" item="vo">
+                <tr>
+                    <!--<td><input type="checkbox" class="js-check" data-yid="js-check-y" data-xid="js-check-x" name="id[]" value="{$vo.id}"></td>-->
+                    <!--<td>{$vo.id}</td>-->
+                    <td>{$vo.orderID}</td>
+                    <td>{$vo.username}</td>
+                    <td>{$games[$vo['appid']]}</td>
+                    <td>{$vo.serverID}</td>
+                    <!--<td>{$vo.channel}</td>-->
+                    <td>{$vo.amount}</td>
+                    <td>
+                        <switch name="vo.type">
+                            <case value="1">推广奖励</case>
+                            <case value="2">充值赠送</case>
+                            <case value="3">游戏补偿</case>
+                            <default/>其他原因
+                        </switch>
+                    </td>
+                    <td>
+                        <switch name="vo.status">
+                            <case value="1"><span class="status" style="color: rgb(38, 153, 38);">成功</span></case>
+                            <case value="2">未请求</case>
+                            <case value="0"><span class="status" style="color: #d41e24;">失败</span></case>
+                            <default/>其他原因
+                        </switch>
+                    </td>
+                    <td>{$vo.create_time|date="Y-m-d H:i",###}</td>
+                    <td><if condition="$vo['is_review'] eq 1">是<else />否</if></td>
+                    <td>
+                        <switch name="vo.review">
+                            <case value="1">审核通过</case>
+                            <case value="2">未审核</case>
+                            <default/>审核失败
+                        </switch>
+                    </td>
+                    <td><if condition="$vo['review_time']">{$vo.review_time|date="Y-m-d H:i",###}</if></td>
+                    <td>{$users[$vo['founder']]}</td>
+                    <td>
+                        <a href="javascript:void(0);" class="view">查看详情</a>
+                        <input type="hidden" class="status" value="{$vo.status}" />
+                        <input type="hidden" class="url" value="{$vo.url}"/>
+                        <input type="hidden" class="remark" value="{$vo.remark}"/>
+                        <input type="hidden" class="feedback" value="{$vo.feedback}"/>
+                        <input type="hidden" class="vip" value="<if condition='$vo.vip eq 1'>有<else />无</if>"/>
+                        <input type="hidden" class="reward" value="<if condition='$vo.reward eq 1'>有<else />无</if>"/>
+                       <input type="hidden" class="callback" value="{$vo.callback}"/>
+                    </td>
+                </tr>
+            </foreach>
+            </tbody>
+        </table>
+        <div class="pagination">{$page}</div>
+    </form>
+</div>
+<script src="__PUBLIC__/js/common.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script src="__PUBLIC__/js/datePicker/datePicker.js"></script>
+<script type="text/javascript">
+$(function(){
+    var dateTimeInput = $("input.date");
+    dateTimeInput.datePicker({
+        time: false
+    });
+
+    $('.view').click(function(){
+        var status = $(this).siblings('.status').val();
+        var url = $(this).siblings('.url').val();
+        var remark = $(this).siblings('.remark').val();
+        var feedback = $(this).siblings('.feedback').val();
+        var vip = $(this).siblings('.vip').val();
+        var reward = $(this).siblings('.reward').val();
+        var callback = $(this).siblings('.callback').val();
+
+        var table = '<div style="padding:15px"><table class="table table-bordered">';
+            table += '<tbody><tr><th style="width:13%">订单备注</th><th style="">'+remark+'</th></tr>';
+            table += '<tr><th style="width:15%">审核意见</th><th style="">'+feedback+'</th></tr>';
+            table += '<tr><th style="width:15%">请求数据</th><th style="word-wrap:break-word;word-break:break-all;overflow: hidden;">'+url+'</th></tr>';
+            table += '<tr><th style="width:15%">返回值</th><th style="">'+callback+'</th></tr>';
+            table += '<tr><th style="width:15%">加VIP经验</th><th style="">'+vip+'</th></tr>';
+            table += '<tr><th style="width:15%">满50额外送</th><th style="">'+reward+'</th></tr>';
+            table += '</tbody></table></div>';
+        layer.open({
+            type: 1,
+            scrollbar: false,
+            skin: 'layui-layer-molv', //加上边框
+            area: ['700px', 'auto'], //宽高
+            content: table,
+            closeBtn: 0, //不显示关闭按钮
+            anim: 2,
+            shadeClose: true //开启遮罩关闭
+        });
+    });
+
+    $('.export').click(function(){
+
+        var founder = $('.founder').val();
+        var username = $('.username').val();
+        var appid = $('.appid').val();
+        var review = $('.review').val()
+        var status = $('.status').val();
+        var start = $('.start').val();
+        var end = $('.end').val();
+        var url =$('.form-search').attr('action');
+        location.href=url+'&founder='+founder+'&username='+username+'&appid='+appid+'&status='+status+'&review='+review+'&start='+start+'&end='+end+'&action=2';
+    })
+})
+</script>
+</body>
+</html>

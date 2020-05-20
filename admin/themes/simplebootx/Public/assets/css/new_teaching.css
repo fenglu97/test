@@ -1,0 +1,62 @@
+.title{
+    font-size: 26px;
+    padding: 20px 10px;
+    border-bottom: 1px solid #ccc;
+}
+.teaching_video{
+    width: 80%;
+    margin: 0 auto;
+}
+.teaching_video video{
+    width: 100%;
+}
+.well>div{
+    margin-top: 30px;
+}
+/*教程提示框*/
+#notarizeBox{
+    display: none;
+    width: 260px;
+    position: absolute;
+    top: 0;
+    left: 38%;
+    z-index: 9999;
+    background-color: #fff;
+    font-weight: normal;
+    border: 1px solid #009f95;
+}
+#notarizeBox p{
+    margin: 0;
+    padding: 0 10px;
+}
+#notarizeBox .teaching_title{
+    padding: 0;
+    height: 32px;
+    line-height: 32px;
+    font-size: 16px;
+    text-align: center;
+    color: #fff;
+    background-color: #009f95;
+}
+#notarizeBox .hint_cont{
+    line-height: 22px;
+    margin: 5px 0;
+}
+#notarizeBox .hint_btn{
+    text-align: center;
+    margin-bottom: 5px;
+}
+#notarizeBox .hint_btn button{
+    color: #fff;
+    background-color: #009f95;
+    border: 1px solid #009f95;
+    font-size: 14px;
+    padding: 1px 12px;
+    border-radius: 2px;
+}
+.it_course img{
+    display: block;
+    width: 50%;
+    margin: 0 auto 20px;
+    border: 1px solid #cdd6d8;
+}

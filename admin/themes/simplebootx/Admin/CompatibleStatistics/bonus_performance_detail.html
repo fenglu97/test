@@ -1,0 +1,208 @@
+<admintpl file="header" />
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/chosen.css">
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/docsupport/prism.css">
+<style type="text/css" media="all">
+    /* fix rtl for demo */
+    .chosen-rtl .chosen-drop { left: -9000px; }
+    th{width:50px;}
+    .expander {
+        background-image: url(./public/js/treeTable/images/toggle-expand-dark.png);
+        background-position: left center;
+        background-repeat: no-repeat;
+        cursor: pointer;
+        padding: 0;
+        zoom: 1;
+        margin-left: -20px;
+    }
+    .collapsed {
+        background-image: url(./public/js/treeTable/images/toggle-collapse-dark.png);
+        background-position: left center;
+        background-repeat: no-repeat;
+        cursor: pointer;
+        padding: 0;
+        zoom: 1;
+        margin-left: -20px;
+    }
+    .asc {
+        background-image: url('/public/js/treeTable/images/toggle-up-dark.png');
+        background-position: left center;
+        background-repeat: no-repeat;
+        cursor: pointer;
+        padding: 0;
+        zoom: 1;
+        margin-left: -20px;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="wrap js-check-wrap">
+
+    <ul class="nav nav-tabs">
+
+        <li class="active"><a href="javascript:;">推广绩效奖金明细</a></li>
+
+    </ul>
+
+    <form class="well form-search" method="post" action="{:U('CompatibleStatistics/bonus_performance_detail')}">
+
+        <div class="search_type cc mb10">
+
+            <div class="mb10">
+
+					<span class="mr20">渠道名称：
+
+					<select name="channel" id="channel"  style="width:180px;" tabindex="1">
+                        <option value="">所有渠道</option>
+
+                        {$channel_list}
+                    </select>&nbsp;&nbsp;
+
+                    					时间：
+<input type="text" class="layui-input" id="datePicker" placeholder="选择年月" >
+                        <input type="hidden" name="time" value="{$max}" >
+						<input type="submit" class="btn btn-primary" value="搜索" />
+
+					</span>
+
+            </div>
+
+        </div>
+
+    </form>
+    <table class="table table-hover table-bordered table-list">
+
+        <thead>
+
+        <tr>
+            <th>渠道名称</th>
+            <th style="padding-left: 15px;"  <if condition="$order eq 1">class="asc"</if> <if condition="$order eq 2">class="collapsed"</if> value="1">达标个数</th>
+            <th style="padding-left: 15px;"  <if condition="$order eq 3">class="asc"</if> <if condition="$order eq 4">class="collapsed"</if> value="2">达标奖金</th>
+            <th style="padding-left: 15px;"  <if condition="$order eq 5">class="asc"</if> <if condition="$order eq 6">class="collapsed"</if> value="3">绩效有效注册数</th>
+            <th style="padding-left: 15px;" <if condition="$order eq 7">class="asc"</if> <if condition="$order eq 8">class="collapsed"</if> value="4">注册绩效扣除金额</th>
+        </tr>
+        </thead>
+
+        <foreach name="result" item="vo">
+
+            <tr>
+
+                <th <if condition="$vo['child']"> class="table_parent expander"</if>  key="{$vo['id']}" style="padding-left:20px;">{$vo['channel_name']}</th>
+                <th>{$vo['tg_qualified_counts']}</th>
+                <th>{$vo['tg_qualified_bonus']}</th>
+                <th>{$vo['valid_new_users']}</th>
+                <th>{$vo['performance_deduct']}</th>
+            </tr>
+            <foreach name="vo['child']" item="v">
+                <tr class="child_{$vo['id']}" style="display:none;">
+
+                    <td style="padding-left: 40px;">&nbsp;└{$v['channel_name']}</td>
+                    <td>{$v['tg_qualified_counts']}</td>
+                    <td>{$v['tg_qualified_bonus']}</td>
+                    <td>{$v['valid_new_users']}</td>
+                    <td>{$v['performance_deduct']}</td>
+                </tr>
+            </foreach>
+        </foreach>
+
+    </table>
+
+</div>
+
+<script src="__ROOT__/public/js/common.js?"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script src="__PUBLIC__/js/laydate/laydate.js"></script>
+
+<script>
+
+
+    setCookie('refersh_time', 0);
+
+    function refersh_window() {
+
+        var refersh_time = getCookie('refersh_time');
+
+        if (refersh_time == 1) {
+
+            window.location.reload();
+
+        }
+
+    }
+
+    setInterval(function() {
+
+        refersh_window()
+
+    }, 3000);
+
+    $(function() {
+
+        $("#selected_cid").change(function() {
+
+            $("#cid_form").submit();
+
+        });
+        $('.table_parent').click(function(){
+
+            if($(this).attr('class').indexOf('expander')>0)
+            {
+                $(this).removeClass('expander');
+                $(this).addClass('collapsed');
+                key = $(this).attr('key');
+                $('.child_'+key).show();
+            }
+            else
+            {
+                $(this).removeClass('collapsed');
+                $(this).addClass('expander');
+                key = $(this).attr('key');
+                $('.child_'+key).hide();
+            }
+
+
+        });
+
+        //年月选择器
+        laydate.render({
+            elem: '#datePicker'
+            ,type: 'month'
+            ,value: '{$time}' || new Date() //参数即为：2018-08-20 20:08:08 的时间戳
+            ,min: '2017-9-1'
+            ,done: function(value){	//控件选择完毕后的回调
+                $('input[name=time]').val(value);
+            }
+        });
+
+        $('th').click(function(){
+            var value = $(this).attr('value');
+            if(value)
+            {
+                var order = $(this).attr('class');
+                order = order?order:'desc';
+                if(order =='asc')
+                {
+                    order = value*2;
+                }
+                else
+                {
+                    order = value*2-1;
+                }
+                var url = '{:U('bonus_performance_detail')}';
+
+                var channel = $('#channel').val();
+                var time = $('input[name=time]').val();
+
+                location.href= url+'&channel='+channel+'&time='+time+'&order='+order;
+            }
+
+        })
+
+    });
+
+</script>
+
+</body>
+
+</html>

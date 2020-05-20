@@ -1,0 +1,66 @@
+<admintpl file="header" />
+</head>
+<body>
+	<div class="wrap js-check-wrap">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="{:U('player/logEntry',array('uid'=>empty($uid)?'':$uid))}">登陆日志</a></li>
+		</ul>
+        <form class="well form-search" method="post" action="{:U('player/logEntry',array('uid'=>empty($uid)?'':$uid))}">
+			游戏:
+			<select name="appid" style="width:auto;height: 35px;">
+				<option value="">请选择游戏</option>
+				{:get_game_list(I('request.appid/d',''))}
+			</select>
+			渠道:
+            <select name="cid" style="width:auto;height: 35px;" >
+				<option value="">请选择渠道</option>
+				{:get_channel_list(I('request.cid/d',''))}
+			</select>
+            系统:
+			<select name="system" style="width:auto;height:35px;">
+			<option value="">全部</option>
+			<php>$system=I('request.system/d','');</php>
+				<option value="1" <if condition="$system==1">selected="selected"</if>>{:L('ANDROID')}</option>
+				<option value="2" <if condition="$system==2">selected="selected"</if>>{:L('IOS')}</option>
+			</select>
+            时间:
+			<input type="text" name="start_time" class="js-yearmonth" value="{$start_time}" min="2017-08-31" style="width: 120px;" autocomplete="off">-
+			<input type="submit" class="btn btn-primary" value="搜索" />
+            <a class="btn btn-danger" href="{:U('player/logEntry',array('uid'=>empty($uid)?'':$uid))}">清空</a>
+        </form>
+		<table class="table table-hover table-bordered">
+			<thead>
+				<tr>
+					<th width="50">ID</th>
+					<th>{:L('USERNAME')}</th>
+<th>游戏小号</th>
+					<th>{:L('GAME')}</th>
+					<th>{:L('CHANNEL')}</th>
+					<th>{:L('SYSTEM')}</th>
+					<th>设备号</th>
+					<th>登录IP</th>
+					<th>{:L('LOGIN_TIME')}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<php>$player_system=array("1"=>L('ANDROID'),"2"=>L('IOS'));</php>
+				<foreach name="player" item="vo">
+				<tr>
+					<td>{$vo.id}</td>
+					<td>{$vo.username}</td>
+<td><if condition="$vo['app_uid']">{$vo.app_uid}</if></td>
+					<td>{$games[$vo['appid']]['game_name']}</td>
+					<td>{$channels[$vo['channel']]['name']}</td>
+					<td>{$player_system[$vo['system']]}</td>
+				    <td>{$vo.machine_code}</td>
+					<td>{:long2ip($vo['ip'])}</td>
+					<td>{:date('Y-m-d H:i',$vo['create_time'])}</td>
+				</tr>
+				</foreach>
+			</tbody>
+		</table>
+		<div class="pagination">{$page}</div>
+	</div>
+	<script src="__PUBLIC__/js/common.js"></script>
+</body>
+</html>

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<!-- saved from url=(0055)http://api.185sy.com/index.php?g=api&m=luckydraw&a=show -->
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+			<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+
+		<!--<meta name="apple-mobile-web-app-capable" content="yes">-->
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/testLD.css">
+		<link rel="stylesheet" type="text/css" href="__PUBLIC__/js/jqalert/alert.css">
+		<style>
+			.jl {
+				width: 90%;
+				height: 12vw;
+				line-height: 12vw;
+				margin: 0 auto;
+				border-radius: 2vw;
+				color: #b9925b;
+				font-size: 4vw;
+				background: -moz-linear-gradient(top, #fff8eb, #fee9c5);
+				background: -webkit-gradient(linear, 0 50%, 100% 50%, from(#fff8eb), to(#fee9c5));
+				background: -webkit-linear-gradient(top, #fff8eb, #fee9c5);
+				background: -o-linear-gradient(top, #fff8eb, #fee9c5);
+			}
+			
+			#content {
+				overflow: hidden;
+			}
+			
+			.jl>p>span {
+				color: #d32833;
+			}
+			
+			.jl>p {
+				text-align: center;
+				margin-bottom: 0;
+			}
+			
+			.gdbox>strong {
+				display: block;
+				color: #303030;
+				text-align: center;
+				padding: 3vw 0vw;
+				margin-top: 10px;
+			}
+			
+			.gdbox>p {
+				text-align: center;
+				color: #303030;
+				margin: 0;
+				background: #b9925b
+			}
+			
+			ul li {
+				line-height: 1.6rem;
+				padding: 0px 1.6rem;
+			}
+		</style>
+	</head>
+
+	<body>
+
+		<div class="jl" id="title" style="height:10rem;margin: 3rem auto 0 auto;">
+			<p style="height:1.6rem"><span>*每次抽奖消耗100金币</span></p>
+			<p>
+				<span id="zjjl">中奖名单</span>
+			</p>
+			<div id="content" style="height: 5rem;">
+				<ul style="height: 1400px;">
+					<li>恭喜S299377刚刚抽到了200金币</li>
+					<li>恭喜SY943893刚刚抽到了30金币</li>
+					<li>恭喜SY943893刚刚抽到了30金币</li>
+					<li>恭喜SY904233刚刚抽到了30金币</li>
+					<li>恭喜SY624377刚刚抽到了30金币</li>
+					<li>恭喜SY624377刚刚抽到了30金币</li>
+					<li>恭喜SY624377刚刚抽到了10平台币</li>
+					<li>恭喜ifxiaozhou1刚刚抽到了10平台币</li>
+					<li>恭喜SY846511刚刚抽到了200金币</li>
+					<li>恭喜fantasmic刚刚抽到了200金币</li>
+					<li>恭喜S299377刚刚抽到了200金币</li>
+					<li>恭喜SY943893刚刚抽到了30金币</li>
+					<li>恭喜SY943893刚刚抽到了30金币</li>
+					<li>恭喜SY904233刚刚抽到了30金币</li>
+					<li>恭喜SY624377刚刚抽到了30金币</li>
+					<li>恭喜SY624377刚刚抽到了30金币</li>
+					<li>恭喜SY624377刚刚抽到了10平台币</li>
+					<li>恭喜ifxiaozhou1刚刚抽到了10平台币</li>
+					<li>恭喜SY846511刚刚抽到了200金币</li>
+					<li>恭喜fantasmic刚刚抽到了200金币</li>
+				</ul>
+			</div>
+		</div>
+		<div class="shanDeng" id="deng">
+			<div id="luck">
+				<!-- luck -->
+				<table>
+					<tbody>
+						<tr>
+							<td class="luck-unit luck-unit-0"><img style="width:100%" src="{$main}{$data[1]['url']}"></td>
+							<td class="luck-unit luck-unit-1"><img style="width:100%" src="{$main}{$data[2]['url']}"></td>
+							<td class="luck-unit luck-unit-2"><img style="width:100%" src="{$main}{$data[3]['url']}"></td>
+							<td class="luck-unit luck-unit-3"><img style="width:100%" src="{$main}{$data[4]['url']}"></td>
+						</tr>
+						<tr>
+							<td class="luck-unit luck-unit-11"><img style="width:100%" src="{$main}{$data[12]['url']}"></td>
+							<td rowspan="2" colspan="2" class="cjBtn" id="btn"></td>
+							<td class="luck-unit luck-unit-4"><img style="width:100%" src="{$main}{$data[5]['url']}"></td>
+						</tr>
+						<tr>
+							<td class="luck-unit luck-unit-10"><img style="width:100%" src="{$main}{$data[11]['url']}"></td>
+							<td class="luck-unit luck-unit-5"><img style="width:100%" src="{$main}{$data[6]['url']}"></td>
+						</tr>
+						<tr>
+							<td class="luck-unit luck-unit-9"><img style="width:100%" src="{$main}{$data[10]['url']}"></td>
+							<td class="luck-unit luck-unit-8"><img style="width:100%" src="{$main}{$data[9]['url']}"></td>
+							<td class="luck-unit luck-unit-7"><img style="width:100%" src="{$main}{$data[8]['url']}"></td>
+							<td class="luck-unit luck-unit-6"><img style="width:100%" src="{$main}{$data[7]['url']}"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<!-- luckEnd -->
+		</div>
+		<input type="hidden" name="uid" value="">
+		<script src="__PUBLIC__/js/jquery19.js"></script>
+		<script src="__PUBLIC__/js/jqalert/alert.js"></script>
+		<script src="__PUBLIC__/js/jquery.kxbdmarquee.js"></script>
+		<script>
+			$('#content').kxbdMarquee({
+				direction: 'up'
+				//direction	"left"	滚动方向。可设置为："left", "right", "up", "down"
+				//isEqual	true	所有滚动的元素长宽是否相等。可设置为：true, false
+				//loop	0	循环滚动次数，0 表示无限循环
+				//scrollAmount	1	步长(px)
+				//scrollDelay	20	时长(ms)
+			});
+			var luck = {
+				index: -1, //当前转动到哪个位置，起点位置
+				count: 0, //总共有多少个位置
+				timer: 0, //setTimeout的ID，用clearTimeout清除
+				speed: 200, //初始转动速度
+				times: 50, //转动次数
+				cycle: 60, //转动基本次数：即至少需要转动多少次再进入抽奖环节
+				prize: 3, //中奖位置
+				init: function(id) {
+					if($("#" + id).find(".luck-unit").length > 0) {
+						$luck = $("#" + id);
+						$units = $luck.find(".luck-unit");
+						this.obj = $luck;
+						this.count = $units.length;
+						$luck.find(".luck-unit-" + this.index).addClass("active");
+					};
+				},
+
+				roll: function() {
+					var index = this.index;
+					var count = this.count;
+					var luck = this.obj;
+					$(luck).find(".luck-unit-" + index).removeClass("active");
+					index += 1;
+					if(index > count - 1) {
+						index = 0;
+					};
+					$(luck).find(".luck-unit-" + index).addClass("active");
+					this.index = index;
+					return false;
+				},
+				stop: function(index) {
+					this.prize = index;
+					return false;
+				}
+			};
+			function roll() {
+				luck.times += 1;
+				luck.roll();
+				var M = {};
+				if(luck.times > luck.cycle + 10 && luck.prize == luck.index) {
+					clearTimeout(luck.timer);
+					luck.prize = -1;
+					luck.times = 0;
+					click = false;
+					M.dialog4 = jqueryAlert({
+						'title': '提示',
+						'width': '80%', //宽度
+						'height': '22%', //高度
+						'content': info,
+						'modal': true,
+						'animateType': '',
+						'buttons': {
+							'确定': function() {
+								M.dialog4.close();
+							}
+						}
+					})
+				} else {
+					if(luck.times < luck.cycle) {
+						luck.speed -= 10;
+
+					} else if(luck.times == luck.cycle) {
+						var index = requestajax();
+						luck.prize = index;
+					} else {
+						if(luck.times > luck.cycle + 10 && ((luck.prize == 0 && luck.index == 7) || luck.prize == luck.index + 1)) {
+							luck.speed += 110;
+						} else {
+							luck.speed += 20;
+						}
+					}
+					if(luck.speed < 40) {
+						luck.speed = 40;
+					};
+					luck.timer = setTimeout(roll, luck.speed);
+				}
+				return false;
+			}
+
+			//闪灯效果
+			var num = 0;
+			$(".shanDeng").attr("class", function() {
+				setInterval(function() {
+					num++;
+					if(num % 2 == 0) {
+						$('#deng').addClass("shanDeng2");
+					} else {
+						$('#deng').addClass("shanDeng");
+						$('#deng').removeClass('shanDeng2');
+					}
+				}, 500)
+			})
+
+			function requestajax() {
+				return place;
+			}
+
+			function requestinfo() {
+				return info;
+			}
+
+			var click = false;
+			var place = 0;
+			var info = '';
+			window.onload = function() {
+				luck.init('luck');
+				$("#btn").click(function() {
+					var uid = $(':input[name=uid]').val();
+					//按下弹起效果
+					$("#btn").addClass("cjBtnDom");
+					setTimeout(function() {
+						$("#btn").removeClass("cjBtnDom");
+					}, 200);
+
+					if(click) {
+						return false;
+					} else {
+						$.post("{:U('luckydraw')}", {
+							uid: uid
+						}, function(res) {
+							if(res.status == 1) {
+								place = res.data.place;
+								info = res.msg;
+								$("td").removeClass("active");
+								luck.speed = 200;
+								luck.times = 600; //转动次数
+								luck.cycle = 700;
+								luck.index = -1;
+								roll();
+								click = true;
+							} else {
+								var M = {};
+								M.dialog4 = jqueryAlert({
+									'title': '提示',
+									'width': '80%', //宽度
+									'height': '22%', //高度
+									'content': res.msg,
+									'modal': true,
+									'animateType': '',
+									'buttons': {
+										'确定': function() {
+											M.dialog4.close();
+										}
+									}
+								})
+								return false;
+							}
+						})
+						return false;
+					}
+				});
+			};
+		</script>
+
+		<div class="alert-modal" style="position: fixed; z-index: 1000; display: none;"></div>
+		<div class="alert-container animated" style="position: fixed; left: 50%; top: 50%; z-index: 1001; width: 80%; height: 22%; margin-left: -392px; margin-top: -191.5px; display: none;">
+			<div class="alert-title">提示</div>
+			<div class="alert-content" style="text-align: center; padding-bottom: 46px; padding-top: 110px;">缺少关键参数</div>
+			<div class="alert-btn-box">
+				<p class="alert-btn-p" style="width: 782px;">确定</p>
+			</div>
+		</div>
+	</body>
+
+</html>

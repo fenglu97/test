@@ -133,8 +133,8 @@ $configs= array(
     'API_KEY' => 'e10adc3949ba59abbe56e057f20f883e',
     'MAIN_CHANNEL'=>1,
     'DATA_CACHE_TIME'=>1,
-    'API_URL'=>'http://sdk.singmaan.com',
-    'BOX_URL'=>'http://box.singmaan.com',
+    'API_URL'=>'http://sdk.23yxm.com',
+    'BOX_URL'=>'http://box.23yxm.com',
 
     'BOX_APP_ID'=>1000, //185盒子APPID
     '185SY_URL'=>'http://box.singmaan.com',

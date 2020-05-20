@@ -1,0 +1,219 @@
+<admintpl file="header" />
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/chosen.css">
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/docsupport/prism.css">
+<link rel="stylesheet" href="__PUBLIC__/js/switch/bootstrap-switch.css">
+</head>
+<script>
+    function resend(channelID,channelOrderID)
+    {
+        if(confirm('确定要重发吗'))
+        {
+            url = '/index.php?g=admin&m=Rh&a=resend&channelID='+channelID+'&channelOrderID='+channelOrderID;
+            $.get(url,function(data){
+                console.log(data);
+                if(data.status == 1)
+                {
+                    alert('正在进行重发');
+                    location.reload();
+                }
+                else
+                {
+                    alert(data.info);
+                }
+
+            });
+        }
+
+    }
+</script>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="{:U('index')}">充值列表</a></li>
+    </ul>
+    <form class="well form-search" method="post" action="{:U('pay_list_v2')}">
+
+        <div class="search_type cc mb10">
+            <div class="mb10">
+					<span class="mr20">
+     渠道名称
+  <select name="packageName" class="chosen-select" style="width:180px;" tabindex="1">
+      <option value="">所有渠道</option>
+      <foreach name="upakage_list" item="vo" key="key">
+          <option value="{$key}" <if condition="$key eq $packageName">selected</if>>{$vo}</option>
+          </foreach>
+      </select>
+						游戏名称：
+  <select name="appid" id="appid" class="chosen-select" style="width:180px;" tabindex="1">
+      <option value="">所有游戏</option>
+      <foreach name="ugames" item="vo" key="key">
+          <option value="{$key}" <if condition="$appid eq $key">selected</if>>{$vo}</option>
+          </foreach>
+  </select>
+       状态：<select name="state"   style="width:80px;">
+                        <option value="3" <if condition="$state eq 3">selected</if>>成功</option>
+                        <option value="2" <if condition="$state eq 2">selected</if>>发货中</option>
+                        <option value="1" <if condition="$state eq 1">selected</if>>未支付</option>
+                        <option value="0" <if condition="$state eq 0">selected</if>>全部</option>
+                    </select>
+      切换状态：<select name="payType"style="width:80px;">
+                        <option value="0">全部</option>
+                        <option value="1" <if condition="$payType eq 1">selected</if>>未切换</option>
+                        <option value="2" <if condition="$payType eq 2">selected</if>>已切换</option>
+                    </select>
+         订单号：<input type="text" name="orderID" value="{$orderID}" style="width:160px;">
+         渠道订单号：<input type="text" name="channelOrderID" value="{$channelOrderID}" style="width:160px;">
+         用户ID：<input type="text" name="userID" value="{$userID}" style="width:120px;">
+         角色名：<input type="text" name="roleName" value="{$roleName}" style="width:120px;">
+                        时间：
+   <input type="text" name="start_time" id="start_time" value="{$start_time}" class="input length_3 js-date" size="11" style="width:150px;"> 至
+   <input type="text" name="end_time" id="end_time" value="{$end_time}" size="11" class="input length_3 js-date" style="width:150px;">
+
+   <input type="submit" class="btn btn-primary" value="搜索" />
+					</span>
+            </div>
+        </div>
+    </form>
+    <table class="table table-hover table-bordered table-list" id="menus-table">
+        <thead>
+        <tr>
+            <th>订单号</th>
+            <th>用户ID</th>
+            <th>金额(元)</th>
+            <th>实际收入(元)</th>
+            <th>状态</th>
+            <th>切换状态</th>
+            <th>渠道号</th>
+            <th>渠道名称</th>
+            <th>游戏名</th>
+            <th>设备</th>
+            <th>区服名</th>
+            <th>角色名</th>
+            <th>创建时间</th>
+            <th>完成时间</th>
+            <th width="120">{:L('ACTIONS')}</th>
+            <th width="6%">切换支付</th>
+        </tr>
+        <tr>
+            <th colspan="2">合计</th>
+            <th>{:sprintf("%.2f",($total['money']/100))}</th>
+            <th>{:sprintf("%.2f",($total['realMoney']/100))}</th>
+            <th colspan="12"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <foreach name="list" item="vo">
+
+            <tr>
+                <td>{$vo.orderID}</td>
+                <td>{$vo.userID}</td>
+                <td>{:sprintf("%.2f",($vo['money']/100))}</td>
+                <td>{:sprintf("%.2f",($vo['realMoney']/100))}</td>
+
+                <td><span class="status"><if condition="$vo['state'] eq 1 ">未支付<elseif condition="$vo['state'] eq 2 "/>发货中<else />成功</if></span></td>
+				                <td><if condition="$vo['payType'] eq 0"><span style="color:#35a6e7;">未切换</span><else /><span style="color:#269926;">已切换</span></if></td>
+                <td>{$vo.channelID}</td>
+                <td>{$vo.title}</td>
+                <td>{$vo.appName}</td>
+                <td><if condition="$vo['deviceType'] eq 1">安卓<else />苹果</if></td>
+                <td>{$vo.serverName}</td>
+                <td>{$vo.roleName}</td>
+                <td>{$vo.createdTime}</td>
+                <td>{$vo.completeTime|default=''}</td>
+                <td>
+                    <if condition="$vo['state'] eq 2">
+                        <a href="javascript:;" onclick="resend('{$vo.channelID}','{$vo.channelOrderID}');">重发</a>
+                        <else />
+                        <font color="#cccccc">重发</font>
+                    </if>
+                    &nbsp;&nbsp;&nbsp;<a href="{:U('pay_info',array('orderID'=>$vo['orderID']))}" >详情</a>
+                </td>
+                <td>
+                    <div class="switch change-box"  data-id="{$vo.userID}" data-on="success"  data-off="danger">
+                        <input class="box"  type="checkbox" <if condition="$switchPays[$vo['userID']] eq 1">checked</if> />
+                    </div>
+                </td>
+            </tr>
+
+        </foreach>
+        </tbody>
+    </table>
+
+    </form>
+    <div class="pagination">{$page}</div>
+</div>
+
+
+<script src="__PUBLIC__/js/chosen/chosen.jquery.js" type="text/javascript"></script>
+<script src="__PUBLIC__/js/chosen/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
+<script src="__PUBLIC__/js/switch/bootstrap.min.js"></script>
+<script src="__PUBLIC__/js/switch/bootstrap-switch.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script type="text/javascript">
+    var config = {
+        '.chosen-select'           : {},
+        '.chosen-select-deselect'  : {allow_single_deselect:true},
+        '.chosen-select-no-single' : {disable_search_threshold:10},
+        '.chosen-select-no-results': {no_results_text:'没有匹配的结果'},
+        '.chosen-select-width'     : {width:"95%"}
+    }
+    for (var selector in config) {
+        $(selector).chosen(config[selector]);
+    }
+    //$("#select_1").val('{$game_id}');
+    //$("#select_1").trigger("chosen:updated");
+
+</script>
+<script src="__PUBLIC__/js/common.js"></script>
+<script>
+    $(document).ready(function() {
+        Wind.css('treeTable');
+        Wind.use('treeTable', function() {
+            $("#menus-table").treeTable({
+                indent : 20
+            });
+        });
+
+        $('.status').each(function(){
+
+            if($(this).text() == '成功')
+            {
+                $(this).css('color','#269926');
+            }
+            else if($(this).text() == '未支付')
+            {
+                $(this).css('color','black');
+            }
+            else if($(this).text() == '发货中')
+            {
+                $(this).css('color','#35a6e7');
+            }
+
+
+        })
+
+
+        $('.change-box').on('switch-change',function(){
+            var val = $(this).find('input').is(':checked');
+            var userID = $(this).attr('data-id');
+            var status = val === false ? 0 : 1;
+
+            $.post("{:U('edit_userID')}",{userID:userID,status:status},function(res){
+                if(res.status != 1){
+                    layer.confirm(res.info, {
+                        btn: ['确定'] //按钮
+                    }, function(){
+                        location.reload();
+                    });
+                }else{
+                    location.reload();
+                }
+            })
+        });
+
+    });
+
+
+</script>
+</body>
+</html>

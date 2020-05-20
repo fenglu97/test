@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>用户协议</title>
+    <link rel="stylesheet" href="__TMPL__Public/assets/css/reset.css"/>
+    <link rel="stylesheet" href="__TMPL__Public/assets/css/new_public.css"/>
+    <style>
+        /*.iframe{*/
+        /*    flex: auto;*/
+        /*    overflow: scroll;*/
+        /*    display: -webkit-box;*/
+        /*}*/
+        .wrap{
+            display: block;
+            overflow: scroll;
+        }
+        .user_agreement{
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <div class="header">
+        <div class="header-button header-left">
+            <i class="icon-left" onclick="history.back()"></i>
+            <span>返回</span>
+        </div>
+        <div class="header-title">用户协议</div>
+        <div class="header-button header-right"></div>
+    </div>
+    <div class="user_agreement">
+        {$data}
+    </div>
+<!--    <div>找回密码详情询问客服 QQ：{:C('KEFU_QQ')}</div>-->
+<!--    <iframe style="padding: 10px" marginheight="0" marginwidth="0" frameborder="0" class="iframe" src="{:C('API_URL')}/index.php?g=api&m=userbox&a=userAgreement"></iframe>-->
+</div>
+</body>
+</html>
+

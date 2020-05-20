@@ -1,0 +1,136 @@
+<admintpl file="header"/>
+<link rel="stylesheet" href="__PUBLIC__/js/switch/bootstrap-switch.css">
+<style>
+    .switch{margin-left:20px}
+</style>
+<style>
+
+    .player{
+        width:50%;margin: 0 auto;margin-bottom: 75px
+    }
+    .player-arrow{
+        position: absolute;
+        width: 0;
+        height: 0;
+        border: 11px solid transparent;
+        border-bottom: 20px solid #66a4da;
+        right: 40px;
+        top: -31px;
+    }
+    .player-content{
+        background-color:#66a4da;padding:10px;border-radius: 15px;position: relative;
+    }
+    .player p{
+        color:white;margin:0
+    }
+    .player p:nth-child(2){text-align: right}
+    .player-user{
+        position: absolute;
+        right: 3px;
+        top: -61px;
+        background-color: #66a4da;
+        color: white;
+        padding: 10px;
+        border-radius: 10px;
+    }
+    .admin{
+        width:50%;margin: 0 auto;margin-bottom: 75px
+    }
+    .admin-arrow{
+        position: absolute;
+        width: 0;
+        height: 0;
+        border: 11px solid transparent;
+        border-bottom: 20px solid #13bd9c;
+        left: 40px;
+        top: -31px;
+    }
+    .admin-content{
+        background-color:#13bd9c;padding:10px;border-radius: 15px;position: relative;
+    }
+    .admin p{
+        color:white;margin:0
+    }
+    .admin p:nth-child(2){text-align: right}
+    .admin-user{
+        position: absolute;
+        left: 3px;
+        top: -61px;
+        background-color: #13bd9c;
+        color: white;
+        padding: 10px;
+        border-radius: 10px;
+    }
+    .desc{width:50%;margin: 0 auto;margin-bottom: 75px}
+    .desc div{background-color:#c34a5b;padding:10px;border-radius: 15px;color:white}
+    .desc div p:nth-child(2){text-indent: 2em}
+</style>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:U('index')}">工单列表</a></li>
+        <li class="active"><a href="javascript:void(0);">详情</a></li>
+    </ul>
+    <div class="well" style="">
+        <div class="desc">
+            <div>
+                <p>问题描述：</p>
+                <p>{$desc}</p>
+            </div>
+
+        </div>
+        <foreach name="data" item="vo">
+            <if condition="$vo['type'] eq 1">
+                <div class="player">
+                    <div class="player-content">
+                        <p>{$vo.comment}</p>
+                        <p>{$vo.create_time|date="Y-m-d H:i:s",###}</p>
+                        <div class="player-arrow"></div>
+                        <span class="player-user">{$uname}</span>
+                    </div>
+                </div>
+            <else/>
+                <div class="admin">
+                    <div class="admin-content">
+                        <p>{$vo.comment}</p>
+                        <p>{$vo.create_time|date="Y-m-d H:i:s",###}</p>
+                        <div class="admin-arrow"></div>
+                        <span class="admin-user">{$vo.user_login} 回复：{$uname}</span>
+                    </div>
+                </div>
+            </if>
+        </foreach>
+        <if condition="$status neq 3">
+            <div style="margin: 0 auto;width: 50%;">
+            <textarea class="comment" style="width: 98%" placeholder="回复"></textarea>
+                <button class="btn btn-primary">提交</button>
+            </div>
+        </if>
+    </div>
+</div>
+<script src="__PUBLIC__/js/jquery19.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script src="__PUBLIC__/js/common.js"></script>
+<script type="text/javascript">
+$(function(){
+    $('.btn').click(function(){
+        var id = "{$id}";
+        var content = $('.comment').val();
+        if(content == ''){
+            layer.alert('请输入回复内容');
+            return false;
+        }
+        $.post("{:U('details')}",{id:id,content:content},function(res){
+            if(res.status == 1){
+                $('.comment').val('');
+                location.reload();
+            }else{
+                layer.alert(res.info)
+            }
+        })
+    })
+})
+</script>
+</body>
+</html>

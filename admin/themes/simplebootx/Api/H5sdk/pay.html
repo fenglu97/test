@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>支付</title>
+    <link rel="stylesheet" href="__TMPL__Public/assets/css/reset.css"/>
+    <link rel="stylesheet" href="__TMPL__Public/assets/css/new_public.css"/>
+    <style>
+        .block{
+            border-bottom: 1px solid #eee;
+            margin: 0 1em;
+            overflow: hidden;
+        }
+        .flex-row{
+            overflow: hidden;
+            padding: .5em 0;
+        }
+        .pay-list{
+            margin: 1em;
+
+            /*-webkit-tap-highlight-color: transparent;*/
+            /*-webkit-touch-callout: none;*/
+            /*-webkit-user-select: none;*/
+            /*user-select:none;*/
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            -webkit-tap-highlight-color: transparent;
+        }
+        .pay-item{
+            display: flex;
+            align-items: center;
+            padding: 1em 0;
+            border-bottom: 1px solid #eee;
+        }
+        .pay-item-title{
+            flex: 1;
+            margin-left: .5em;
+        }
+        .pay-button{
+            display: flex;
+            justify-content: center;
+        }
+        .pay-button .button{
+            margin: 1em;
+            flex: 1;
+        }
+
+        .discount-container{
+            display: none;
+        }
+        .discount{
+            color: red;
+        }
+        .amount{
+            color: #409EFF;
+        }
+
+        #iframe{
+            flex: 1;
+            display: none;
+            position: relative;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+<div class="toast is-placemiddle" style="padding: 10px; display: none;">
+    <span class="toast-text" style="padding-top: 0;">提示信息</span>
+</div>
+<div class="wrap">
+    <div class="header">
+        <div class="header-button header-left"></div>
+        <div class="header-title">支付</div>
+        <div class="header-button header-right">
+            <i class="icon-close"></i>
+        </div>
+    </div>
+    <iframe marginheight="0" marginwidth="0" frameborder="0" id="iframe"></iframe>
+    <div class="main">
+        <div class="block account-information">
+            <div class="flex-row">
+                <div>产品名称：</div>
+                <div class="product-name"></div>
+            </div>
+            <div class="flex-row">
+                <div>角色名：</div>
+                <div class="role-name"></div>
+            </div>
+            <!--<div class="flex-row">-->
+                <!--<div class="flex1">平台币：</div>-->
+                <!--<div>15</div>-->
+            <!--</div>-->
+        </div>
+        <div class="block">
+            <div class="flex-row">
+                <div class="flex1">商品金额：</div>
+                <div class="origPrice"></div>
+            </div>
+            <div class="flex-row discount-container">
+                <div class="flex1">折扣：</div>
+                <div class="discount"></div>
+            </div>
+            <div class="flex-row">
+                <div class="flex1">实际支付金额：</div>
+                <div class="amount"></div>
+            </div>
+        </div>
+        <div class="pay-list">
+            支付方式:
+            <div class="pay-item" data-type="2">
+                <i class="icon-alipay"></i>
+                <div class="pay-item-title">支付宝支付</div>
+                <i class="icon-radio icon-radio-checked"></i>
+            </div>
+
+            <div class="pay-item" data-type="1">
+                <i class="icon-alipay"></i>
+                <div class="pay-item-title">支付宝扫码支付</div>
+                <i class="icon-radio "></i>
+            </div>
+            <div class="pay-item" data-type="4">
+                <i class="icon-wecat"></i>
+                <div class="pay-item-title">微信支付</div>
+                <i class="icon-radio"></i>
+            </div>
+            <div class="pay-item" data-type="3">
+                <i class="icon-wecat"></i>
+                <div class="pay-item-title">微信扫码支付</div>
+                <i class="icon-radio"></i>
+            </div>
+        </div>
+        <div class="pay-button">
+            <button class="button button-primary is-round button-pay" type="button">支付</button>
+        </div>
+    </div>
+</div>
+<script src="__PUBLIC__/js/jquery.js"></script>
+<script src="__PUBLIC__/js/md5.js"></script>
+<script src="__TMPL__Public/assets/js/base64.js"></script>
+<script src="__TMPL__Public/assets/js/api.js"></script>
+<script>
+    $(function () {
+        var payParams = '',
+            uid = 0,
+            appUid = 0,
+            discount = 0,
+            payType = 2,
+            amount = 0;
+        (function () {
+            if(Api.config.system === 1){
+                uid = window.Android.getUid();
+                appUid = window.Android.getCUid();
+                discount = parseInt(Api.config.discount, 10);
+                payParams = JSON.parse(window.Android.getPayParams());
+                initialize();
+                // var key = '';
+                // var html = '';
+                // for(key in payParams){
+                //     html += key + ':' +payParams[key] + '<br>';
+                // }
+                // $('#msg').html(html);
+
+            } else if(Api.config.system === 2){
+                window.appIosCallback = function (data) {
+                    var iosInfo = JSON.parse(Base64.decode(data));
+                    Api.config.appid = iosInfo.getAppId;
+                    Api.config.appkey = iosInfo.getAppKey;
+                    Api.config.channel = iosInfo.getChannel;
+                    Api.config.maker = iosInfo.getMaker;
+                    Api.config.mobile_model = iosInfo.getMobileModel;
+                    Api.config.machine_code = iosInfo.getMachineCode;
+                    Api.config.system_version = iosInfo.getVersionName;
+                    Api.config.getAdLinkUrl = iosInfo.getAdLinkUrl;
+                    Api.config.getAdImageUrl = iosInfo.getAdImageUrl;
+                    Api.config.isDisplayAd = iosInfo.isDisplayAd;
+                    Api.config.isRegisterEnabled = iosInfo.isRegisterEnabled;
+                    Api.config.isNameAuthEnabled = iosInfo.isNameAuthEnabled;
+                    Api.config.isPlatformMoneyEnabled = iosInfo.isPlatformMoneyEnabled;
+                    Api.config.isBindMobileEnabled = iosInfo.isBindMobileEnabled;
+                    Api.config.getDiscount = iosInfo.getDiscount;
+                };
+                window.webkit.messageHandlers.wz_callOC.postMessage({method : 'getAppInfo'});
+
+
+                window.IosGetPayParamsCallback = function (data) {
+                    payParams = JSON.parse(Base64.decode(data));
+                    uid = payParams.getUid;
+                    appUid = payParams.getCUid;
+                    discount = parseInt(payParams.discount, 10);
+                    initialize();
+                    // var key = '';
+                    // var html = '';
+                    // for(key in payParams){
+                    //     html += key + ':' +payParams[key] + '<br>';
+                    // }
+                    // $('#msg').html(html);
+                };
+                window.webkit.messageHandlers.wz_callOC.postMessage({method : 'getPayParams'});
+            }
+        })();
+        // var payType = 2;
+
+        // if(!Api.config.isPlatformMoneyEnabled){
+        // var discount = parseInt(Api.config.discount, 10);
+        // var amount = 0;
+        function initialize() {
+            var origPrice = payParams.origPrice;
+            if(discount === 0 || discount === 10){
+                amount = origPrice;
+            } else if(discount) {
+                amount = (Math.ceil(origPrice * (discount / 10) * 100) / 100).toFixed(2);
+                $('.discount').html(discount + '折'); // 折扣
+                $('.discount-container').show();
+            }
+            if(Api.config.isPlatformMoneyEnabled && Api.config.isPlatformMoneyEnabled != '0'){
+                getUserCenter();
+            }
+            // getUserCenter();
+
+            $('.amount').html(amount + '元'); // 价格
+            $('.origPrice').html(origPrice + '元'); // 原价
+            $('.product-name').html(payParams.productNAME);
+            $('.role-name').html(payParams.roleNAME);
+        }
+        // if(false){
+        //     var coinTemplate = '<div class="flex-row">\n' +
+        //         '                <div class="flex1">平台币：</div>\n' +
+        //         '                <div>0</div>\n' +
+        //         '            </div>';
+        //     $('.account-information').append(coinTemplate);
+        //
+        //     var payTemplate = '\n' +
+        //         '            <div class="pay-item" data-type="10">\n' +
+        //         '                <i class="icon-platformcoin"></i>\n' +
+        //         '                <div class="pay-item-title">平台币支付</div>\n' +
+        //         '                <i class="icon-radio"></i>\n' +
+        //         '            </div>';
+        //     $('.pay-list').append(payTemplate);
+        // }
+
+        function toast(msg){
+            msg = msg || '提示';
+            $('.toast').children('.toast-text').html(msg);
+            $('.toast').fadeIn();
+            var toastTimer =  setTimeout(function () {
+                $('.toast').fadeOut();
+                clearTimeout(toastTimer);
+            }, 2000);
+        }
+
+        $('.pay-list').on('click', '.pay-item', function () {
+            $('.icon-radio').removeClass('icon-radio-checked');
+            $(this).children('.icon-radio').addClass('icon-radio-checked');
+            payType = $(this).attr('data-type');
+            // console.log();
+        });
+
+        var paySwitch = false;
+        // 支付前检查
+        $('.button-pay').on('click', function () {
+            if(paySwitch){
+                return false;
+            }
+            paySwitch = true;
+            var options = {
+                appid: Api.config.appid,
+                uid: uid
+                // appid: Api.config.appid
+            };
+            options.sign = Api.util.getSign(options, Api.config.appkey);
+            $.ajax({
+                url: Api.config.host + '/index.php?g=api&m=pay&a=payReady',
+                type: 'post',
+                data: options,
+                success: function (res) {
+                    if(res.status === 1){
+                        payStart();
+                    } else if(res.msg){
+                        toast(res.msg);
+                    }
+                    paySwitch = false;
+                },
+                error: function (err) {
+                    paySwitch = false;
+                    console.log(err);
+                }
+            })
+        });
+
+        var payState = false;
+        var payId = '';
+        // 发起支付
+        function payStart() {
+            var options = {
+                deviceType: Api.config.system, // 2苹果，1安卓
+                appid: Api.config.appid,
+                channel: Api.config.channel, // 渠道
+                uid: uid, // 用户ID
+                app_uid: appUid, // 小号ID
+                serverID: payParams.serverID, // 区服ID
+                serverNAME: payParams.serverNAME, // 区服名
+                roleID: payParams.roleID, // 角色ID
+                roleNAME: payParams.roleNAME, // 角色名
+                productID: payParams.productID, // 产品ID
+                productNAME: payParams.productNAME, // 产品名
+                payType: payType, // 支付方式
+                payMode: 1, // 充值类型(1正常充值 2GM权限充值)
+                // cardID: '', // 充值卡号
+                // cardPass: '', // 充值密码
+                // cardMoney: '', // 充值卡金额
+                amount: amount, // 充值金额
+                // origPrice: payParams.origPrice, // 原价(从研发获取,折扣服才有值,没有传0)
+                extend: payParams.extension // 扩展字段
+            };
+            options.sign = Api.util.getSign(options, Api.config.appkey);
+            options.origPrice = payParams.origPrice; // 原价(从研发获取,折扣服才有值,没有传0)
+            if(Api.config.system === 1){
+                options.android_id = Api.config.machine_id; // 安卓ID(不进入签名)
+                options.imei = Api.config.machine_code; // 安卓设备号(不进入签名)
+            }
+            // $('#msg').html(JSON.stringify(options));
+            $.ajax({
+                url: Api.config.host + '/index.php?g=api&m=pay&a=payStart',
+                type: 'post',
+                data: options,
+                success: function (res) {
+                    if(res.status === 1){
+                        var data = res.data;
+                        if(data.url){
+                            if (options.payType==4){
+                                if(Api.config.system === 1){
+                                    window.open(data.url + '&money=' + data.amount + '&order=' + data.orderID);
+                                } else{
+                                    window.location.href = data.url + '&money=' + data.amount + '&order=' + data.orderID;
+                                }
+                            } else {
+                                $('#iframe').attr('src',data.url + '&money=' + data.amount + '&order=' + data.orderID);
+                                $('.main').hide();
+                                $('#iframe').show();
+                            }
+                            // $('#iframe').attr('src', data.url + '&money=' + data.amount + '&order=' + data.orderID);
+                            // $('.main').hide();
+                            // $('#iframe').show();
+                        }
+                        payState = true;
+                        payId = data.orderID;
+                        data['amount'] = amount;
+                        var count = 1;
+                        var timer = setInterval(function () {
+                            if(count <= 60){
+                                count++;
+                                payQuery(data);
+                            } else {
+                                payError();
+                                clearInterval(timer);
+                            }
+                        }, 5000);
+                    } else if (res.msg){
+                        toast(res.msg);
+                    }
+                },
+                error: function (err) {
+                    toast('err');
+                    console.log(err);
+                }
+            })
+        };
+
+        // 支付查询
+        function payQuery(data) {
+            var options = {
+                orderID: data.orderID
+            };
+            options.sign = Api.util.getSign(options, Api.config.appkey);
+            $.ajax({
+                url: Api.config.host + '/index.php?g=api&m=pay&a=payQuery',
+                type: 'post',
+                data: options,
+                success: function (res) {
+                    // toast('支付查询中...');
+                    if(res.status === 1){
+                        var data = res.data;
+                        if(data.order_status === 1){
+                            // 成功
+                            clearInterval(timer);
+                            paySucceed();
+
+                            $('#iframe').attr('src', data.url);
+                            $('.main').hide();
+                            $('#iframe').show();
+                            // window.location.href = data.url + '&money=' + payParams.amount + '&order=' + data.orderID;
+                        } else if(data.order_status === 2){
+                            // 发货中
+                        } else if(data.order_status === 3){
+                            // 未支付
+                        }
+                    }
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            })
+        }
+
+        $('.icon-close').on('click', function () {
+            if(Api.config.system === 1){
+                window.Android.closePay(payState, payId);
+            } else if (Api.config.system === 2){
+                window.webkit.messageHandlers.wz_callOC.postMessage({
+                    method: 'closePay',
+                    param: {
+                        payState: payState,
+                        payId: payId
+                    }
+                });
+            }
+        });
+
+        function paySucceed() {
+            payId = '';
+            payState = false;
+            if(Api.config.system === 1){
+                window.Android.onPaySucceed();
+            } else if (Api.config.system === 2){
+                window.webkit.messageHandlers.wz_callOC.postMessage({method: 'onPaySucceed'});
+            }
+        }
+        function payError() {
+            payId = '';
+            if(Api.config.system === 1){
+                window.Android.onPayFail('');
+            } else if (Api.config.system === 2){
+                window.webkit.messageHandlers.wz_callOC.postMessage({
+                    method: 'onPayFail',
+                    param: {
+                        message: ''
+                    }
+                });
+            }
+        }
+
+        function getUserCenter() {
+            var options = {
+                uid: uid,
+                appid: Api.config.appid
+            };
+            options.sign = Api.util.getSign(options);
+            $.ajax({
+                url: Api.config.host + '/index.php?g=api&m=userbox&a=user_center_sdk',
+                type: 'post',
+                data: options,
+                success: function (res) {
+                    if(res.status === 1){
+                        var data = res.data;
+                        if(data && data.platform_money && data.pay_platform_money){
+                            if(data.platform_money >= (amount * 10)){
+                                var coinTemplate = '<div class="flex-row">\n' +
+                                    '                <div class="flex1">平台币：</div>\n' +
+                                    '                <div>'+ data.platform_money +'</div>\n' +
+                                    '            </div>';
+                                $('.account-information').append(coinTemplate);
+                                var payTemplate = '\n' +
+                                    '            <div class="pay-item" data-type="10">\n' +
+                                    '                <i class="icon-platformcoin"></i>\n' +
+                                    '                <div class="pay-item-title">平台币支付</div>\n' +
+                                    '                <i class="icon-radio"></i>\n' +
+                                    '            </div>';
+                                $('.pay-list').append(payTemplate);
+                            }
+                        }
+                    } else if (res.msg){
+                        toast(res.msg + '-------------');
+                    }
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            })
+        }
+    })
+</script>
+</body>
+</html>

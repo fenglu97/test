@@ -1,0 +1,265 @@
+<admintpl file="header"/>
+<link rel="stylesheet" href="__PUBLIC__/js/uploadifive/uploadifive.css">
+<style>
+    .up_text{
+        height:20px;
+        margin-left:-7px;
+
+    }
+</style>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:U('prize')}">奖品列表</a></li>
+        <li class="active"><a href="javascript:void(0);"><if condition="$data[id] neq 0">修改奖品<else />新增奖品</if></a></li>
+    </ul>
+    <form class="form-horizontal js-ajax-forms" action="" method="post">
+        <fieldset>
+            <div class="control-group">
+                <label class="control-label">标题<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <input type="text"  maxlength="20" name="name" value="{$data.name}"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">奖品位置<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <input name="place" id="place" maxlength="2" value="{$data.place}" placeholder="1-12位置" type="number">
+                    <a href="javascript:void(0)" class="place">位置参考</a>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">奖品类型<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <select name="type">
+                        <option value="1" <eq name="data['type']" value="1">selected</eq> >平台币</option>
+                        <option value="2" <eq name="data['type']" value="2">selected</eq>>金币</option>
+                        <option value="3" <eq name="data['type']" value="3">selected</eq>>实物奖品</option>
+                        <option value="4" <eq name="data['type']" value="4">selected</eq>>谢谢参与</option>
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">获奖数量<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <input name="value" id="value"  value="{$data.value}" placeholder="虚拟币中奖数量" type="number">
+                    <span>实物奖品不填</span>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">奖品总数<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <input type="number"   name="number" value="{$data.number}"/>
+                    <span>无限制填-1</span>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">每日产出数<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <input type="number" name="output" value="{$data.output}"/>
+                    <span>无限制填-1</span>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">奖品价值权重<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <input type="number" name="worth" value="{$data.worth}"/>
+                    <span>值越高代表奖品价值就高</span>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">奖品图片<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <input type="file" name="upload" id="up_prize" />
+                    <input type="text" placeholder="图片尺寸142X142最佳" maxlength="255" style="width:490px;padding-left:15px;" readonly name="url" id="url" class="up_text" value="{$data.url}"/>
+                </div>
+            </div>
+        </fieldset>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary js-ajax-submit">提交</button>
+            <a class="btn" href="javascript:history.back(-1);">{:L('BACK')}</a>
+            <i class="fa fa-question-circle"></i><span>奖品中务必要有一个权重为0，总数和产出无限的，可以设置成谢谢参与</span>
+        </div>
+        <input name="id" value="{$data.id}" type="hidden" />
+    </form>
+    <div  style="display:none" id="placeimg">
+        <img src="./public/images/indeximg.png" alt="图片名">
+    </div>
+</div>
+<script src="__PUBLIC__/js/jquery19.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script src="__PUBLIC__/js/uploadifive/jquery.uploadifive.js"></script>
+<script src="__PUBLIC__/js/common.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $('.place').click(function(){
+            layer.open({
+                type: 1,
+                title: false,
+                closeBtn: 0,
+                area: '400px',
+                skin: 'layui-layer-nobg', //没有背景色
+                shadeClose: true,
+                content: $('#placeimg')
+            });
+        })
+
+        var url = "{:U('upprize')}";
+        $('#up_prize').uploadifive({
+            'auto' : true,
+            'dnd' : false,
+            'height' : 20,
+            'width' : 58,
+            'uploadScript' : url,
+            'fileObjName' : 'upload',
+            'buttonText' : '选择文件',
+            'fileType' : '',
+            'multi' : false,
+            'fileSizeLimit'   : '2MB',
+            'uploadLimit' : 1,
+            'queueSizeLimit'  : 1,
+            'removeCompleted' : true,
+            onUploadComplete : function(file, data) {
+                var obj = JSON.parse(data);
+                $('#url').val(obj.fullpath);
+            },
+            onCancel : function(file) {
+                $("#frontSide").val("");
+                /* 注意：取消后应重新设置uploadLimit */
+                $data    = $(this).data('uploadifive'),
+                    settings = $data.settings;
+                settings.uploadLimit++;
+            },
+            onFallback : function() {
+                alert("该浏览器无法使用!");
+            },
+            onProgress   : function(file, e) {
+                if (e.lengthComputable) {
+                    var percent = Math.round((e.loaded / e.total) * 100)-1;
+                }
+                file.queueItem.find('.fileinfo').html(' - ' + percent + '%');
+                file.queueItem.find('.progress-bar').css('width', percent + '%');
+            }
+        });
+
+        Wind.use('validate', 'ajaxForm', 'artDialog', function () {
+            var form = $('form.js-ajax-forms');
+            //表单验证开始
+            form.validate({
+                //是否在获取焦点时验证
+                onfocusout: false,
+                //是否在敲击键盘时验证
+                onkeyup: false,
+                //当鼠标掉级时验证
+                onclick: false,
+                //验证错误
+                showErrors: function (errorMap, errorArr) {
+                    //errorMap {'name':'错误信息'}
+                    //errorArr [{'message':'错误信息',element:({})}]
+                    try {
+                        $(errorArr[0].element).focus();
+                        art.dialog({
+                            id: 'error',
+                            icon: 'error',
+                            lock: true,
+                            fixed: true,
+                            background: "#CCCCCC",
+                            opacity: 0,
+                            content: errorArr[0].message,
+                            cancelVal: '确定',
+                            cancel: function () {
+                                $(errorArr[0].element).focus();
+                            }
+                        });
+                    } catch (err) {
+
+                    }
+                },
+                //验证规则
+                rules: {
+                    'name': {required: true},
+                    'place': {
+                        required: true,
+                        range:[1,12],
+                        remote: {
+                            url: "{:U('checkIndex')}",     //后台处理程序
+                            type: "post",               //数据发送方式
+                            dataType: "json",           //接受数据格式
+                            data:{                     //要传递的数据
+                                place: function() {
+                                    return $("#place").val();
+                                },
+                                id:function(){
+                                    return $(':input[name=id]').val();
+                                }
+                            }
+                        }
+                    },
+                    'number' :{required:true,maxlength:10,number:true},
+                    'output' : {required:true,maxlength:10,number:true},
+                    'worth' : {required:true,range:[0,99]},
+                    'url': {required: true}
+                },
+                //验证未通过提示消息
+                messages: {
+                    'name': {required: '请输入奖品名'},
+                    'place': {required: '请输入奖品位置',range:'奖品位置请设置1-12之间',remote:'该位置已设置奖品'},
+                    'number' :{required:'请输入奖品总数',maxlength:'最多输入10个数字',number:'请输入正确数字'},
+                    'output' : {required:'请输入每日奖品产出数',maxlength:'最多输入10个数字',number:'请输入正确数字'},
+                    'worth' : {required:'请设置奖品价值权重',range:'奖品价值权重请设置0-99之间'},
+                    'url': {required: '请上传图片'}
+                },
+                //给未通过验证的元素加效果,闪烁等
+                highlight: false,
+                //是否在获取焦点时验证
+                onfocusout: false,
+                //验证通过，提交表单
+                submitHandler: function (forms) {
+                    $(forms).ajaxSubmit({
+                        url: form.attr('action'), //按钮上是否自定义提交地址(多按钮情况)
+                        dataType: 'json',
+                        beforeSubmit: function (arr, $form, options) {
+
+                        },
+                        success: function (data, statusText, xhr, $form) {
+                            if (data.status) {
+                                setCookie("refersh_time", 1);
+                                //添加成功
+                                Wind.use("artDialog", function () {
+                                    art.dialog({
+                                        id: "succeed",
+                                        icon: "succeed",
+                                        fixed: true,
+                                        lock: true,
+                                        background: "#CCCCCC",
+                                        opacity: 0,
+                                        content: data.info,
+                                        button: [{
+                                            name: '继续{:isset($info['id'])?'编辑':'添加'}？',
+                                            callback: function () {
+                                                reloadPage(window);
+                                                return true;
+                                            },
+                                            focus: true
+                                        }, {
+                                            name: '返回列表',
+                                            callback: function () {
+                                                location.href = "index.php?g=admin&m=luckydraw&a=prize";
+                                                return true;
+                                            }
+                                        }]
+                                    });
+                                });
+                            } else {
+                                layer.alert(data.info);
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<admintpl file="header" />
+<link rel="stylesheet" href="__TMPL__Public/assets/css/new_teaching.css"/>
+</head>
+<body>
+<!--确认框-->
+<div id="notarizeBox">
+    <p class="teaching_title">温馨提示</p>
+    <p class="hint_cont">是否已观看本教程，如已了解，请点击确认按钮，确认后将不再提示！</p>
+    <p class="hint_btn"><button id="notarizeBtn">确认</button></p>
+</div>
+    <div class="title">新手后台初步使用教程：</div>
+    <div class="wrap">
+        <div class="well">
+            <h4>一、视频学习</h4>
+            <div class="teaching_video">
+                <video controls="controls">
+                    <source src="http://www.sy218.com/assets/sc/test/test_1514430804.mp4" type="video/mp4" />
+                    <object data="http://www.sy218.com/assets/sc/test/test_1514430804.mp" width="746" height="420">
+                        <embed src="http://www.sy218.com/assets/sc/test/test_1514430804.mp" width="746" height="420" />
+                    </object>
+                </video>
+            </div>
+        </div>
+        <!--<div class="well">-->
+            <!--<h4>二、推广简单流程</h4>-->
+            <!--<div><img src="" alt=""></div>-->
+        <!--</div>-->
+
+        <!--<div class="well">-->
+            <!--<h4>三、GIF图展示区</h4>-->
+            <!--<div></div>-->
+        <!--</div>-->
+
+        <div class="well">
+            <h4>二、图文演示</h4>
+            <!--<div class="it_course">-->
+                <!--<img src="__TMPL__Public/assets/images/jc01.png">-->
+                <!--<img src="__TMPL__Public/assets/images/jc02.png">-->
+                <!--<img src="__TMPL__Public/assets/images/jc03.png">-->
+            <!--</div>-->
+            <div id="layer-photos-demo" class="it_course layer-photos-demo">
+                <img layer-src="__TMPL__Public/assets/images/jc01.png" src="__TMPL__Public/assets/images/jc01.png" alt="图片名" layer-index="0">
+                <img layer-src="__TMPL__Public/assets/images/jc02.png" src="__TMPL__Public/assets/images/jc02.png" alt="图片名" layer-index="1">
+                <img layer-src="__TMPL__Public/assets/images/jc03.png" src="__TMPL__Public/assets/images/jc03.png" alt="图片名" layer-index="2">
+                <img layer-src="__TMPL__Public/assets/images/jc04.png" src="__TMPL__Public/assets/images/jc04.png" alt="图片名" layer-index="3">
+                <img layer-src="__TMPL__Public/assets/images/jc05.png" src="__TMPL__Public/assets/images/jc05.png" alt="图片名" layer-index="4">
+                <img layer-src="__TMPL__Public/assets/images/jc06.png" src="__TMPL__Public/assets/images/jc06.png" alt="图片名" layer-index="5">
+                <img layer-src="__TMPL__Public/assets/images/jc07.png" src="__TMPL__Public/assets/images/jc07.png" alt="图片名" layer-index="6">
+                <img layer-src="__TMPL__Public/assets/images/jc08.png" src="__TMPL__Public/assets/images/jc08.png" alt="图片名" layer-index="7">
+                <img layer-src="__TMPL__Public/assets/images/jc09.png" src="__TMPL__Public/assets/images/jc09.png" alt="图片名" layer-index="8">
+                <img layer-src="__TMPL__Public/assets/images/jc10.png" src="__TMPL__Public/assets/images/jc10.png" alt="图片名" layer-index="9">
+            </div>
+        </div>
+    </div>
+<div id="rule" style="display: none;padding:20px"> <p>1.每月1日自动结算上月分成金额，计入提现金额。</p> <p>2.每月分成比例根据销售总额所在分成档位进行计算。</p> <p>3.系统结算分成档位如下 <table style="width: 220px;margin-left: 10px;"> <tr style="text-align: left;"> <th>销售额度</th> <th>分成比例</th> </tr> <foreach name="setting" item="vo"> <tr> <td>5元</td> <td>10%</td> </tr> </foreach> </table> </p> <p>例如: 当月销售额为85000元，该额度属于70000-89999元档位，分成比例为23%，当月结算分成金额为85000*23%=19550元。</p> </div>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script src="__TMPL__Public/assets/js/new_teaching.js"></script>
+<script type="text/javascript">
+    $(function() {
+        function openPhotos () {
+            layer.photos({
+                photos: '#layer-photos-demo'
+            });
+        }
+        $('img').click(function () {
+            openPhotos();
+//            console.log(window.top.window.openPhotos);
+//            window.top.window.openPhotos();
+        })
+    })
+</script>
+</body>
+</html>
+

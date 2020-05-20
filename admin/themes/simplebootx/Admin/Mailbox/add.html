@@ -1,0 +1,159 @@
+<admintpl file="header"/>
+<link rel="stylesheet" href="__PUBLIC__/js/switch/bootstrap-switch.css">
+<style>
+    .switch{margin-left:20px}
+</style>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="javascript:void(0);"><if condition="$data[id] neq 0">编辑邮件<else />新增邮件</if></a></li>
+    </ul>
+    <form class="form-horizontal js-ajax-forms" action="" method="post">
+        <fieldset>
+            <div class="control-group">
+                <label class="control-label">标题<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <input type="text" style="width:400px" maxlength="50" name="title" />
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">类型</label>
+                <div class="controls">
+                    <select name="type">
+                        <option value="1">投诉</option>
+                        <option value="2">建议</option>
+                        <option value="3">其他</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">内容<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <textarea name="content" rows="2" cols="20" id="content" class="inputtext" style="height: 100px; width: 500px;"></textarea>
+                </div>
+            </div>
+
+            <div class="control-group float checkboxs">
+                <label class="control-label">是否匿名</label>
+                <div class="switch" data-on="success" data-on-label="匿名" data-off-label="非匿名" data-off="danger">
+                    <input type="checkbox" checked name="is_anonymous"/>
+                </div>
+            </div>
+
+            <div class="control-group float checkboxs">
+                <label class="control-label">联系方式</label>
+                <div class="controls">
+                    <input type="text" style="width:400px" maxlength="11" name="mobile" />
+                </div>
+            </div>
+        </fieldset>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary js-ajax-submit">提交</button>
+            <a class="btn" href="javascript:history.back(-1);">{:L('BACK')}</a>
+        </div>
+    </form>
+</div>
+<script src="__PUBLIC__/js/jquery19.js"></script>
+<script src="__PUBLIC__/js/switch/bootstrap.min.js"></script>
+<script src="__PUBLIC__/js/switch/bootstrap-switch.js"></script>
+<script src="__PUBLIC__/js/common.js"></script>
+<script type="text/javascript">
+    $(function(){
+        var time = $(':input[name=add_time]').val();
+        if(time == '1970-01-01 08:00:00' || time == ''){
+            $(':input[name=add_time]').val("{:date('Y-m-d H:i',time())}");
+        }
+
+        Wind.use('validate', 'ajaxForm', 'artDialog', function () {
+            var form = $('form.js-ajax-forms');
+            //表单验证开始
+            form.validate({
+                //是否在获取焦点时验证
+                onfocusout: false,
+                //是否在敲击键盘时验证
+                onkeyup: false,
+                //当鼠标掉级时验证
+                onclick: false,
+                //验证错误
+                showErrors: function (errorMap, errorArr) {
+                    //errorMap {'name':'错误信息'}
+                    //errorArr [{'message':'错误信息',element:({})}]
+                    try {
+                        $(errorArr[0].element).focus();
+                        art.dialog({
+                            id: 'error',
+                            icon: 'error',
+                            lock: true,
+                            fixed: true,
+                            background: "#CCCCCC",
+                            opacity: 0,
+                            content: errorArr[0].message,
+                            cancelVal: '确定',
+                            cancel: function () {
+                                $(errorArr[0].element).focus();
+                            }
+                        });
+                    } catch (err) {
+
+                    }
+                },
+                //验证规则
+                rules: {
+                    'title': {required: true},
+                    'content': {required: true}
+                },
+                //验证未通过提示消息
+                messages: {
+                    'title': {required: '请输入标题'},
+                    'content': {required: '请输入内容'}
+                },
+                //给未通过验证的元素加效果,闪烁等
+                highlight: false,
+                //是否在获取焦点时验证
+                onfocusout: false,
+                //验证通过，提交表单
+                submitHandler: function (forms) {
+                    $(forms).ajaxSubmit({
+                        url: form.attr('action'), //按钮上是否自定义提交地址(多按钮情况)
+                        dataType: 'json',
+                        beforeSubmit: function (arr, $form, options) {
+
+                        },
+                        success: function (data, statusText, xhr, $form) {
+                            if (data.status) {
+                                setCookie("refersh_time", 1);
+                                //添加成功
+                                Wind.use("artDialog", function () {
+                                    art.dialog({
+                                        id: "succeed",
+                                        icon: "succeed",
+                                        fixed: true,
+                                        lock: true,
+                                        background: "#CCCCCC",
+                                        opacity: 0,
+                                        content: data.info,
+                                        button: [{
+                                            name: '确定',
+                                            callback: function () {
+                                                reloadPage(window);
+                                                return true;
+                                            },
+                                            focus: true
+                                        }]
+                                    });
+                                });
+                            } else {
+                                layer.alert(data.info);
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    })
+</script>
+</body>
+</html>

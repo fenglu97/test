@@ -1,0 +1,226 @@
+<admintpl file="header"/>
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/chosen.css">
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/docsupport/prism.css">
+<style>
+    .switch{margin-left:20px}
+</style>
+<script type="text/html" id="photos-item-wrapper">
+    <li id="savedimage{id}" style="margin-bottom:20px;">
+        <input id="photo-{id}" type="hidden" name="imgs[]" value="{filepath}">
+        <img id="photo-{id}-preview" src="{url}" style="width: 200px;" onclick="parent.image_preview_dialog(this.src);">
+        <a href="javascript:upload_one_image('图片上传','#photo-{id}');">替换</a>
+        <a href="javascript:(function(){$('#savedimage{id}').remove();})();">移除</a>
+    </li>
+</script>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:U('index')}">精选产品列表</a></li>
+        <li class="active"><a href="javascript:void(0);">编辑精选产品</a></li>
+    </ul>
+    <form class="form-horizontal js-ajax-forms" action="" method="post">
+        <fieldset>
+            <div class="control-group">
+                <label class="control-label">游戏<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <select name="appid" class="chosen-select appid" style="width:200px;" tabindex="1">
+                        {:get_game_list($info['appid'],1,'all')}
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">产品题材<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <input type="text" style="width:300px"  name="theme" value="{$info.theme}" id="theme"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">产品类型<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <input type="text" style="width:300px"  name="type" value="{$info.type}" id="type"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">返利周期<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <select name="rebate_cycle">
+                        <option value="0">请选择</option>
+                        <option value="1" <if condition="$info['rebate_cycle'] eq 1">selected</if>>立刻发放</option>
+                        <option value="2" <if condition="$info['rebate_cycle'] eq 2">selected</if>>12小时内发放</option>
+                        <option value="3" <if condition="$info['rebate_cycle'] eq 3">selected</if>>24小时内发放</option>
+                        <option value="4" <if condition="$info['rebate_cycle'] eq 4">selected</if>>72小时内发放</option>
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">BUG处理速度<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <select name="troubleshooting">
+                        <option value="0">请选择</option>
+                        <option value="1" <if condition="$info['troubleshooting'] eq 1">selected</if>>1天内解决</option>
+                        <option value="2" <if condition="$info['troubleshooting'] eq 2">selected</if>>2天内解决</option>
+                        <option value="3" <if condition="$info['troubleshooting'] eq 3">selected</if>>3天内解决</option>
+                        <option value="4" <if condition="$info['troubleshooting'] eq 4">selected</if>>1周内解决</option>
+                        <option value="5" <if condition="$info['troubleshooting'] eq 5">selected</if>>1个月内解决</option>
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">研发配合程度<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <select name="yf_cooper_degree">
+                        <option value="0">请选择</option>
+                        <option value="1" <if condition="$info['yf_cooper_degree'] eq 1">selected</if>>非常配合</option>
+                        <option value="2" <if condition="$info['yf_cooper_degree'] eq 2">selected</if>>一般配合</option>
+                        <option value="3" <if condition="$info['yf_cooper_degree'] eq 3">selected</if>>不配合</option>
+                        <option value="4" <if condition="$info['yf_cooper_degree'] eq 4">selected</if>>基本不管</option>
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">GIF图集</label>
+                <div class="controls">
+                    <ul id="photos" class="pic-list unstyled">
+                        <notempty name="info['imgs']">
+                            <foreach name="info['imgs']" item="vo" key="key">
+                                <php>$img_url=sp_get_image_preview_url($vo);</php>
+                                <li id="savedimage{$key}"  style="margin-bottom:20px;">
+                                    <input id="photo-{$key}" type="hidden" name="imgs[]" value="{$vo}">
+                                    <img id="photo-{$key}-preview" src="{$img_url}" style="width:200px;" onclick="parent.image_preview_dialog(this.src);">
+                                    <a href="javascript:upload_one_image('图片上传','#photo-{$key}');">替换</a>
+                                    <a href="javascript:(function(){ $('#savedimage{$key}').remove();})();">移除</a>
+                                </li>
+                            </foreach>
+                        </notempty>
+                    </ul>
+                    <a href="javascript:upload_multi_image('图片上传','#photos','photos-item-wrapper');" class="btn btn-small">选择图片</a>
+                    <b style="color:#ee5f5b">最多可以上传10张图片</b>
+                </div>
+            </div>
+<input type="hidden" name="id" value="{$info.id}">
+        </fieldset>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary js-ajax-submit">提交</button>
+            <a class="btn" href="javascript:history.back(-1);">{:L('BACK')}</a>
+        </div>
+    </form>
+</div>
+<script src="__PUBLIC__/js/chosen/chosen.jquery.js" type="text/javascript"></script>
+<script src="__PUBLIC__/js/chosen/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    var config = {
+        '.chosen-select'           : {},
+        '.chosen-select-deselect'  : {allow_single_deselect:true},
+        '.chosen-select-no-single' : {disable_search_threshold:10},
+        '.chosen-select-no-results': {no_results_text:'没有匹配的结果'},
+        '.chosen-select-width'     : {width:"95%"}
+    }
+    for (var selector in config) {
+        $(selector).chosen(config[selector]);
+    }
+    //$("#select_1").val('{$game_id}');
+    //$("#select_1").trigger("chosen:updated");
+
+</script>
+<script src="__PUBLIC__/js/jquery19.js"></script>
+<script src="__PUBLIC__/js/common.js"></script>
+<script type="text/javascript">
+    $(function(){
+
+        Wind.use('validate', 'ajaxForm', 'artDialog', function () {
+            var form = $('form.js-ajax-forms');
+            //表单验证开始
+            form.validate({
+                //是否在获取焦点时验证
+                onfocusout: false,
+                //是否在敲击键盘时验证
+                onkeyup: false,
+                //当鼠标掉级时验证
+                onclick: false,
+                //验证错误
+                showErrors: function (errorMap, errorArr) {
+                    //errorMap {'name':'错误信息'}
+                    //errorArr [{'message':'错误信息',element:({})}]
+                    try {
+                        $(errorArr[0].element).focus();
+                        art.dialog({
+                            id: 'error',
+                            icon: 'error',
+                            lock: true,
+                            fixed: true,
+                            background: "#CCCCCC",
+                            opacity: 0,
+                            content: errorArr[0].message,
+                            cancelVal: '确定',
+                            cancel: function () {
+                                $(errorArr[0].element).focus();
+                            }
+                        });
+                    } catch (err) {
+
+                    }
+                },
+                //验证规则
+                rules: {
+                    'theme': {required: true},
+                    'type': {required: true},
+                },
+                //验证未通过提示消息
+                messages: {
+                    'theme': {required: '请输入产品题材'},
+                    'type': {required: '请输入产品类型'},
+                },
+                //给未通过验证的元素加效果,闪烁等
+                highlight: false,
+                //是否在获取焦点时验证
+                onfocusout: false,
+                //验证通过，提交表单
+                submitHandler: function (forms) {
+                    $(forms).ajaxSubmit({
+                        url: form.attr('action'), //按钮上是否自定义提交地址(多按钮情况)
+                        dataType: 'json',
+                        beforeSubmit: function (arr, $form, options) {
+
+                        },
+                        success: function (data, statusText, xhr, $form) {
+                            if (data.status) {
+                                setCookie("refersh_time", 1);
+                                //添加成功
+                                Wind.use("artDialog", function () {
+                                    art.dialog({
+                                        id: "succeed",
+                                        icon: "succeed",
+                                        fixed: true,
+                                        lock: true,
+                                        background: "#CCCCCC",
+                                        opacity: 0,
+                                        content: data.info,
+                                        button: [{
+                                            name: '继续编辑？',
+                                            callback: function () {
+                                                reloadPage(window);
+                                                return true;
+                                            },
+                                            focus: true
+                                        }, {
+                                            name: '返回列表',
+                                            callback: function () {
+                                                location.href = "{:U('index')}";
+                                                return true;
+                                            }
+                                        }]
+                                    });
+                                });
+                            } else {
+                                layer.alert(data.info);
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    })
+</script>
+</body>
+</html>

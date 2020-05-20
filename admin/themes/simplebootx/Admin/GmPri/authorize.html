@@ -1,0 +1,333 @@
+<admintpl file="header"/>
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/chosen.css">
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/docsupport/prism.css">
+<style>
+li{
+    margin-bottom: 5px;}
+</style>
+
+</head>
+<body>
+	<div class="wrap js-check-wrap">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="javascript:void(0);">权限授权</a></li>
+		</ul>
+		<form action="{:U('GmPri/authorize')}" method="post" class="form-horizontal js-ajax-forms" enctype="multipart/form-data">
+			<div class="row-fluid">
+				<div class="span9">
+					<table class="table table-bordered">
+
+
+						             <tr>
+              <th width="120">游戏名称</th>
+              <td>
+  <select name="appid" id="select_1"  class="chosen-select" style="width:220px;" tabindex="1">
+                        <option value="">请选择游戏</option>
+                        {$games}
+                    </select>
+
+              <span class="must_red">*</span>
+              </td>
+            </tr>
+           	 <tr>
+              <th width="120">区服ID</th>
+              <td>
+    <select name="serverid"  id="serverid"  >
+   
+    </select>
+              </td>
+            </tr>
+                       						             <tr>
+              <th width="120">玩家账号/手机号码</th>
+              <td>
+              <input type="text" name="username" required value="" />
+              <span class="must_red">*</span>
+              </td>
+            </tr>
+                                   						             <tr>
+              <th width="120">GM权限档位</th>
+              <td>
+    <select name="gm_gear_id"  id="gm_gear_id"  >
+   
+    </select>
+              </td>
+            </tr>
+                                   						             <tr>
+              <th width="120">授权原因</th>
+              <td>
+              <textarea name="open_reason" required></textarea>
+               <span class="must_red">*</span>
+              </td>
+            </tr>
+<input type="hidden" name="type" value="2"/>
+					</table>
+				</div>
+
+			</div>
+			<div class="form-actions">
+				<button class="btn btn-primary js-ajax-submit" type="submit">授权</button>
+				<a class="btn" href="javascript:history.back(-1);">{:L('BACK')}</a>
+			</div>
+		</form>
+	</div>
+	<script type="text/javascript" src="__PUBLIC__/js/common.js"></script>
+	<script src="__PUBLIC__/js/chosen/chosen.jquery.js" type="text/javascript"></script>
+  <script src="__PUBLIC__/js/chosen/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+var config = {
+'.chosen-select'           : {},
+'.chosen-select-deselect'  : {allow_single_deselect:true},
+'.chosen-select-no-single' : {disable_search_threshold:10},
+'.chosen-select-no-results': {no_results_text:'没有匹配的结果'},
+'search_contains':true,
+'.chosen-select-width'     : {width:"95%"},
+'.max_selected_options'  :{max_selected_options:10}
+}
+for (var selector in config) {
+	$(selector).chosen(config[selector]);
+}
+//$("#select_1").val('{$game_id}');
+//$("#select_1").trigger("chosen:updated");
+$(document).ready(function(){
+	$("form").submit(function(){
+		
+		if(!$('#select_1').val())
+		{
+			alert('请选择游戏');
+			return false;
+		}
+		if(!$('#gm_gear_id').val())
+		{
+			alert('请选择档位');
+			return false;
+		}
+		if(!$('#serverid').val())
+		{
+			alert('请选择区服ID');
+			return false;
+		}
+		
+	});
+
+	$('#select_1').change(function(){
+		var url = "{:U('GmPri/get_gm_by_game')}";
+		var url1= "{:U('GmPri/get_server')}";
+		$.post(url,{appid:this.value},function(data){
+			 
+			 $('#gm_gear_id').html('<option value="">请选择档位</option>');
+			for(var i=0,l=data.length;i<l;i++){
+                str = '<option value="'+data[i]['gear_id']+'">'+data[i]['gear_name']+'</option>';
+     
+				$('#gm_gear_id').append(str);
+
+			}
+		}
+
+	,'json');
+	$.post(url1,{appid:this.value},function(data){
+		if(data.status == 0)
+		{
+			alert('游戏研发方错误');
+		}
+		else if(data.status == 2)
+		{
+			alert('请为游戏添加GM权限');
+		}
+		else if(data.status == 3)
+		{
+			alert('请为GM权限填写区服地址');
+		}
+		else
+		{
+			$('#serverid').html('<option value="">请选择区服</option>');
+			for(var i=0,l=data.data.length;i<l;i++){
+				str = '<option value="'+data.data[i]['serverID']+'">'+data.data[i]['serverName']+'</option>';
+
+				$('#serverid').append(str);
+
+			}
+		}
+
+	}
+
+	,'json');
+})
+
+$("input[name='isdisplay_ad']").click(function(){
+
+	if($(this).val() == 1)
+	{
+		$('.ad').show();
+	}
+	else
+	{
+		$("input[name='ad_url']").val('');
+		$("input[name='ad_pic']").val('');
+		$('#thumb-preview').attr('src','__TMPL__Public/assets/images/default-thumbnail.png');
+		$('.ad').hide();
+
+	}
+
+})
+
+});
+
+Wind.use('validate', 'ajaxForm', 'artDialog', function() {
+	//javascript
+
+	//编辑器
+	editorcontent = new baidu.editor.ui.Editor();
+	editorcontent.render('content');
+	try {
+		editorcontent.sync();
+	} catch (err) {
+	}
+	//增加编辑器验证规则
+	jQuery.validator.addMethod('editorcontent', function() {
+		try {
+			editorcontent.sync();
+		} catch (err) {
+		}
+		return editorcontent.hasContents();
+	});
+	var form = $('form.js-ajax-forms');
+	//ie处理placeholder提交问题
+	if ($.browser && $.browser.msie) {
+		form.find('[placeholder]').each(function() {
+			var input = $(this);
+			if (input.val() == input.attr('placeholder')) {
+				input.val('');
+			}
+		});
+	}
+
+	var formloading = false;
+	//表单验证开始
+	form.validate({
+		//是否在获取焦点时验证
+		onfocusout : false,
+		//是否在敲击键盘时验证
+		onkeyup : false,
+		//当鼠标掉级时验证
+		onclick : false,
+		//验证错误
+		showErrors : function(errorMap, errorArr) {
+			//errorMap {'name':'错误信息'}
+			//errorArr [{'message':'错误信息',element:({})}]
+			try {
+				$(errorArr[0].element).focus();
+				art.dialog({
+					id : 'error',
+					icon : 'error',
+					lock : true,
+					fixed : true,
+					background : "#CCCCCC",
+					opacity : 0,
+					content : errorArr[0].message,
+					cancelVal : '确定',
+					cancel : function() {
+						$(errorArr[0].element).focus();
+					}
+				});
+			} catch (err) {
+			}
+		},
+		//验证规则
+		rules: {'name':{required:1}},
+		//验证未通过提示消息
+		messages: {'name':{required:'请输入权限名称'}},
+		//给未通过验证的元素加效果,闪烁等
+		highlight: false,
+		//是否在获取焦点时验证
+		onfocusout: false,
+		//验证通过，提交表单
+		submitHandler: function (forms) {
+
+			$(forms).ajaxSubmit({
+				url: form.attr('action'), //按钮上是否自定义提交地址(多按钮情况)
+				dataType: 'json',
+				beforeSubmit: function (arr, $form, options) {
+				},
+
+				success: function (data, statusText, xhr, $form) {
+
+					if(data.status){
+
+						setCookie("refersh_time",1);
+
+						//添加成功
+
+						Wind.use("artDialog", function () {
+
+							art.dialog({
+
+								id: "succeed",
+
+								icon: "succeed",
+
+								fixed: true,
+
+								lock: true,
+
+								background: "#CCCCCC",
+
+								opacity: 0,
+
+								content: data.info,
+
+								button:[
+
+								{
+
+									name: '继续授权',
+
+									callback:function(){
+
+										reloadPage(window);
+
+										return true;
+
+									},
+
+									focus: true
+
+								},{
+
+									name: '返回列表',
+
+									callback:function(){
+
+										location.href="__URL__";
+
+										return true;
+
+									}
+
+								}
+
+								]
+
+							});
+
+						});
+
+					}else{
+
+						isalert(data.info);
+
+					}
+
+				}
+
+			});
+
+		}
+
+	});
+
+});
+
+  </script>
+
+</body>
+</html>

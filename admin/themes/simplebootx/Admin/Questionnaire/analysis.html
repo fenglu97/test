@@ -1,0 +1,117 @@
+<admintpl file="header"/>
+<link rel="stylesheet" href="__PUBLIC__/js/switch/bootstrap-switch.css">
+<style>
+    .title{
+        width: 755px;
+        margin: 0 0 50px 21%;
+        padding: 20px;
+        border-radius: 15px;
+        display: block;
+        background-color: #008fbf;
+    }
+    .title p{
+        color:white;
+        text-align: center;
+        font-size: 20px;
+        margin:0;
+    }
+</style>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:U('adminIndex')}">问卷列表</a></li>
+        <li class="active"><a href="javascript:void(0);">问卷统计</a></li>
+    </ul>
+    <div class="title">
+        <p>{$data.title}</p>
+    </div>
+    <foreach name="data['question']" key="k" item="vo">
+        <div class="well" data-id="{$vo.id}" data-type="{$vo.type}" style="width: 45%;margin-left: 21%;">
+            <p style="border: 1px solid #f5f5f5;border-bottom-color: #afaeae;">Q{$k+1}：{$vo.name}<if condition="$vo.type eq 1 ">&nbsp;&nbsp;(单选)<elseif condition="$vo.type eq 2"/>&nbsp;&nbsp;(多选)&nbsp;&nbsp;<span onmouseover="showtips(this)">多选题百分比计算方法</span><else/>&nbsp;&nbsp;(填空)</if></p>
+            <if condition="$vo.type neq 3">
+                <table class="table table-hover table-bordered">
+                    <thead>
+                        <tr>
+                            <th  style="width:35%">选项</th>
+                            <th>小计</th>
+                            <th>比例</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <volist  name="vo['option']" id="val">
+                            <tr>
+                                <td>{$val.name}</td>
+                                <td>{$val.count}</td>
+                                <td>{$val.scale}%</td>
+                            </tr>
+                        </volist >
+                    </tbody>
+                </table>
+            <else/>
+                <p>
+                    <button class="btn btn-primary info">查看详细信息</button>
+                </p>
+                <div class="fill" style="display: none;padding: 10px;">
+                    <table class="table table-hover table-bordered " >
+                        <thead>
+                        <tr>
+                            <th  style="width:50px">序号</th>
+                            <th>答案</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <volist  name="vo['answer']" id="val">
+                            <tr>
+                                <td>{$key + 1}</td>
+                                <td>{$val.value}</td>
+                            </tr>
+                        </volist >
+                        </tbody>
+                    </table>
+                </div>
+            </if>
+        </div>
+    </foreach>
+    <div class="form-actions" style="text-align: center">
+        <a class="btn" href="javascript:history.back(-1);">{:L('BACK')}</a>
+    </div>
+
+</div>
+<script src="__PUBLIC__/js/jquery19.js"></script>
+<script src="__PUBLIC__/js/switch/bootstrap.min.js"></script>
+<script src="__PUBLIC__/js/switch/bootstrap-switch.js"></script>
+<script src="__PUBLIC__/js/common.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script>
+    function showtips(obj){
+        var index = layer.tips('1、多选题选项百分比＝该选项被选择次数÷有效答卷份数。<br>2、含义为选择该选项的人次在所有填写人数中所占的比例。<br>所以对于多选题百分比相加可能超过百分之一百。', obj, {
+            tips: 2,
+            area:['auto','auto'],
+            time:false
+        });
+        $(obj).on('mouseout',function(){
+            layer.close(index)
+        })
+    }
+$(function () {
+    $('.info').click(function(){
+        layer.open({
+            type: 1,
+            skin: 'layui-layer-molv', //加上边框
+            area: ['800px', '600px'], //宽高
+            content: $(this).parents('p').siblings('div'),
+            closeBtn: 0, //不显示关闭按钮
+            anim: 2,
+            shadeClose: true, //开启遮罩关闭
+            btn: ['关闭'],
+            btnAlign:'c',
+            yes:function(index){
+                layer.close(index)
+            }
+        });
+    })
+})
+</script>
+</body>
+</html>

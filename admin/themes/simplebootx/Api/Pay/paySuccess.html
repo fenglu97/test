@@ -1,0 +1,235 @@
+<html>
+<head>
+    <title>支付页面</title>
+    <meta id="viewport" name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1; user-scalable=no;">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="__TMPL__Public/assets/css/reset.css"/>
+    <link rel="stylesheet" href="__TMPL__Public/assets/css/new_public.css"/>
+    <style type="text/css">
+        body {
+            text-align: center;
+            margin-left: 0px;
+            margin-top: 0px;
+            margin-right: 0px;
+            margin-bottom: 0px;
+            font-family: "Microsoft YaHei";
+            font-size: 16px;
+            color: #333333;
+        }
+        .btn_blue{display:inline-block;padding:0 20px;height:40px;line-height:40px;background:#2284D8;letter-spacing:2px;color:#ffffff;}
+        .btn_red{display:inline-block;padding:0 20px;height:40px;line-height:40px;background: #d83f53;letter-spacing:2px;color:#ffffff;}
+        .bg_gray{display:inline-block;width:100%;background:#f2f2f2;}
+        .bg_white{display:inline-block;width:100%;}
+        .text_in{display:inline-block;width:300px;height:30px;line-height:30px;padding: 0 0 0 70px;}
+		
+        .header{
+            height: 3rem;
+            padding: 0 1em;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+        }
+        .header-title{
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+        .header-button{
+            width: 5rem;
+            display: flex;
+            align-items: center;
+            line-height: 1rem;
+        }
+        .header-button.header-left{
+            justify-content: flex-start;
+        }
+        .header-button.header-right{
+            justify-content: flex-end;
+        }
+    </style>
+</head>
+<body>
+<if condition="$order['payType'] eq 4">
+    <div class="header">
+        <div class="header-button header-left"></div>
+        <div class="header-title">支付</div>
+        <div class="header-button header-right">
+            <i class="icon-close"></i>
+        </div>
+    </div>
+</if>
+<if condition="$data['sate'] eq 1">
+    <div align="center" class="btn_blue">{$data.msg}！</div>
+    <div class="bg_white">&nbsp;</div>
+    <div class="bg_gray">
+        <div align="left" class="text_in">订单：&nbsp;&nbsp;{$data.order}</div>
+    </div>
+    <div class="bg_white">
+        <div align="left" class="text_in">金额：&nbsp;&nbsp;<font>{$data.money}</font> 元</div>
+    </div>
+    <div class="bg_gray">
+        <div align="left" class="text_in">状态：&nbsp;&nbsp;<font color="#228b22">{$data.status}</font></div>
+    </div>
+    <div class="bg_white">
+        <div align="left" class="text_in">时间：&nbsp;&nbsp;{$data.time|date="Y-m-d H:i:s",###}</div>
+    </div>
+    <div class="bg_gray">
+        <div align="left"  class="text_in">网络原因部分订单可能延时发货，</div>
+    </div>
+    <div class="bg_white">
+        <div align="left" class="text_in">请稍等片刻或联系客服。</div>
+    </div>
+    <div class="bg_gray">
+        <div align="left"  class="text_in">&nbsp;</div>
+    </div>
+
+    <else/>
+
+    <div align="center" class="btn_blue">{$data.msg}！</div>
+
+</if>
+<div id="msg"></div>
+<!--<script charset="utf-8" type="text/javascript">
+    document.write('<script src="__PUBLIC__/js/jquery.js?v='+(new Date()).getTime()+'"><\/script>');
+</script>
+<script charset="utf-8" type="text/javascript">
+    document.write('<script src="__PUBLIC__/js/md5.js?v='+(new Date()).getTime()+'"><\/script>');
+</script>
+<script charset="utf-8" type="text/javascript">
+    document.write('<script src="__TMPL__Public/assets/js/base64.js?v='+(new Date()).getTime()+'"><\/script>');
+</script>-->
+<script src="__PUBLIC__/js/jquery.js"></script>
+<script src="__PUBLIC__/js/md5.js"></script>
+<script src="__TMPL__Public/assets/js/base64.js"></script>
+<script charset="utf-8" type="text/javascript">
+    document.write('<script src="__TMPL__Public/assets/js/api.js?v='+(new Date()).getTime()+'"><\/script>');
+</script>
+<script>
+    let payQueryInterval;
+    var payId = '';
+    window.onload = function(){
+        if (JSON.parse(localStorage.getItem('orderInfo'))){
+            let orderInfo = JSON.parse(localStorage.getItem('orderInfo'));
+            document.getElementsByClassName("icon-close")[0].addEventListener("click",function () {
+                if(Api.config.system === 1){
+                    window.Android.closePay(true,orderInfo.orderID);
+                } else if (Api.config.system === 2){
+                    window.webkit.messageHandlers.wz_callOC.postMessage({
+                        method: 'closePay',
+                        param: {
+                            payState: true,
+                            payId: orderInfo.orderID
+                        }
+                    });
+                }
+            });
+            if (orderInfo.order_status!=1){
+                var count = 1;
+                payQueryInterval = setInterval(function () {
+                    if(count <= 60){
+                        count++;
+                        payQuery();
+                    }
+                    else {
+                        payError();
+                        clearInterval(payQueryInterval);
+                    }
+                }, 5000);
+            }
+        }
+    };
+    function payQuery() {
+        let orderInfo = JSON.parse(localStorage.getItem('orderInfo'));
+        var options = {
+            orderID: orderInfo.orderID
+        };
+
+        options.sign = Api.util.getSign(options, Api.config.appkey);
+        // document.getElementById("msg").innerHTML = JSON.stringify(options.sign);
+        $.ajax({
+            url: Api.config.host + '/index.php?g=api&m=pay&a=payQuery',
+            type: 'post',
+            data: options,
+            success: function (res) {
+
+                if(res.status == 1){
+                    // document.getElementById("msg").innerHTML = JSON.stringify(res);
+                    var data = res.data;
+                    if(data.order_status == 1){
+                        // 成功
+                        payId = data.orderID;
+                        let orderInfoOther = JSON.parse(localStorage.getItem('orderInfo'));
+                        orderInfoOther.order_status = 1;
+                        localStorage.removeItem("orderInfo");
+                        localStorage.setItem('orderInfo', JSON.stringify(orderInfoOther));
+                        clearInterval(payQueryInterval);
+                        paySucceed();
+                        // window.location.href = data.url + '&money=' + payParams.amount + '&order=' + data.orderID;
+                    }
+                    else if(data.order_status == 2){
+                        // 发货中
+                    }
+                    else if(data.order_status == 3){
+                        // 未支付
+                       /* let orderInfoOther = JSON.parse(localStorage.getItem('orderInfo'));
+                        orderInfoOther.order_status = 1;
+                        localStorage.removeItem("orderInfo");
+                        localStorage.setItem('orderInfo', JSON.stringify(orderInfoOther));
+                        document.getElementById("msg").innerHTML = JSON.stringify(JSON.parse(localStorage.getItem('orderInfo')).order_status)*/
+                    }
+                }
+            },
+            error: function (err) {
+                // document.getElementById("msg").innerHTML = JSON.stringify(err);
+                console.log(err);
+            }
+        })
+    }
+    function paySucceed() {
+        // payId = '';
+        // payState = false;
+        let orderInfo = JSON.parse(localStorage.getItem('orderInfo'));
+        // document.getElementById("msg").innerHTML = JSON.stringify(orderInfo);
+        if(Api.config.system === 1){
+            // document.getElementById("msg").innerHTML = JSON.stringify(Date.now());
+            window.Android.onPaySucceed();
+        } else if (Api.config.system === 2){
+            window.webkit.messageHandlers.wz_callOC.postMessage({method: 'onPaySucceed'});
+        }
+        window.location.href = "http://sdk.luckysy.cn/index.php?g=api&m=pay&a=paySuccess&money="+orderInfo.money+"&order="+orderInfo.orderID+"&time="+orderInfo.create_time;
+    }
+    function payError() {
+        // payId = '';
+        if(Api.config.system === 1){
+            window.Android.onPayFail('');
+        } else if (Api.config.system === 2){
+            window.webkit.messageHandlers.wz_callOC.postMessage({
+                method: 'onPayFail',
+                param: {
+                    message: ''
+                }
+            });
+        }
+    }
+    $('.icon-close').on('click', function () {
+        if(Api.config.system === 1){
+            window.Android.closePay(true, payId);
+        } else if (Api.config.system === 2){
+            window.webkit.messageHandlers.wz_callOC.postMessage({
+                method: 'closePay',
+                param: {
+                    payState: true,
+                    payId: payId
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>
+

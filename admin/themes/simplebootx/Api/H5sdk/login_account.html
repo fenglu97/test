@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>账号登录</title>
+    <link rel="stylesheet" href="__TMPL__Public/assets/css/reset.css"/>
+    <link rel="stylesheet" href="__TMPL__Public/assets/css/new_public.css"/>
+</head>
+<body>
+<div class="wrap">
+    <div class="toast is-placemiddle" style="padding: 10px; display: none;">
+        <span class="toast-text" style="padding-top: 0;">提示信息</span>
+    </div>
+    <div class="header">
+        <div class="header-button header-left">
+            <!--<i class="icon-left"></i>-->
+            <!--<span>返回</span>-->
+        </div>
+        <div class="header-title">登录</div>
+        <div class="header-button header-right">
+            <a class="a" href="/api/H5sdk/register_user.html">注册</a>
+        </div>
+    </div>
+    <div class="main">
+        <div class="form">
+            <form>
+                <div class="form-item">
+                    <!--<label class="form-item-label">账号</label>-->
+                    <div class="form-item-content">
+                        <label class="form-item-label">
+                            <i class="icon-user"></i>
+                        </label>
+                        <input class="form-item-input" type="text" name="username" placeholder="用户名">
+                        <i class="icon-clear"></i>
+                    </div>
+                </div>
+
+                <div class="form-item">
+                    <!--<label class="form-item-label">账号</label>-->
+                    <div class="form-item-content">
+                        <label class="form-item-label">
+                            <i class="icon-password"></i>
+                        </label>
+                        <input class="form-item-input" type="password" name="password" placeholder="密码">
+                        <i class="icon-clear"></i>
+                    </div>
+                </div>
+                <div class="form-item">
+                    <!--<a class="a flex1" href="/api/H5sdk/register_mobile.html">注册</a>-->
+                    <a class="a flex1" href="/api/H5sdk/login_mobile.html#isJudge=1">手机号登录</a>
+                    <a class="a" href="/api/H5sdk/retrieve_password_check.html">找回密码</a>
+                </div>
+
+                <div class="form-item">
+                    <button class="button button-primary is-round submit" type="button">登录</button>
+                    <!--&emsp;-->
+                    <!--<button class="button" type="button">取消</button>-->
+                </div>
+                <div class="form-item">
+                    <button class="button button-primary is-round visitor" type="button">游客登录</button>
+                </div>
+            </form>
+            <div class="wxts">
+                <p><span>温馨提示：</span>本游戏适合5岁以上的用户使用。未实名用户请实名认证。适度游戏益脑，请您合理控制游戏时间，避免沉溺游戏影响生活。注意自我保护，防范网络陷阱。</p>
+            </div>
+        </div>
+
+    </div>
+    <div class="test"></div>
+</div>
+
+<script charset="utf-8" type="text/javascript" defer="defer">
+    document.write('<script src="__PUBLIC__/js/jquery.js?v='+(new Date()).getTime()+'"><\/script>');
+</script>
+<script charset="utf-8" type="text/javascript" defer="defer">
+    document.write('<script src="__PUBLIC__/js/layer/layer.js?v='+(new Date()).getTime()+'"><\/script>');
+</script>
+<script charset="utf-8" type="text/javascript" defer="defer">
+    document.write('<script src="__PUBLIC__/js/md5.js?v='+(new Date()).getTime()+'"><\/script>');
+</script>
+<script charset="utf-8" type="text/javascript" defer="defer">
+    document.write('<script src="__TMPL__Public/assets/js/base64.js?v='+(new Date()).getTime()+'"><\/script>');
+</script>
+<script charset="utf-8" type="text/javascript">
+    document.write('<script src="__TMPL__Public/assets/js/osvalue.js?v='+(new Date()).getTime()+'"><\/script>');
+</script>
+<script src="__TMPL__Public/assets/js/vconsole.min.js"></script>
+<script>
+    var vConsole = new VConsole();
+</script>
+<script>
+    $(function () {
+        if(Api.config.system === 2){
+            window.appIosCallback = function (data) {
+                var iosInfo = JSON.parse(Base64.decode(data));
+                Api.config.iosInfo = JSON.parse(Base64.decode(data));
+                Api.config.appid = iosInfo.getAppId;
+                Api.config.appkey = iosInfo.getAppKey;
+                Api.config.channel = iosInfo.getChannel;
+                Api.config.maker = iosInfo.getMaker;
+                Api.config.mobile_model = iosInfo.getMobileModel;
+                Api.config.machine_code = iosInfo.getMachineCode;
+                Api.config.system_version = iosInfo.getVersionName;
+                Api.config.getAdLinkUrl = iosInfo.getAdLinkUrl;
+                Api.config.getAdImageUrl = iosInfo.getAdImageUrl;
+                Api.config.isDisplayAd = iosInfo.isDisplayAd;
+                Api.config.isRegisterEnabled = iosInfo.isRegisterEnabled;
+                Api.config.isNameAuthEnabled = iosInfo.isNameAuthEnabled;
+                Api.config.isPlatformMoneyEnabled = iosInfo.isPlatformMoneyEnabled;
+                Api.config.isBindMobileEnabled = iosInfo.isBindMobileEnabled;
+                Api.config.getDiscount = iosInfo.getDiscount;
+            };
+            window.webkit.messageHandlers.wz_callOC.postMessage({
+                method : 'getAppInfo'
+            });
+        }
+        /*从本地获取信息*/
+        if (Api.config.system===1){
+            if (Api.config.getAccount){
+                if (JSON.parse(Api.config.getAccount).account){
+                    getAccountInfo(Api.config.getAccount);
+                }
+            }
+        }
+        else if (Api.config.system===2){
+            window.iOSGetDataCallBack = function (data) {
+                if (data){
+                    if (JSON.parse(data).account){
+                        getAccountInfo(data);
+                    }
+                }
+            };
+            window.webkit.messageHandlers.wz_callOC.postMessage({
+                method: 'iOSGetData',
+                param: {
+                    key: 'userInfo'
+                }
+            });
+        }
+        function getAccountInfo(account) {
+            if(account){
+                account = JSON.parse(account);
+                $('input[name="username"]').val(account.account);
+                $('input[name="password"]').val(account.password);
+                $('.icon-clear').show();
+            }
+        }
+        /*var account = Api.util.cookie.get('185_account_username');
+        if(account){
+            getAccount(account);
+            // account = JSON.parse(account);
+            // $('input[name="username"]').val(account.username);
+            // $('input[name="password"]').val(account.password);
+            // $('.icon-clear').show();
+        } else if(Api.config.system === 2){
+            window.iOSGetDataCallBack = function (data) {
+                getAccount(data);
+            };
+            window.webkit.messageHandlers.wz_callOC.postMessage({
+                method: 'iOSGetData',
+                param: {
+                    key: '185_account_username'
+                }
+            });
+        }*/
+
+
+        function toast(msg){
+            msg = msg || '提示';
+            $('.toast').children('.toast-text').html(msg);
+            $('.toast').fadeIn();
+            var toastTimer =  setTimeout(function () {
+                $('.toast').fadeOut();
+                clearTimeout(toastTimer);
+            }, 2000);
+        }
+
+        $('.form-item-content>input').on('input', function () {
+            if(this.value.length > 0){
+                $(this).parent().children('.icon-clear').show();
+            } else {
+                $(this).parent().children('.icon-clear').hide();
+            }
+        });
+
+        $('.icon-clear').on('click', function () {
+            $(this).parent().children('input').val('');
+            $(this).hide();
+        });
+
+        // $('input[name="username"]')
+        $('.submit').on('click', function () {
+            var username = $('input[name="username"]').val();
+            var password = $('input[name="password"]').val();
+            if(!username){
+                toast('用户名不能为空');
+                return
+            }
+            if(!password){
+                toast('密码不能为空');
+                return
+            }
+
+            submitForm({
+                username: username,
+                password: password
+            });
+        });
+
+        // 点击游客登陆时间
+        $('.visitor').on('click',function() {
+            var options = {
+                appid: Api.config.appid, //应用ID
+                channel: Api.config.channel, //渠道ID
+                system: Api.config.system, //系统
+                maker: Api.config.maker, //厂商
+                mobile_model: Api.config.mobile_model, //手机型号
+                machine_code: Api.config.machine_code, //设备号
+                system_version: Api.config.system_version //系统版本
+            };
+            options.sign = Api.util.getSign(options, Api.config.appkey);
+
+            $.ajax({
+                url: Api.config.host + '/index.php?g=api&m=user&a=visitorlogin',
+                type: 'post',
+                data: options,
+                success: function (res) {
+                    if(res.status === 1002) {
+                        // 游客模式还有剩余时间
+
+                        layer.confirm(res.msg,{
+                            btn:['绑定账号','稍后再说']
+                        },function() {
+                            // 绑定账号，进入绑定账号页面
+                            location.href = res.data.url;
+                        },function() {
+                            // 稍后再说直接进入游戏
+                            Api.config.onLoginSucceed(res.data.app_uid, res.data.token, res.data.uid);
+                        })
+                    }else if(res.status === 1001) {
+                        // 游客模式没有剩余时间
+                        layer.confirm(res.msg,{
+                            btn:['绑定账号','退出游戏']
+                        },function() {
+                            location.href = res.data.url;
+                        },function() {
+
+                        })
+                    }else {
+                        layer.msg(res.msg);
+                    }
+                },
+                error: function (err) {
+                    toast(err);
+                }
+            })
+        });
+
+        var submitFormFlag = true;
+        function submitForm(vals) {
+            if(!submitFormFlag){
+                return
+            }
+            submitFormFlag = false;
+            var options = {
+                username: vals.username,
+                type: 1, //1.用户账号 2.手机登录
+                password: vals.password,
+                appid: Api.config.appid, //应用ID
+                channel: Api.config.channel, //渠道ID
+                system: Api.config.system, //系统
+                machine_code: Api.config.machine_code //设备号
+            };
+            options.sign = Api.util.getSign(options, Api.config.appkey);
+            $.ajax({
+                url: Api.config.host + '/index.php?g=api&m=user&a=login',
+                type: 'post',
+                data: options,
+                success: function (res) {
+                    if(res.status === 1){
+                        var data = res.data;
+                        Api.util.cookie.set('185_userdata', JSON.stringify(data));
+                        Api.util.cookie.set('185_account_username', JSON.stringify({
+                            username: vals.username,
+                            password: vals.password
+                        }));
+                        Api.util.iosCookie.set('185_account_username', JSON.stringify({
+                            username: vals.username,
+                            password: vals.password
+                        }));
+
+                        /*将输入框信息保存到本地*/
+                        /*let userMobile = "";
+                        if (userInfo) {
+                            userMobile = JSON.parse(userInfo).mobile?JSON.parse(userInfo).mobile:"";
+                        }*/
+                        if (Api.config.system===1){
+                            window.Android.setAccount("mowanshouyou",vals.username,data.mobile,vals.password);
+                        }
+                        else if (Api.config.system===2){
+                            Api.util.iosCookie.set('userInfo', JSON.stringify({
+                                account: vals.username,
+                                mobile:"",
+                                password: vals.password
+                            }));
+                        }
+
+                        location.href = '/api/H5sdk/account_list.html';
+                    } else if(res.msg){
+                        toast(res.msg);
+                    }
+
+                    submitFormFlag = true;
+                },
+                error: function (err) {
+                    submitFormFlag = true;
+                    console.log(err);
+                }
+            })
+        }
+    })
+</script>
+</body>
+</html>

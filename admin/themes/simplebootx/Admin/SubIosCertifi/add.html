@@ -1,0 +1,270 @@
+<admintpl file="header"/>
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/chosen.css">
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/docsupport/prism.css">
+<link rel="stylesheet" href="__PUBLIC__/js/uploadifive/uploadifive.css">
+<style type="text/css" media="all">
+    /* fix rtl for demo */
+    .chosen-rtl .chosen-drop { left: -9000px; }
+    th{width:80px;}
+</style>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:U('index')}">证书列表</a></li>
+        <li class="active"><a href="javascript:void(0);">新增证书</a></li>
+    </ul>
+    <form class="form-horizontal js-ajax-forms" action="" method="post">
+        <fieldset>
+
+            <div class="control-group">
+                <label class="control-label">游戏</label>
+                <div class="controls">
+                    <select name="appid" class="chosen-select">
+                        <option value="0">全部</option>
+                        {:get_game_list()}
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">渠道</label>
+                <div class="controls">
+                    <select name="channel" class="chosen-select">
+                        <option value="0">全部</option>
+                        {:get_channel_list()}
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">P12密码</label>
+                <div class="controls">
+                    <input type="text" maxlength="255" style="width:490px;" name="p12_pwd" class="up_text"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">P12文件</label>
+                <div class="controls">
+                    <input type="file"  id="up_p12" />
+                    <input type="text" maxlength="255" style="width:490px;padding-left:15px;border-radius: 0 5px 5px 0;" readonly name="p12_url" id="p12_url" class="up_text"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Mobileprovision文件</label>
+                <div class="controls">
+                    <input type="file"  id="up_provision" />
+                    <input type="text" maxlength="255" style="width:490px;padding-left:15px;border-radius: 0 5px 5px 0;" readonly name="provision_url" id="provision_url" class="up_text" />
+                </div>
+            </div>
+        </fieldset>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary js-ajax-submit">提交</button>
+            <a class="btn" href="javascript:history.back(-1);">{:L('BACK')}</a>
+        </div>
+        <input name="id" value="{$data.id}" type="hidden" />
+    </form>
+</div>
+<script src="__PUBLIC__/js/common.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script src="__PUBLIC__/js/uploadifive/jquery.uploadifive.js"></script>
+<script src="__PUBLIC__/js/chosen/chosen.jquery.js" type="text/javascript"></script>
+<script src="__PUBLIC__/js/chosen/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    var config = {
+        '.chosen-select'           : {},
+        '.chosen-select-deselect'  : {allow_single_deselect:true},
+        '.chosen-select-no-single' : {disable_search_threshold:10},
+        '.chosen-select-no-results': {no_results_text:'没有匹配的结果'},
+        '.chosen-select-width'     : {width:"95%"}
+    }
+    for (var selector in config) {
+        $(selector).chosen(config[selector]);
+    }
+    $(function(){
+        $('#up_p12').uploadifive({
+            'auto' : true,
+            'dnd' : false,
+            'height' : 20,
+            'width' : 58,
+            'uploadScript' : "{:U('upload')}",
+            'fileObjName' : 'upload',
+            'buttonText' : '选择文件',
+            'fileType' : '',
+            'multi' : false,
+            'fileSizeLimit'   : '2MB',
+            'uploadLimit' : 1,
+            'queueSizeLimit'  : 1,
+            'removeCompleted' : true,
+            onUploadComplete : function(file, data) {
+                var obj = JSON.parse(data);
+                if(obj.status == 1){
+                    $('#p12_url').val(obj.fullpath);
+                }else{
+                    layer.alert(obj.msg);
+                    $data    = $(this).data('uploadifive'),
+                        settings = $data.settings;
+                    settings.uploadLimit++;
+                }
+            },
+            onCancel : function(file) {
+                $("#frontSide").val("");
+                /* 注意：取消后应重新设置uploadLimit */
+                $data    = $(this).data('uploadifive'),
+                    settings = $data.settings;
+                settings.uploadLimit++;
+            },
+            onFallback : function() {
+                alert("该浏览器无法使用!");
+            },
+            onProgress   : function(file, e) {
+                if (e.lengthComputable) {
+                    var percent = Math.round((e.loaded / e.total) * 100)-1;
+                }
+                file.queueItem.find('.fileinfo').html(' - ' + percent + '%');
+                file.queueItem.find('.progress-bar').css('width', percent + '%');
+            }
+        });
+
+        $('#up_provision').uploadifive({
+            'auto' : true,
+            'dnd' : false,
+            'height' : 20,
+            'width' : 58,
+            'uploadScript' : "{:U('upload')}",
+            'fileObjName' : 'upload',
+            'buttonText' : '选择文件',
+            'fileType' : '',
+            'multi' : false,
+            'fileSizeLimit'   : '2MB',
+            'uploadLimit' : 1,
+            'queueSizeLimit'  : 1,
+            'removeCompleted' : true,
+            onUploadComplete : function(file, data) {
+                var obj = JSON.parse(data);
+                if(obj.status == 1){
+                    $('#provision_url').val(obj.fullpath);
+                }else{
+                    layer.alert(obj.msg);
+                    $data    = $(this).data('uploadifive'),
+                        settings = $data.settings;
+                    settings.uploadLimit++;
+                }
+            },
+            onCancel : function(file) {
+                $("#frontSide").val("");
+                /* 注意：取消后应重新设置uploadLimit */
+                $data    = $(this).data('uploadifive'),
+                    settings = $data.settings;
+                settings.uploadLimit++;
+            },
+            onFallback : function() {
+                alert("该浏览器无法使用!");
+            },
+            onProgress   : function(file, e) {
+                if (e.lengthComputable) {
+                    var percent = Math.round((e.loaded / e.total) * 100)-1;
+                }
+                file.queueItem.find('.fileinfo').html(' - ' + percent + '%');
+                file.queueItem.find('.progress-bar').css('width', percent + '%');
+            }
+        });
+
+        Wind.use('validate', 'ajaxForm', 'artDialog', function () {
+            var form = $('form.js-ajax-forms');
+            //表单验证开始
+            form.validate({
+                //是否在获取焦点时验证
+                onfocusout: false,
+                //是否在敲击键盘时验证
+                onkeyup: false,
+                //当鼠标掉级时验证
+                onclick: false,
+                //验证错误
+                showErrors: function (errorMap, errorArr) {
+                    //errorMap {'name':'错误信息'}
+                    //errorArr [{'message':'错误信息',element:({})}]
+                    try {
+                        $(errorArr[0].element).focus();
+                        art.dialog({
+                            id: 'error',
+                            icon: 'error',
+                            lock: true,
+                            fixed: true,
+                            background: "#CCCCCC",
+                            opacity: 0,
+                            content: errorArr[0].message,
+                            cancelVal: '确定',
+                            cancel: function () {
+                                $(errorArr[0].element).focus();
+                            }
+                        });
+                    } catch (err) {
+
+                    }
+                },
+                //验证规则
+                rules: {
+                    'p12_pwd': {required: true},
+                    'p12_url': {required: true},
+                    'provision_url': {required: true}
+                },
+                //验证未通过提示消息
+                messages: {
+                    'p12_pwd': {required: '请输入P12密码'},
+                    'p12_url': {required: '请上传P12文件'},
+                    'provision_url': {required: '请上传Mobileprovision文件'}
+                },
+                //给未通过验证的元素加效果,闪烁等
+                highlight: false,
+                //是否在获取焦点时验证
+                onfocusout: false,
+                //验证通过，提交表单
+                submitHandler: function (forms) {
+                    $(forms).ajaxSubmit({
+                        url: form.attr('action'), //按钮上是否自定义提交地址(多按钮情况)
+                        dataType: 'json',
+                        beforeSubmit: function (arr, $form, options) {
+
+                        },
+                        success: function (data, statusText, xhr, $form) {
+                            if (data.status) {
+                                setCookie("refersh_time", 1);
+                                //添加成功
+                                Wind.use("artDialog", function () {
+                                    art.dialog({
+                                        id: "succeed",
+                                        icon: "succeed",
+                                        fixed: true,
+                                        lock: true,
+                                        background: "#CCCCCC",
+                                        opacity: 0,
+                                        content: data.info,
+                                        button: [{
+                                            name: '继续添加',
+                                            callback: function () {
+                                                reloadPage(window);
+                                                return true;
+                                            },
+                                            focus: true
+                                        }, {
+                                            name: '返回列表',
+                                            callback: function () {
+                                                location.href = "index.php?g=admin&m=SubIosCertifi&a=index";
+                                                return true;
+                                            }
+                                        }]
+                                    });
+                                });
+                            } else {
+                                layer.alert(data.info,function () {
+                                    location.href = "index.php?g=admin&m=SubIosCertifi&a=index";
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    })
+</script>
+</body>
+</html>

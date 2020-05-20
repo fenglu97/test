@@ -1,0 +1,94 @@
+<admintpl file="header"/>
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/chosen.css">
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/docsupport/prism.css">
+<style type="text/css" media="all">    /* fix rtl for demo */
+.chosen-rtl .chosen-drop {
+    left: -9000px;
+}</style></head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+
+        <li><a href="{:U('Promoter/open_server',array('type_day'=>0))}" target="_self">今日开服</a></li>
+        <li><a href="{:U('Promoter/open_server',array('type_day'=>1))}" target="_self">明日开服</a></li>
+        <li class="active"><a href="javascript:;">游戏开服列表</a></li>
+
+
+    </ul>
+
+    <script src="__PUBLIC__/js/chosen/chosen.jquery.js" type="text/javascript"></script>
+    <script src="__PUBLIC__/js/chosen/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">        var config = {
+        '.chosen-select': {},
+        '.chosen-select-deselect': {allow_single_deselect: true},
+        '.chosen-select-no-single': {disable_search_threshold: 10},
+        '.chosen-select-no-results': {no_results_text: '没有匹配的结果'},
+        '.chosen-select-width': {width: "95%"}
+    };
+    for (var selector in config) {
+        $(selector).chosen(config[selector]);
+    }
+    $("#select_1").val('{$game_id}');
+    $("#select_1").trigger("chosen:updated");    </script>
+
+
+
+        <table class="table table-hover table-bordered table-list">
+            <thead>
+            <tr>
+
+                <th width="100">ID</th>
+                <th>游戏名称</th>
+                <th>区服ID</th>
+                <th>开服时间</th>
+                <th>游戏平台</th>
+
+
+
+            </tr>
+            </thead>
+            <foreach name="lists" item="vo">
+                <tr>
+
+                    <td>{$vo.id}</td>
+                    <td>{$vo.gamename}</td>
+                    <td>
+                        <if condition="$vo['line'] eq 1">双线
+                            <elseif condition="$vo['line'] eq 2"/>
+                            内测
+                            <elseif condition="$vo['line'] eq 3"/>
+                            删档
+                            <elseif condition="$vo['line'] eq 4"/>
+                            公测
+                            <elseif condition="$vo['line'] eq 5"/>
+                            封测
+                        </if>
+                        {$vo.server_id}服
+                    </td>
+                    <td>{$vo.start_time|date="Y-m-d H:i:s",###}</td>
+                    <td>
+                        <if condition="$vo['platform'] eq 1">BT服</if>
+                    </td>
+
+
+
+
+                </tr>
+            </foreach>
+        </table>
+        <div class="pagination">{$page}</div>
+
+</div>
+<script src="__ROOT__/public/js/common.js?"></script>
+<script>    Think.setValue("game_id", {$game_id | default = 0 });
+setCookie('refersh_time', 0);
+function refersh_window() {
+    var refersh_time = getCookie('refersh_time');
+    if (refersh_time == 1) {
+        window.location.reload();
+    }
+}
+setInterval(function () {
+    refersh_window()
+}, 3000);</script>
+</body></html>

@@ -1,0 +1,90 @@
+<admintpl file="header" />
+<link rel="stylesheet" href="__PUBLIC__/js/raty/jquery.raty.css">
+</head>
+<body>
+	<div class="wrap js-check-wrap">
+		<ul class="nav nav-tabs">
+			<li class="<if condition="$type eq 1">active</if>"><a href="{:U('Studymaterial/index',array('type'=>1))}">文档资料</a></li>
+			<li class="<if condition="$type eq 2">active</if>"><a href="{:U('Studymaterial/index',array('type'=>2))}">视频资料</a></li>
+	        <li class=""><a href="{:U('Studymaterial/add')}">上传资料</a></li>
+		</ul>
+
+			<table class="table table-hover table-bordered table-list" id="menus-table">
+				<thead>
+					<tr>
+					
+						<th width="100">ID</th>
+					
+						<th>资料名称</th>
+					    <th>资料星级</th>
+					    <th>资料大小</th>
+					    <th>上传日期</th>
+						<th width="100">下载</th>
+						<th width="100">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+				<foreach name="list" item="vo">
+					<tr>
+					<td>{$vo.id}</td>
+					<td>{$vo.file_name}</td>
+					<td><div class="star{$vo.score}"></div></td>
+					<td>{$vo.file_size}MB</td>
+					<td>{$vo.create_time|date='Y-m-d H:i:s',###}</td>
+					<td>
+					<a class="btn a btn-primary" href="{$vo.file_url}" target="_blank">下载</a>
+ </td>
+ <td>
+ 						<a href="{:U('Studymaterial/edit',array('id'=>$vo['id']))}">修改</a>
+
+						<a href="{:U('Studymaterial/del',array('id'=>$vo['id']))}" class="js-ajax-delete">删除</a>
+
+ </td>
+					</tr>	</foreach>
+				</tbody>
+				<tfoot>
+					<tr>
+						<th width="100">ID</th>
+					
+						<th>资料名称</th>
+					    <th>资料星级</th>
+					    <th>资料大小</th>
+					    <th>上传日期</th>
+						<th width="100">下载</th>
+						<th width="100">下载</th>
+					</tr>
+				</tfoot>
+			</table>
+	
+		</form>
+	</div>
+	
+			<div class="pagination">{$page}</div>
+	<script src="__PUBLIC__/js/common.js"></script>
+	<script src="__PUBLIC__/js/raty/jquery.raty.js"></script>
+	<script>
+	$('.star0').raty({ readOnly: true, score: 0 });
+	$('.star1').raty({ readOnly: true, score: 1 });
+	$('.star2').raty({ readOnly: true, score: 2 });
+	$('.star3').raty({ readOnly: true, score: 3 });
+	$('.star4').raty({ readOnly: true, score: 4 });
+	$('.star5').raty({ readOnly: true, score: 5 });
+		$(document).ready(function() {
+			Wind.css('treeTable');
+			Wind.use('treeTable', function() {
+				$("#menus-table").treeTable({
+					indent : 20
+				});
+			});
+		});
+
+		setInterval(function() {
+			var refersh_time = getCookie('refersh_time_admin_menu_index');
+			if (refersh_time == 1) {
+				reloadPage(window);
+			}
+		}, 1000);
+		setCookie('refersh_time_admin_menu_index', 0);
+	</script>
+</body>
+</html>

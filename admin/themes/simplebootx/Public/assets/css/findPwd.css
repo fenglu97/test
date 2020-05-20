@@ -1,0 +1,116 @@
+html,body{
+	width: 100%;
+	height: 100%;
+}
+body{
+	background: url(../images/bj.jpg) no-repeat;
+	background-size: cover;
+}
+/*标题*/
+.title{
+	text-align: center;
+	padding-top: 50px;
+	color: #fff;
+	font-size: 34px;
+}
+/*注册表单*/
+#findPwd_form{
+	margin: 30px auto;
+	width: 680px;
+	background-color: #fff;
+	border-radius: 4px;
+	position: relative;
+}
+/*提示信息*/
+#findPwd_form .hint{
+	color: red;
+	font-size: 16px;
+	padding: 20px;
+}
+#findPwd_form ul{
+	padding: 20px 100px;
+}
+#findPwd_form ul li{
+	position: relative;
+	line-height: 40px;
+	height: 70px;
+	/*强制不换行*/
+	white-space:nowrap;
+}
+#findPwd_form ul li:after {
+   content: ".";
+   display: block;
+   height: 0;
+   clear: both;
+   visibility: hidden;
+}
+
+#findPwd_form ul li label{
+	display: block;
+	float: left;
+	width: 100px;
+	text-align: center;
+}
+#findPwd_form ul .form-item .msg-wrap{
+	position: absolute;
+	top: 37px;
+	left: -385px;
+}
+/*验证码提示位置*/
+#findPwd_form ul .codeli .msg-wrap{
+	left: -167px;
+}
+#findPwd_form ul li input{
+	float: left;
+	outline:none;
+	width: 378px;
+	height: 40px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+}
+#findPwd_form #code{
+	width: 160px;
+}
+/*获取验证码按钮*/
+#findPwd_form .codeBtn{
+	background-color: #45a1de;
+	color: #fff;
+	border: 1px solid #45A1DE;
+	width: 160px;
+	float: right;
+}
+#findPwd_form .codeBtnOut{
+	background-color: #9094a0;
+	border: 1px solid #9094a0;
+}
+/*密码提示*/
+.pwdHint{
+	width: 360px;
+	font-size: 12px;
+	float: right;
+	line-height: 12px;
+}
+#findPwd_form #btn{
+	width: 130px;
+	font-size: 16px;
+	text-align: center;
+	text-indent: 5px;
+	letter-spacing:5px;
+	background-color: #45a1de;
+	color: #fff;
+	border: 1px solid #45A1DE;
+	margin-left: 180px;
+}
+#findPwd_form #btn:hover{
+	cursor: pointer;
+}
+/*返回首页按钮*/
+.hideBtn{
+	display: block;
+	width: 24px;
+	height: 24px;
+	background: url("../images/x_24.png") no-repeat;
+	position: absolute;
+	right: 10px;
+	top: 10px;
+}

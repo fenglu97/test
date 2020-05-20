@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <title>Title</title>
+    <style>
+        /*适配*/
+        @media screen and (max-width: 320px) {
+            html,body{font-size: 12px;}
+        }
+        @media screen and (min-width: 321px) and (max-width: 413px){
+            html,body{font-size: 14px;}
+        }
+        @media screen and (min-width: 414px) and (max-width: 639px){
+            html,body{font-size: 15px;}
+        }
+        @media screen and (min-width: 640px){
+            html,body{font-size: 16px;}
+        }
+        html,body{ width: 100%; height: 100%; overflow: hidden;}
+        body, h1, h2, h3, h4, h5, h6, hr, p, blockquote, /* structural elements 结构元素 */
+        dl, dt, dd, ul, ol, li, /* list elements 列表元素 */
+        pre, /* text formatting elements 文本格式元素 */
+        form, fieldset, legend, button, input, textarea, /* form elements 表单元素 */
+        th, td /* table elements 表格元素 */ {
+            margin: 0;
+            padding: 0;
+        }
+        body,
+        button, input, select, textarea /* for ie */ {
+            font-family:微软雅黑;background-color: white;
+        }
+        ul, ol {list-style: none;}
+        a{text-decoration: none; color: #000000}
+        a:hover{text-decoration: none; color: #000000}
+        fieldset, img {border: 0;} /* img 搭车：让链接里的 img 无边框 */
+        img{ vertical-align: top;}
+        button, input, select, textarea{font-size: 100%;} /* 使得表单元素在 ie 下能继承字体大小 */
+        input{ outline: none;}
+        /** 重置表格元素 **/
+        /*table {border-collapse: collapse;border-spacing: 0;}*/
+
+        .color1{ color: #29a1f7;}
+        .crazy{ width: 100%; height: 100%; overflow-y: auto;}
+        .tab{ width: 93%; border-collapse: collapse; margin: 0 auto; text-align: center;}
+        .tab td, .tab th{ border: 1px solid #eeeeee; color: #111; font-size: small;}
+        .tab td{ font-size: small;}
+        .tab th{ height: 3rem;}
+        .tab tbody tr td:last-child{ color: #888;}
+        .tab tbody tr td p,#myLevel{ display: inline-block; width: 2.5rem; height: 2.5rem; position: relative;}
+        #myLevel{ width: 5rem; height: 5rem;}
+        .tab tbody tr td img,#myLevel img{ width: 100%; height: 100%;}
+        .tab tbody tr td sub,#myLevel sub{ line-height: 1rem; position: absolute; right: .3rem; bottom: .3rem; color: #ffffff; transform: scale(0.8, 0.8);}
+        #myLevel sub{ right: 1rem; bottom: 1rem; font-size: 1.2rem; transform: scale(1, 1);}
+        .sub1{ text-shadow: 0 0 5px #000,0 0 10px #7684a2,0 0 15px #7684a2;}
+        .sub2{ text-shadow: 0 0 5px #000,0 0 10px #7684a2,0 0 15px #7684a2;}
+        .sub3{ text-shadow: 0 0 5px #000,0 0 10px #7684a2,0 0 15px #7684a2;}
+        .sub4{ text-shadow: 0 0 5px #000,0 0 10px #279cd8,0 0 15px #279cd8;}
+        .sub5{ text-shadow: 0 0 5px #000,0 0 10px #279cd8,0 0 15px #279cd8;}
+        .sub6{ text-shadow: 0 0 5px #000,0 0 10px #279cd8,0 0 15px #279cd8;}
+        .sub7{ text-shadow: 0 0 5px #000,0 0 10px #ff8c14,0 0 15px #ff8c14;}
+        .sub8{ text-shadow: 0 0 5px #000,0 0 10px #ff8c14,0 0 15px #ff8c14;}
+        .sub9{ text-shadow: 0 0 5px #000,0 0 10px #ff8c14,0 0 15px #ff8c14;}
+
+        .top{ display: flex; flex-direction: column; align-items: center; margin: 1.5rem 0;}
+
+        .top .title{ font-size: 1.15rem; font-weight: bold; margin: 0.8rem 0 1.3rem; display: flex; align-items: center; justify-content: center;}
+        .top .title img{ width: 3rem;}
+        #typeTitle{ margin: 0 .5rem;}
+        .hint{ display: inline-block; height: 2rem; line-height: 2rem; padding: 0 2rem; box-shadow: 0 0 5px 0 #29a1f7; border-radius: 1rem; margin: 0 auto; position: relative; z-index: 2; font-size: small;}
+        /*.hint:after{ display: inline-block; content: " "; width: 0; height: 0; border: .5rem solid transparent; box-shadow: 0 0 5px 0 #fc9222; border-bottom-color: #ffffff; position: absolute; right: 20%; bottom: 100%;}*/
+    </style>
+</head>
+<body>
+<div class="crazy">
+    <div class="top">
+        <div id="myLevel">
+
+        </div>
+        <div class="color1 title">
+            <img src="__TMPL__Public/assets/images/l_icon_zuo.png">
+            <span id="typeTitle">暂未点亮</span>
+            <img src="__TMPL__Public/assets/images/k_icon_you.png">
+        </div>
+        <div class="color1 hint">
+            <span>升级勋章，可获得海量积分奖励!</span>
+        </div>
+    </div>
+    <table class="tab">
+        <thead>
+            <tr>
+                <th>勋章等级</th>
+                <th>专属勋章</th>
+                <th>达成条件</th>
+            </tr>
+        </thead>
+        <tbody id="tabTbody">
+            <!--<tr>-->
+                <!--<td>Lv.1</td>-->
+                <!--<td>-->
+                    <!--<p>-->
+                        <!--<img src="">-->
+                        <!--<sub>1</sub>-->
+                    <!--</p>-->
+                <!--</td>-->
+                <!--<td>累计签到3天</td>-->
+            <!--</tr>-->
+        </tbody>
+    </table>
+</div>
+
+<script>
+    var type = '{$type}',
+        typeText = '',
+        typeU = '';
+    var typeTitle = document.getElementById('typeTitle');
+    if(type == 1){
+        console.log('签到狂')
+        typeText = '签到';
+        typeU = '天';
+    } else if(type == 2){
+        console.log('助人狂')
+        typeText = '助人';
+        typeU = '次';
+    } else if(type == 3){
+        console.log('点评狂')
+        typeText = '点评';
+        typeU = '条';
+    } else if(type == 4){
+        console.log('开车狂')
+        typeText = '开车';
+        typeU = '次';
+    }
+
+    getAjaxData();
+    function getAjaxData() {
+        var ajax = new XMLHttpRequest();
+        ajax.open('get', '{:C("API_URL")}/index.php?g=api&m=userbox&a=getCrazyInfo&type={$type}&uid={$uid}');
+        ajax.send();
+        ajax.onreadystatechange = function () {
+            if (ajax.readyState == 4 && ajax.status == 200) {
+                var datas = JSON.parse(ajax.responseText);
+//                console.log(datas);
+                if(datas.status == 1){
+                    var data = datas.data;
+                    var list = data.list;
+                    var user = data.user;
+                    var key = '',
+                        html = '';
+                    var tabTbody = document.getElementById('tabTbody');
+                    var myLevel = document.getElementById('myLevel');
+                    myLevel.innerHTML =  '<img src="'+user.icon+'">';
+                    typeTitle.innerHTML = typeText + '达人·暂未点亮';
+                    for(key in list){
+                        html += '<tr><td>Lv.'+key+'</td><td><p><img src="'+list[key].icon+'"><sub class="sub'+key+'">'+key+'</sub></p></td><td>累计'+ typeText + list[key].condition + typeU +'</td></tr>';
+                        if(user.userLevel == key){
+                            myLevel.innerHTML =  '<img src="'+list[key].icon+'"><sub class="sub'+key+'">'+key+'</sub>';
+                            typeTitle.innerHTML = typeText + '达人';
+                        }
+                    }
+                    tabTbody.innerHTML = html;
+                }
+                if(datas.status == 0){
+                    console.log('请求失败：' + datas.msg);
+                }
+            }
+        }
+    }
+</script>
+</body>
+</html>

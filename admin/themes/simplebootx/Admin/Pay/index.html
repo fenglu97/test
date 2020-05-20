@@ -1,0 +1,379 @@
+<admintpl file="header" />
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/chosen.css">
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/docsupport/prism.css">
+<style type="text/css" media="all">
+	/* fix rtl for demo */
+	.chosen-rtl .chosen-drop { left: -9000px; }
+	th{width:80px;}
+</style>
+<script>
+	function resend(id)
+	{
+		if(confirm('确定要重发吗'))
+		{
+			url = '/index.php?g=api&m=pay&a=reSend&order='+id;
+			$.get(url,function(data){
+				if(data.status == 1)
+				{
+					alert('正在进行重发');
+					location.reload();
+				}
+				else
+				{
+					alert(data.msg);
+				}
+
+			});
+		}
+
+	}
+</script>
+</head>
+
+<body>
+
+<div class="wrap js-check-wrap">
+
+	<ul class="nav nav-tabs">
+
+		<li class="active"><a href="javascript:;">充值列表</a></li>
+
+	</ul>
+
+	<form class="well form-search" method="post" action="{:U('Pay/index')}">
+
+		<div class="search_type cc mb10">
+
+			<div class="mb10">
+
+					<span class="mr20">渠道名称：
+
+					<select name="cid" id="cid"  class="chosen-select cid" style="width:180px;" tabindex="1">
+						<option value="">所有渠道</option>
+
+						{$channel_list}
+					</select>&nbsp;&nbsp;
+
+						游戏名称： 
+
+  <select name="appid" id="appid" class="chosen-select appid" style="width:180px;" tabindex="1">
+	  <option value="">所有游戏</option>
+	  {$game_list}
+  </select>&nbsp;&nbsp;
+                   状态：<select name="status"   style="width:120px;">
+
+							<option value="1" <if condition="$parameter['status'] eq 1">selected</if>>成功</option>
+							<option value="2" <if condition="$parameter['status'] eq 2">selected</if>>发货中</option>
+							<option value="3" <if condition="$parameter['status'] eq 3">selected</if>>未支付</option>
+							<option value="all" <if condition="$parameter['status'] eq 'all'">selected</if>>全部</option>
+						</select>
+                    &nbsp;&nbsp;
+                                       充值类型：<select name="payType"   style="width:120px;">
+							<option value="">请选择</option>
+							<option value="1" <if condition="$parameter['payType'] eq 1">selected</if> >人民币</option>
+							<option value="2" <if condition="$parameter['payType'] eq 2">selected</if>>平台币</option>
+
+						</select>
+						&nbsp;&nbsp;
+				    设备类型：<select name="deviceType"   style="width:120px;">
+							<option value="">请选择</option>
+							<option value="1" <if condition="$parameter['deviceType'] eq 1">selected</if> >安卓</option>
+							<option value="2" <if condition="$parameter['deviceType'] eq 2">selected</if>>苹果</option>
+						</select>
+												&nbsp;&nbsp;
+				    接入类型：<select name="access_type"   style="width:120px;">
+							<option value="">请选择</option>
+							<option value="1" <if condition="$parameter['access_type'] eq 1">selected</if>>独代自接</option>
+							<option value="2" <if condition="$parameter['access_type'] eq 2">selected</if>>其他平台</option>
+						</select>
+                    &nbsp;&nbsp;
+						订单金额：<input type="text" name="money" value="{$parameter['money']}" style="width:130px;">&nbsp;&nbsp;
+						分成金额：<input type="text" name="getmoney" value="{$parameter['getmoney']}" style="width:130px;">&nbsp;&nbsp;
+						平台币：<input type="text" name="platform_money" value="{$parameter['platform_money']}" style="width:130px;">&nbsp;&nbsp;
+                    玩家账号:<input type="text" name="username" value="{$parameter['username']}" style="width:130px;">
+                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    游戏小号:<input type="text" name="app_uid" value="{$parameter['app_uid']}" style="width:130px;">
+                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    手机号码:<input type="text" name="mobile" value="{$parameter['mobile']}" style="width:130px;">
+                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                       
+                    订单号:<input type="text" name="orderID" value="{$parameter['orderID']}">
+                       &nbsp;&nbsp;
+                    订单号2:<input type="text" name="jz_other" value="{$parameter['jz_other']}">
+                    &nbsp;&nbsp;
+                    					时间：
+
+   <input type="text" name="start_time" id="start_time" value="{$parameter['start_time']}" class="input length_3 js-date" size="11" style="width:180px;"> 至
+   <input type="text" name="end_time" id="end_time" value="{$parameter['end_time']}" size="11" class="input length_3 js-date" style="width:180px;">
+						
+   
+   <input type="submit" class="btn btn-primary" value="搜索" />
+    <button class="btn btn-primary applyRebate" onclick="return false;">申请返利</button>
+
+					</span>
+
+
+
+
+
+
+			</div>
+
+		</div>
+
+	</form>
+
+	<script src="__PUBLIC__/js/chosen/chosen.jquery.js" type="text/javascript"></script>
+	<script src="__PUBLIC__/js/chosen/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		var config = {
+			'.chosen-select'           : {},
+			'.chosen-select-deselect'  : {allow_single_deselect:true},
+			'.chosen-select-no-single' : {disable_search_threshold:10},
+			'.chosen-select-no-results': {no_results_text:'没有匹配的结果'},
+			'.chosen-select-width'     : {width:"95%"}
+		}
+		for (var selector in config) {
+			$(selector).chosen(config[selector]);
+		}
+		//$("#select_1").val('{$game_id}');
+		//$("#select_1").trigger("chosen:updated");
+
+	</script>
+
+	<table class="table table-hover table-bordered table-list">
+
+		<thead>
+
+		<tr>
+
+			<th style="width:100px">订单号</th>
+
+			<th>玩家账号</th>
+			<th>游戏小号</th>
+
+						<th>订单金额（元）</th>
+						<th>实际收入（元）</th>
+					    <th>支付平台币</th>
+						<th>返还平台币</th>
+						<th style="width:40px;">状态</th>
+			<if condition="session('ROLE_ID') eq 2 OR session('ROLE_ID') eq 3">
+			            <th>游戏平台</th>
+				</if>
+						<th>游戏名</th>
+						<th style="width:20px">设备</th>
+						<if condition="($cp neq 1) and (session('ROLE_ID') neq 14)">
+						<th>渠道名</th>
+						</if>
+						<th>角色名</th>
+
+			<th>区服名</th>
+			<th>发起时间</th>
+			<th>发货成功时间</th>
+			<th style="width:120px;">操作</th>
+		</tr>
+		<tr>
+			<th colspan="3"><center>合计</center></th>
+			<th>{$total['money']}</th>
+			<th>{$total['total_getmoney']}</th>
+			<th>{$total['total_platform_money']}</th>
+			<th>{$total['total_rebate']}</th>
+			<if condition="session('ROLE_ID') eq 2 OR session('ROLE_ID') eq 3">
+			<th colspan="10"></th>
+				<else />
+				<th colspan="9"></th>
+				</if>
+		</tr>
+		</thead>
+
+		<foreach name="list" item="vo">
+
+			<tr>
+
+				<td>{$vo.orderID}</td>
+				<td>{$vo.username}</td>
+				<td><if condition="$vo['app_uid']">{$vo.app_uid}</if></td>
+				<td>{$vo.money}</td>
+				<td>{$vo.getmoney}</td>
+				<td>{$vo.platform_money}</td>
+				<td>{$vo.rebate}</td>
+				<td><span class="status"><php>if($vo['status'] ==1 ){echo '成功';}elseif($vo['status'] == 2){echo '发货中';}elseif($vo['status'] == 3){echo '未支付';}</php></span></td>
+				<if condition="session('ROLE_ID') eq 2 OR session('ROLE_ID') eq 3">
+				<td>{$game_platfrom[$vo['game_platform']]}</td>
+					</if>
+				<td>{$vo.game_name}</td>
+				<td>
+					<eq name="vo['deviceType']" value="1">安卓</eq>
+					<eq name="vo['deviceType']" value="2">苹果</eq>
+				</td>
+				<if condition="$cp neq 1">
+					<td>{$vo.cname}</td>
+				</if>
+				<td>{$vo.roleNAME}</td>
+
+				<td>{$vo.serverNAME}</td>
+				<td>{$vo.create_time|date="Y-m-d H:i:s",###}</td>
+				<td><php>if($vo['pay_to_time'] !=0){ echo date('Y-m-d H:i:s',$vo['pay_to_time']);}</php></td>
+				<td>
+					<if condition="$vo['status'] eq 2">
+						<a href="javascript:;" onclick="resend('{$vo.orderID}');">重发</a>
+						<else />
+						<font color="#cccccc">重发</font>
+					</if>
+					&nbsp;&nbsp;&nbsp;<a href="{:U('pay/info',array('id'=>$vo['id']))}" >详情</a>
+					&nbsp;&nbsp;&nbsp;
+					<if condition="$vo['is_rebated'] eq 0">
+						<a href="{:U('set_rebate',array('id'=>$vo['id'],))}" class="js-ajax-dialog-btn" data-msg="你确定要手动将订单设置为已申请返利">未申请返利</a>
+						<else />
+						<font color="#cccccc">已申请返利</font>
+					</if>&nbsp;&nbsp;&nbsp;
+					<if condition="$vo['rebate'] eq 0 && $vo['status'] neq 3">
+						<a href="#" class="rebate" val="{$vo.id}" onclick="">返平台币</a>
+					<else />
+						<font color="#cccccc">返平台币</font>
+					</if>
+				</td>
+
+
+
+			</tr>
+
+		</foreach>
+
+
+
+	</table>
+
+
+
+
+
+	<div class="pagination">{$page}</div>
+</div>
+
+<script src="__ROOT__/public/js/common.js?"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script>
+	$(document).ready(function(){
+		$('.rebate').click(function(){
+			var id = $(this).attr('val');
+			layer.prompt({title:'请输入返还的比例，1-100%，注：输入值为1-100之间任意整数即可',formType:0},function(rate){
+
+				if(/^\d+$/.test(rate) && parseInt(rate)>=1 &&parseInt(rate)<=100){
+					url = "{:U('do_rebate')}";
+					var index = layer.load(0, {shade: false});
+					$.post(url,{rate:rate,id:id},function(res){
+						if(res.status == 1){
+							layer.msg(res.info,{icon: 1});
+							layer.close(index);
+							setTimeout("location.reload()",1500);
+						}else{
+							layer.msg(res.info,{icon: 2});
+							layer.close(index);
+							setTimeout("location.reload()",1500);
+						}
+					});
+
+				}
+				else{
+					layer.alert('内容格式不正确或者不在规定范围内');
+				}
+			});
+		});
+
+		$('.applyRebate').click(function(){
+			var username = $('input[name=username]').val();
+			var appid = $('#appid').val();
+
+			layer.confirm('确定要进行一键申请返利吗?', {
+				btn: ['确定','取消'] //按钮
+			}, function(){
+				url = "{:U('apply_rebate')}";
+				var index = layer.load(0, {shade: false});
+				$.post(url,{username:username,appid:appid},function(res){
+					if(res.status == 1){
+						layer.msg(res.info,{icon: 1});
+						layer.close(index);
+						setTimeout("location.reload()",1500);
+					}else{
+						layer.msg(res.info,{icon: 2});
+						layer.close(index);
+						setTimeout("location.reload()",1500);
+					}
+				});
+			});
+
+
+		});
+
+
+		$('.status').each(function(){
+
+			if($(this).text() == '成功')
+			{
+				$(this).css('color','#269926');
+			}
+			else if($(this).text() == '未支付')
+			{
+				$(this).css('color','black');
+			}
+			else if($(this).text() == '发货中')
+			{
+				$(this).css('color','#35a6e7');
+			}
+
+
+		})
+
+	})
+
+	setCookie('refersh_time', 0);
+
+	function refersh_window() {
+
+		var refersh_time = getCookie('refersh_time');
+
+		if (refersh_time == 1) {
+
+			window.location.reload();
+
+		}
+
+	}
+
+	setInterval(function() {
+
+		refersh_window()
+
+	}, 3000);
+
+	$(function() {
+
+		$("#selected_cid").change(function() {
+
+			$("#cid_form").submit();
+
+		});
+
+	});
+
+
+	$('.export').click(function(){
+
+		var appid = $('#appid').val();
+		var cid = $('#cid').val();
+		var start_time = $('input[name="start_time"]').val();
+		var end_time = $('input[name="end_time"]').val();
+		var url =$('.form-search').attr('action');
+		location.href=url+'&appid='+appid+'&cid='+cid+'&start_time='+start_time+'&end_time='+end_time+'&action=1';
+	})
+
+
+
+
+
+</script>
+
+</body>
+
+</html>

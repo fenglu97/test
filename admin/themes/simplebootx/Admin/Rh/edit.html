@@ -1,0 +1,105 @@
+<admintpl file="header"/>
+<style>
+    li{margin-bottom: 5px;}
+    hr{    margin: 12px 0;
+        border: none;
+        border-bottom: solid #ccc 1px;}
+    input{margin:6px;}
+</style>
+<script>
+    function remove_li(obj)
+    {
+        $(obj).parent().html('');
+    };
+
+    function add_li(obj)
+    {
+
+        $(obj).parent().parent().append('<li>包名 <input type="text" name="packageName[]"  value=""  style="width:150px;height:20px;">&nbsp;&nbsp;&nbsp;备注 <input type="text" name="title[]"  value=""  style="width:150px;height:20px;">&nbsp;&nbsp;&nbsp;切换金额 <input type="text" name="amount[]" placeholder="单位元，大于等于该值切换"  value="" style="width:180px;height:20px;">&nbsp;&nbsp; 循环方式 <select name="loopType[]" style="width:100px;margin-top:4.5px;"><option value="0">不循环</option><option value="1">每天</option></select>&nbsp;&nbsp; 开始时间 <input type="text" name="startTime[]"  value="" class="input length_3 js-datetime"  style="width:160px;height:20px;">&nbsp;&nbsp;&nbsp;结束时间 <input type="text" name="endTime[]"  value="" class="input length_3 js-datetime"  style="width:160px;height:20px;">&nbsp;&nbsp;<a href="javascript:void(0);" onclick="remove_li(this);"> 移除 </a><hr></li>');
+        //日期+时间选择器
+        var dateTimeInput = $("input.js-datetime");
+        if (dateTimeInput.length) {
+            Wind.use('datePicker', function () {
+                dateTimeInput.datePicker({
+                    time: true
+                });
+            });
+        }
+    };
+
+
+
+
+
+</script>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:U('index')}">联运渠道列表</a></li>
+        <li class="active"><a href="javascript:void(0);">切换支付配置</a></li>
+    </ul>
+    <form action="" method="post" class="form-horizontal js-ajax-forms" enctype="multipart/form-data">
+        <div class="row-fluid">
+            <div class="span9" style="width:90%;">
+                <table class="table table-bordered">
+
+
+                    <tr>
+
+                        <td>
+                            <ul id="list" class="pic-list unstyled">
+                                <if condition="$list">
+                                <foreach name="list" item="vo" key="k">
+                                    <li>
+                                        包名 <input type="text" name="packageName[]"  value="{$vo.packageName}"  style="width:150px;height:20px;">&nbsp;&nbsp;
+                                        备注 <input type="text" name="title[]"  value="{$vo.title}"  style="width:150px;height:20px;">&nbsp;&nbsp;
+                                        切换金额 <input type="text" name="amount[]"  value="{$vo.amount}" placeholder="单位元，大于等于该值切换" style="width:180px;height:20px;">&nbsp;&nbsp;
+                                        循环方式
+                                        <select name="loopType[]" style="width:100px;margin-top:4.5px;">
+                                            <option value="0" <if condition="$vo['loopType'] eq 0">selected</if>>不循环</option>
+                                            <option value="1" <if condition="$vo['loopType'] eq 1">selected</if>>每天</option>
+                                        </select>&nbsp;&nbsp;
+                                        开始时间 <input type="text" name="startTime[]"  value="{$vo.startTime}" class="input length_3 js-datetime"  style="width:160px;height:20px;">&nbsp;&nbsp;
+                                        结束时间 <input type="text" name="endTime[]"  value="{$vo.endTime}" class="input length_3 js-datetime"  style="width:160px;height:20px;">&nbsp;&nbsp;
+                                        <if condition="$k eq 0">
+                                            <a href="javascript:void(0)" onclick="add_li(this);">添加</a>
+                                            <else />
+                                            <a href="javascript:void(0);" onclick="remove_li(this);"> 移除 </a>
+                                        </if>
+                                        <hr>
+                                    </li>
+                                </foreach>
+                                    <else />
+                                    <li>
+                                    包名 <input type="text" name="packageName[]"  value=""  style="width:150px;height:20px;">&nbsp;&nbsp;
+                                    备注 <input type="text" name="title[]"  value=""  style="width:150px;height:20px;">&nbsp;&nbsp;
+                                    切换金额 <input type="text" name="amount[]"  value="" placeholder="单位元，大于等于该值切换"  style="width:180px;height:20px;">&nbsp;&nbsp;
+                                    循环方式
+                                    <select name="loopType[]" style="width:100px;margin-top:4.5px">
+                                        <option value="0" >不循环</option>
+                                        <option value="1" >每天</option>
+                                    </select>&nbsp;&nbsp;
+                                    开始时间 <input type="text" name="startTime[]"  value="" class="input length_3 js-datetime"  style="width:160px;height:20px;">&nbsp;&nbsp;
+                                    结束时间 <input type="text" name="endTime[]"  value="" class="input length_3 js-datetime"  style="width:160px;height:20px;">&nbsp;&nbsp;
+                                    <a href="javascript:void(0)" onclick="add_li(this);">添加</a>
+                                        <hr>
+                                    </li>
+                                    </if>
+                            </ul>
+                        </td>
+                    </tr>
+                    <input type="hidden" name="channelID" value="{$channelID}">
+                </table>
+            </div>
+
+        </div>
+        <div class="form-actions">
+            <button class="btn btn-primary js-ajax-submit" type="submit">{:L("EDIT")}</button>
+            <a class="btn" href="javascript:history.back(-1);">{:L('BACK')}</a>
+        </div>
+    </form>
+</div>
+<script type="text/javascript" src="__PUBLIC__/js/common.js"></script>
+</body>
+</html>

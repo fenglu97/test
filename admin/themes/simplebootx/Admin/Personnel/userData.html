@@ -1,0 +1,140 @@
+<admintpl file="header" />
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="javascript:void(0);">人员数据</a></li>
+    </ul>
+    <form class="well form-search" method="post" action="{:U('userData')}">
+        地区:
+        <select name="map[area]" class="area" style="width:150px">
+            <option value="0">全部</option>
+            <foreach name="area" item="v">
+                <option value="{$v.id}">{$v.name}</option>
+                <!--<option value="{$v.id}" <eq name="map['area']" value="$v['id']">selected</eq> >{$v.name}</option>-->
+            </foreach>
+        </select>
+        团队名称:
+        <select name="map[taem]" class="taem" style="width:150px">
+            <option value="0">全部</option>
+        </select>
+        人员名称:
+        <select name="map[name]" class="name" style="width:150px">
+            <option value="0">全部</option>
+        </select>
+        月份
+        <input type="text" id="month" name="map[month]"  value="{$map.month}" style="width: 80px;" >
+        <input type="submit" class="btn btn-primary" value="搜索" />
+        <a class="btn btn-primary" href="{:U('TgEmployees/add')}">新增员工</a>
+    </form>
+
+    <form class="js-ajax-form" method="post">
+        <table class="table table-hover table-bordered" style="table-layout: fixed;">
+            <thead>
+            <tr><th>地区</th>
+                <th>团队名称</th>
+                <th width="">目前在职人数</th>
+                <th width="">当月离职人数</th>
+                <th width="">当月绩效</th>
+                <th width="">当月充值</th>
+                <th width="">完成率</th>
+                <th width="">当月注册</th>
+                <th width="">充值人数</th>
+                <th width="">上周绩效</th>
+                <th width="">上周充值</th>
+                <th width="">上周注册目标</th>
+                <th width="">上周注册</th>
+                <th width="">本周绩效</th>
+                <th width="">本周充值</th>
+                <th width="">本周注册目标</th>
+                <th width="">本周注册</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <foreach name="data" item="vo">
+                <tr>
+                    <td>{$vo.area}</td>
+                    <td>{$vo.taem}</td>
+                    <td>{$vo.working|default=0}</td>
+                    <td>{$vo.quit|default=0}</td>
+                    <td>{$vo.target|default=0}</td>
+                    <td>{$vo.pay|default=0}</td>
+                    <td>{$vo.complete|default=0}%</td>
+                    <td>{$vo.reg|default=0}</td>
+                    <td>{$vo.pay_number|default=0}</td>
+                    <td>{$week_target[$vo['taem_id']]['lastweek_money']}</td>
+                    <td>{$vo.lastweek_pay}</td>
+                    <td>{$week_target[$vo['taem_id']]['lastweek_register']}</td>
+                    <td>{$vo.lastweek_register}</td>
+                    <td>{$week_target[$vo['taem_id']]['thisweek_money']}</td>
+                    <td>{$vo.thisweek_pay}</td>
+                    <td>{$week_target[$vo['taem_id']]['thisweek_register']}</td>
+                    <td>{$vo.thisweek_register}</td>
+
+                </tr>
+            </foreach>
+            </tbody>
+        </table>
+        <div class="pagination">{$page}</div>
+    </form>
+</div>
+<script src="__PUBLIC__/js/common.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script src="__PUBLIC__/js/laydate/laydate.js"></script>
+<script type="text/javascript">
+    laydate.render({
+        elem: '#month'
+        ,type: 'month'
+    });
+    $(function () {
+        $('.area').change(function () {
+            var id = $(this).val();
+            if(id != 0){
+                getData(id,1);
+            }else{
+                $('.taem').empty();
+                $('.taem').append("<option value='0'>全部</option>");
+            }
+        })
+
+        $('.taem').change(function () {
+            var id = $(this).val();
+            if(id != 0){
+                getData(id,2);
+            }else{
+                $('.name').empty();
+                $('.name').append("<option value='0'>全部</option>");
+            }
+        })
+    })
+
+    function getData(id,type) {
+        if(type == 1){
+            $('.taem').empty();
+        }else{
+            $('.name').empty();
+        }
+
+        var url = "{:U('getData')}";
+        var date = $('#month').val();
+        $.post(url,{id:id,type:type,date:date},function (res) {
+            if(res.status == 1){
+                var option = "<option value='0'>全部</option>";
+                $.each(res.info,function (k,v) {
+                    option += "<option value='"+v.id+"'>"+v.name+"</option>";
+                })
+                if(type == 1){
+                    $('.taem').append(option)
+                }else{
+                    $('.name').append(option)
+                }
+
+            }else{
+                layer.alert(res.info)
+            }
+        })
+    }
+</script>
+</body>
+</html>

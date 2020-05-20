@@ -1,0 +1,235 @@
+<admintpl file="header" />
+</head>
+<body>
+<div class="wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a>提现账号信息</a></li>
+    </ul>
+    <form method="post" class="form-horizontal js-ajax-forms" action="">
+        <fieldset>
+            <div class="control-group">
+                <label class="control-label"></label>
+                <div class="controls" style="color:#bb3434"><i class="fa fa-exclamation-circle"></i>提现审核后将打款到对应支付宝，请务必保证信息准确</div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">支付宝账号</label>
+                <div class="controls">
+                    <input type="text" name="alipay" value="{$info.alipay_account}">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">真实姓名</label>
+                <div class="controls">
+                    <input type="text" name="name" maxlength="10" value="{$info.user_truename}" placeholder="">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">身份证</label>
+                <div class="controls">
+                    <input type="text" name="id_card" value="{$info.id_card}" placeholder="">
+                </div>
+            </div>
+            <if condition="$info.mobile eq ''">
+                <div class="control-group">
+                    <label class="control-label">手机号</label>
+                    <div class="controls">
+                        <input type="text"  name="mobile" class="mobile"   placeholder="">
+                        <span style="color:#bb3434"><i class="fa fa-exclamation-circle"></i>请设置准确的手机号，提现将使用该手机验证</span>
+                    </div>
+                </div>
+                <else/>
+                <div class="control-group">
+                    <label class="control-label">手机号</label>
+                    <div class="controls">
+                        <input type="text"  readonly class="mobile" data-content="{$info['mobile']}"  value="{:cutStr($info['mobile'],'mobile')}" placeholder="">
+                        <span style="color:#bb3434"><i class="fa fa-exclamation-circle"></i>请设置准确的手机号，提现将使用该手机验证</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label">验证码</label>
+                    <div class="controls">
+                        <input type="text" name="code" class="code" value="" placeholder="">
+                        <button style="margin-left:21px" type="button" class="btn btn-primary sendverify">发送验证码</button>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">新手机号</label>
+                    <div class="controls">
+                        <input type="text" name="mobile" class="edit_mobile"  placeholder="不填该栏，不修改手机号">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label"></label>
+                    <div class="controls">
+                        <!--<input type="checkbox" name="is_contract" />-->
+                        点击"保存"即表示您同意并愿意遵守{:C('BOX_NAME')}
+                        <a href="javascript:;" style="text-decoration:none" class="sign">劳动兼职合同</a>
+                    </div>
+                </div>
+            </if>
+
+        </fieldset>
+        <textarea style="display: none" class="Contract">{$data}</textarea>
+        <div class="form-actions">
+            <input type="hidden" name="id" class="id" value="{$info.id}" />
+            <button type="submit" class="btn btn-primary js-ajax-submit">{:L('SAVE')}</button>
+        </div>
+    </form>
+</div>
+<script src="__PUBLIC__/js/jquery19.js"></script>
+<script src="__PUBLIC__/js/common.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script>
+    $(function () {
+        function getNow(s) {
+            return s < 10 ? '0' + s: s;
+        }
+        /* 验证码点击事件 start */
+        $('body').on('click','.sendverify',function () {
+            var obj = $(this);
+            var uid = $('.id').val();
+            var mobile = $('.mobile').data('content');
+            $.post("{:U('sendSms')}",{mobile:mobile,uid:uid,msg:'手机号修改'},function (res) {
+                if(res.status == 1){
+                    settime(obj);
+                }else{
+                    layer.alert(res.info)
+                }
+            });
+
+        })
+        $('.sign').click(function () {
+            var myDate = new Date();
+            var html = $('.Contract').text();
+            var name = $(':input[name=name]').val();
+            var id_card = $(':input[name=id_card]').val();
+            var contract_time = "{$info['contract_time']}";
+            var time
+
+            if(contract_time > 0){
+                time = "{:date('Y年m月d日',$info['contract_time'])}";
+            }else{
+                time = myDate.getFullYear()+'年'+getNow(myDate.getMonth()+1)+'月'+getNow(myDate.getDate())+'日';
+            }
+            var replace_name = /#real_name#/g;
+            html = html.replace(replace_name,name);
+            var replace_id = /#identification_card#/g;
+            html = html.replace(replace_id,id_card);
+            var replace_time = /#time#/g;
+            html = html.replace(replace_time,time);
+
+            layer.open({
+                type: 1,
+                skin: 'layui-layer-molv', //加上边框
+                area: ['800px', '600px'], //宽高
+                content: html,
+                closeBtn: 0, //不显示关闭按钮
+                anim: 2,
+                shadeClose: true //开启遮罩关闭
+            });
+        })
+
+        var countdown = 60;
+        function settime(obj){
+            if (countdown == 0) {
+                obj.removeAttr("disabled");
+                obj.html("发送验证码");
+                countdown = 60;
+                return;
+            } else {
+                obj.attr("disabled", true);
+                obj.html("重新发送(" + countdown + ")");
+                countdown--;
+                setTimeout(function(){
+                    settime(obj)},1000
+                )
+            }
+        }
+        /* 验证码点击事件 end */
+
+        Wind.use('validate', 'ajaxForm', 'artDialog', function () {
+            var form = $('form.js-ajax-forms');
+            jQuery.validator.addMethod("mobileCheck", function(value, element) {
+                return this.optional(element) || /^1[34578]\d{9}$/.test(value);
+            }, "地址必须以http或https开头");
+            //表单验证开始
+            form.validate({
+                //是否在获取焦点时验证
+                onfocusout: false,
+                //是否在敲击键盘时验证
+                onkeyup: false,
+                //当鼠标掉级时验证
+                onclick: false,
+                //验证错误
+                showErrors: function (errorMap, errorArr) {
+                    //errorMap {'name':'错误信息'}
+                    //errorArr [{'message':'错误信息',element:({})}]
+                    try {
+                        layer.alert(
+                            errorArr[0].message,
+                            {icon:2},
+                            function(index){layer.close(index);$(errorArr[0].element).focus();}
+                        );
+                    } catch (err) {
+
+                    }
+                },
+                //验证规则
+                rules: {
+                    'alipay': {required: true},
+                    'name': {required: true},
+                    'mobile': {mobileCheck: true},
+                    'id_card': {required: true}
+                },
+                //验证未通过提示消息
+                messages: {
+                    'alipay': {required: '支付宝账号不能为空'},
+                    'name': {required: '真实姓名不能为空'},
+                    'mobile': {mobileCheck: '手机号格式错误'},
+                    'id_card': {required: '身份证不能为空'}
+                },
+                //给未通过验证的元素加效果,闪烁等
+                highlight: false,
+                //是否在获取焦点时验证
+                onfocusout: false,
+                //验证通过，提交表单
+                submitHandler: function (forms) {
+                    var edit_mobile = $('.edit_mobile').val();
+                    var code = $('.code').val();
+                    if(edit_mobile != '' && code == ''){
+                        layer.alert('请填写验证码');
+                        return false;
+                    }
+                    $(forms).ajaxSubmit({
+                        url: form.attr('action'), //按钮上是否自定义提交地址(多按钮情况)
+                        dataType: 'json',
+                        beforeSubmit: function (arr, $form, options) {
+
+                        },
+                        success: function (data, statusText, xhr, $form) {
+                            if (data.status) {
+                                setCookie("refersh_time", 1);
+                                //添加成功
+                                layer.open({
+                                    title: '消息',
+                                    icon:1,
+                                    content: data.info,
+                                    btn:['确定'],
+                                    yes:function(index){
+                                        reloadPage(window);
+                                    }
+                                });
+                            } else {
+                                layer.alert(data.info,{icon:2});
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    })
+
+</script>
+</body>
+</html>

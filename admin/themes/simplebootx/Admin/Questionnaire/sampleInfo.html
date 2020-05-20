@@ -1,0 +1,62 @@
+<admintpl file="header"/>
+<link rel="stylesheet" href="__PUBLIC__/js/switch/bootstrap-switch.css">
+<style>
+    .title{
+        width: 755px;
+        margin: 0 0 50px 21%;
+        padding: 20px;
+        border-radius: 15px;
+        display: block;
+        background-color: #008fbf;
+    }
+    .title p{
+        color:white;
+        text-align: center;
+        font-size: 20px;
+        margin:0;
+    }
+</style>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:U('adminIndex')}">问卷列表</a></li>
+        <li class="active"><a href="javascript:void(0);">样本列表</a></li>
+    </ul>
+    <div class="title">
+        <p>{$data.title}</p>
+    </div>
+    <foreach name="data['questionItems']" key="k" item="vo">
+        <div class="well" data-id="{$vo.id}" data-type="{$vo.type}" style="width: 45%;margin-left: 21%;">
+            <p style="border: 1px solid #f5f5f5;border-bottom-color: #afaeae;">Q{$k+1}：{$vo.name}</p>
+            <if condition="$vo.type neq 3">
+                <foreach name="vo['option']" key="k1" item="v">
+                    <div style="margin-bottom: 5px">
+                        <label>
+                            <if condition="$vo.type eq 1">
+                                <input type="radio" <if condition="$vo['id'] eq $user[$k]['pid'] and $v['id'] eq $user[$k]['value']">checked</if> disabled data-id="{$v.id}" name="q{$vo.id}" value="{$v.name}" style="margin:0 5px 0 0"/>{$v.name}
+                                <else/>
+                                <input type="checkbox" <if condition="$vo['id'] eq $user[$k]['pid'] and in_array($v['id'],$user[$k]['value'])">checked</if> disabled class="choice" data-id="{$v.id}"  value="{$v.name}" style="margin:0 5px 0 0"/>{$v.name}
+                            </if>
+                        </label>
+                    </div>
+                </foreach>
+                <else/>
+                <p>
+                    <textarea disabled style="width: 740px;height:90px;resize: vertical;">{$user[$k]['value']}</textarea>
+                </p>
+            </if>
+        </div>
+    </foreach>
+    <div class="form-actions" style="text-align: center">
+        <a class="btn" href="javascript:history.back(-1);">{:L('BACK')}</a>
+    </div>
+</div>
+<script src="__PUBLIC__/js/jquery19.js"></script>
+<script src="__PUBLIC__/js/switch/bootstrap.min.js"></script>
+<script src="__PUBLIC__/js/switch/bootstrap-switch.js"></script>
+<script src="__PUBLIC__/js/common.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+
+</body>
+</html>

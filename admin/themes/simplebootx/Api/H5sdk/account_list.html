@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>账号列表</title>
+    <link rel="stylesheet" href="__TMPL__Public/assets/css/reset.css"/>
+    <link rel="stylesheet" href="__TMPL__Public/assets/css/new_public.css"/>
+    <style>
+        #msg{
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 9999999;
+        }
+        .header{
+            background-color: #555;
+            color: #fff;
+        }
+
+        .main{
+            flex: 1;
+            overflow-y: auto;
+            padding: 1em;
+            background-color: #f0f0f0;
+        }
+
+        .username{
+            padding-bottom: 1em;
+            border-bottom: 1px solid #ddd;
+            font-size: .85rem;
+        }
+        .account-add{
+            margin: 1.5em 0;
+        }
+        .account-add .flex-row{
+            font-size: 1.1rem;
+        }
+
+        .hint{
+            margin-top: .5em;
+            color: #888;
+        }
+
+
+        .account-list{
+            padding: .5em;
+            /*border: 1px solid #eee;*/
+            background-color: #fff;
+        }
+        .account-item{
+            height: 3rem;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+        }
+        .account-name{
+            flex: 1;
+        }
+        /*i{ font-style:normal;}*/
+        .account-a{
+            display: flex;
+            align-items: center;
+            color: #555;
+        }
+
+
+        .modal-active{
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            /*visibility: hidden;*/
+            -webkit-transition: visibility 200ms ease-in;
+            transition: visibility 200ms ease-in;
+            z-index: 1000;
+            display: none;
+        }
+        .modal-overlay{
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            background-color: rgba(0,0,0,.3);
+        }
+        .modal-container{
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -webkit-transform: translate(-50%,-50%);
+            transform: translate(-50%,-50%);
+            width: 18rem;
+            border-radius: .256rem;
+            background-color: #fff;
+            overflow: hidden;
+        }
+        .modal-header{
+            position: relative;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            padding: .5rem .512rem;
+            color: #333;
+            font-size: 1rem;
+            text-align: center;
+            /*border-bottom: 1px solid #e5e5e5;*/
+        }
+        .modal-content{
+            padding: .68267rem .512rem;
+            min-height: 6rem;
+            max-height: 10rem;
+            color: #333;
+            font-size: 1rem;
+            box-sizing: border-box;
+            overflow-x: hidden;
+            overflow-y: scroll;
+            border-bottom: 1px solid #e5e5e5;
+        }
+        .modal-footer{
+
+        }
+        .modal-footer::before, .modal-header::after {
+            content: "";
+            position: absolute;
+            -webkit-transform-origin: center;
+            transform-origin: center;
+            box-sizing: border-box;
+            pointer-events: none;
+            left: 0;
+            right: 0;
+            -webkit-transform: scaleY(.5);
+            transform: scaleY(.5);
+        }
+        .modal-action{
+            display: flex;
+            align-items: center;
+        }
+        .modal-button{
+            flex: auto;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            -webkit-transition: background-color .3s;
+            transition: background-color .3s;
+            margin-top: 0;
+            min-width: 3.41333rem;
+            height: 2.5rem;
+            color: #333;
+            font-size: 1rem;
+            line-height: 1.83467rem;
+            outline: 0;
+            border: 0;
+            border-radius: 0;
+            background-color: transparent;
+        }
+        .modal-button:not(:first-child){
+            border-left: 1px solid #e5e5e5;
+        }
+        .modal-button.modal-button-normal{
+            color: #6190e8;
+        }
+        .modal-input-item{
+            display: flex;
+            align-items: center;
+            border: 1px solid #dedede;
+            border-radius: 5px;
+            padding: 4px 5px;
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 1em;
+        }
+        .modal-input{
+            height: 24px;
+            flex: 1;
+            outline: none;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+<div class="toast is-placemiddle" style="padding: 10px; display: none;">
+    <span class="toast-text" style="padding-top: 0;">提示信息</span>
+</div>
+<div class="modal-active">
+    <div class="modal-overlay"></div>
+    <div class="modal-container">
+        <div class="modal-header">添加小号</div>
+        <div class="modal-content">
+            <div class="modal-input-item">
+                <input class="modal-input" type="text" name="nickname" placeholder="请输入小号名字">
+                <i class="icon-clear" style="margin-right: 0;"></i>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="modal-action">
+                <button class="modal-button modal-button-hide">取消</button>
+                <button class="modal-button modal-button-normal">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="wrap">
+    <div class="header">
+        <div class="header-button header-left"></div>
+        <div class="header-title">选择小号</div>
+        <div class="header-button header-right"></div>
+    </div>
+    <div class="main">
+        <div class="flex-row username">
+            <span class="nick-name blue">账号木有昵称</span>
+            <span class="flex1">，欢迎归来</span>
+            <a href="/api/H5sdk/login_mobile.html">切换账号</a>
+        </div>
+        <div class="account-add">
+            <div class="flex-row">
+                <span class="flex1">先选择小号进入游戏</span>
+                <button class="button button-primary button-small button-add-account">添加</button>
+            </div>
+            <div class="hint">可创建10个小号,创建后不可删除或修改</div>
+        </div>
+
+        <div class="account-list">
+            <!--<div class="account-item">-->
+                <!--<div class="account-name">-->
+                    <!--超级大侠客_小号1-->
+                <!--</div>-->
+                <!--<div class="account-a">-->
+                    <!--进入游戏&nbsp;&gt;-->
+                <!--</div>-->
+            <!--</div>-->
+        </div>
+    </div>
+</div>
+
+
+<script src="__PUBLIC__/js/jquery.js"></script>
+<script src="__PUBLIC__/js/md5.js"></script>
+<script src="__TMPL__Public/assets/js/base64.js"></script>
+<!--<script charset="utf-8" type="text/javascript">
+    document.write('<script src="__TMPL__Public/assets/js/api.js?v='+(new Date()).getTime()+'"><\/script>');
+</script>-->
+<script charset="utf-8" type="text/javascript">
+    document.write('<script src="__TMPL__Public/assets/js/osvalue.js?v='+(new Date()).getTime()+'"><\/script>');
+</script>
+<script>
+    $(function () {
+        // Api.config.onLoginSucceed(0, '', 0);
+        // function onLoginSucceed(account, token, uid) {
+        //     if(Api.config.system === 1){
+        //         window.Android.onLoginSucceed(account, token, uid);
+        //     } else if(Api.config.system === 2){
+        //         window.webkit.messageHandlers.wz_callOC.postMessage({
+        //             method: 'onLoginSucceed',
+        //             param: {
+        //                 account: account,
+        //                 token: token,
+        //                 uid: uid
+        //             }
+        //         });
+        //     }
+        // };
+        // onLoginSucceed = Api.config.onLoginSucceed;
+        if(Api.config.system === 2){
+            window.appIosCallback = function (data) {
+                var iosInfo = JSON.parse(Base64.decode(data));
+                Api.config.iosInfo = JSON.parse(Base64.decode(data));
+                Api.config.appid = iosInfo.getAppId;
+                Api.config.appkey = iosInfo.getAppKey;
+                Api.config.channel = iosInfo.getChannel;
+                Api.config.maker = iosInfo.getMaker;
+                Api.config.mobile_model = iosInfo.getMobileModel;
+                Api.config.machine_code = iosInfo.getMachineCode;
+                Api.config.system_version = iosInfo.getVersionName;
+                Api.config.getAdLinkUrl = iosInfo.getAdLinkUrl;
+                Api.config.getAdImageUrl = iosInfo.getAdImageUrl;
+                Api.config.isDisplayAd = iosInfo.isDisplayAd;
+                Api.config.isRegisterEnabled = iosInfo.isRegisterEnabled;
+                Api.config.isNameAuthEnabled = iosInfo.isNameAuthEnabled;
+                Api.config.isPlatformMoneyyEnabled = iosInfo.isPlatformMoneyyEnabled;
+                Api.config.isBindMobileEnabled = iosInfo.isBindMobileEnabled;
+                Api.config.getDiscount = iosInfo.getDiscount;
+            };
+            window.webkit.messageHandlers.wz_callOC.postMessage({
+                method : 'getAppInfo'
+            });
+        }
+
+        function toast(msg){
+            msg = msg || '提示';
+            $('.toast').children('.toast-text').html(msg);
+            $('.toast').fadeIn();
+            var toastTimer =  setTimeout(function () {
+                $('.toast').fadeOut();
+                clearTimeout(toastTimer);
+            }, 2000);
+        }
+
+        $('.button-add-account').on('click', function () {
+            $('.modal-active').show();
+        });
+        $('.modal-button-hide').on('click', function () {
+            $('.icon-clear').click();
+            $('.modal-active').hide();
+        });
+        $('.modal-button-normal').on('click', function () {
+            var nickname = $('input[name="nickname"]').val();
+            if(nickname){
+                var reg =/\s/;
+                if(reg.test(nickname)){
+                    toast('名字不能含有空格');
+                    return
+                }
+                if(nickname.length > 15){
+                    toast('名字长度不能超过15位');
+                    return
+                }
+
+                addAppuid(nickname);
+
+            } else {
+                toast('请输入小号名称');
+            }
+        });
+
+        var addAppuidFlag = true;
+        function addAppuid(nickname){
+            if(!addAppuidFlag){
+                return
+            }
+            addAppuidFlag = false;
+            var options = {
+                uid: userdata.uid,
+                nick_name: nickname,
+                appid: Api.config.appid, //渠道ID
+                system: Api.config.system, //系统
+                machine_code: Api.config.machine_code //设备号
+            };
+            options.sign = Api.util.getSign(options, Api.config.appkey);
+            $.ajax({
+                url: Api.config.host + '/index.php?g=api&m=user&a=add_appuid',
+                type: 'post',
+                data: options,
+                success: function (res) {
+                    // $('#msg').html(JSON.stringify(res));
+                    if(res.status === 1){
+                        var data = res.data;
+                        $('.account-list').html(accountTemplate(data));
+                        // $('.modal-active').hide();
+                        $('.modal-button-hide').click();
+                    } else if(res.msg){
+                        toast(res.msg);
+                    }
+
+                    addAppuidFlag = true;
+                },
+                error: function (err) {
+                    // $('#msg').html(JSON.stringify(err));
+                    addAppuidFlag = true;
+                    console.log(err);
+                }
+            })
+        }
+
+        $('.modal-input-item>.modal-input').on('input', function () {
+            // console.log(this.value);
+            if(this.value.length > 0){
+                $(this).parent().children('.icon-clear').show();
+            } else {
+                $(this).parent().children('.icon-clear').hide();
+            }
+        });
+
+        $('.icon-clear').on('click', function () {
+            $(this).parent().children('input').val('');
+            $(this).hide();
+        });
+
+
+        var userdata = JSON.parse(Api.util.cookie.get('185_userdata'));
+        if(userdata){
+            $('.nick-name').html(userdata.username || '账号木有昵称');
+
+            $('.account-list').html(accountTemplate(userdata.list));
+
+            $('.account-list').on('click', '.account-item', function (e) {
+                useAccount($(this).attr('data-appuid'));
+            })
+        }
+
+        function accountTemplate(list) {
+            var html = '';
+            for(var i = 0; i < list.length; i++){
+                html += '<div class="account-item" data-appuid="'+  list[i].app_uid +'">\n' +
+                    '                <div class="account-name">'+ list[i].nick_name +'</div>' +
+                    // '                <div class="account-name">'+ list[i].game_name +'</div>' +
+                    '                <div class="account-a">\n' +
+                    '                    进入游戏&nbsp;&gt;\n' +
+                    '                </div>\n' +
+                    '            </div>';
+            }
+            return html;
+        }
+
+        var useAccountFlag = true;
+        function useAccount(appuid) {
+            // alert(appuid+ '进入游戏');
+            if(!useAccountFlag){
+                return
+            }
+            useAccountFlag = false;
+            var options = {
+                uid: userdata.uid,
+                app_uid: appuid,
+                token: userdata.token,
+                appid: Api.config.appid, //渠道ID
+                system: Api.config.system, //系统
+                machine_code: Api.config.machine_code, //设备号
+            };
+            options.sign = Api.util.getSign(options, Api.config.appkey);
+            options.real_name_verify = 1;   // 是否需要实名验证，1为需要，0为不需要
+            $.ajax({
+                url: Api.config.host + '/index.php?g=api&m=user&a=check_switch_user',
+                type: 'post',
+                data: options,
+                success: function (res) {
+                    if(res.status === 1){
+                        var data = res.data;
+                        Api.config.onLoginSucceed(data.app_uid, data.token, data.uid);
+                    }else if(res.status === 44){  // 返回44  需要进行实名认证
+                        location.href = '/api/H5sdk/real_name_verify.html?app_uid='+appuid+'&appid='+Api.config.appid+'&machine_code='+options.machine_code+'&appkey='+Api.config.appkey;  // 跳转到实名认证页面
+                    }else if(res.msg){
+                        Api.config.onLoginError(res.msg);
+                        toast(res.msg);
+                    }
+                    useAccountFlag = true;
+                },
+                error: function (err) {
+                    useAccountFlag = true;
+                    console.log(err);
+                }
+            })
+        }
+    })
+</script>
+</body>
+</html>

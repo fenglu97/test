@@ -1,0 +1,34 @@
+<admintpl file="header" />
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class=""><a href="{:U('index')}">游戏平台列表</a></li>
+        <li class="active"><a href="javascript;">活动列表</a></li>
+    </ul>
+
+    <table class="table table-hover table-bordered table-list" id="menus-table">
+        <thead>
+        <tr>
+            <th>游戏平台</th>
+            <th>活动名称</th>
+            <th>查看活动</th>
+        </tr>
+        </thead>
+        <tbody>
+        <foreach name="info['files']" item="vo">
+
+            <tr>
+                <td>{$info.name}</td>
+                <td>{$vo['file_name']}</td>
+                <td><a href="https://view.officeapps.live.com/op/view.aspx?src={$vo.file_url}">查看活动</a></td>
+            </tr>
+
+        </foreach>
+        </tbody>
+    </table>
+
+    </form>
+</div>
+</body>
+</html>

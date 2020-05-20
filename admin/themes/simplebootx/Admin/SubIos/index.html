@@ -1,0 +1,321 @@
+<admintpl file="header" />
+<style>
+    .do{width:40px;padding:5px;background-color: #996666;}
+    .a{padding:5px;background-color: #33485d;}
+    .chosen-rtl .chosen-drop { left: -9000px; }
+    th{width:80px;}
+</style>
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/chosen.css">
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/docsupport/prism.css">
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="javascript:void(0);">苹果分包</a></li>
+    </ul>
+    <form class="well form-search" method="post" action="">
+        <select name="cid" class="chosen-select cid"  style="width:auto;height: 35px;" tabindex="1">
+            {:get_channel_list($cid)}
+        </select>
+        <select name="gid" class="chosen-select gid"  style="width:auto;height: 35px;" tabindex="1">
+            <option value="0">所有游戏</option>
+            {:get_game_list($gid,2,'all')}
+        </select>
+        <select name="type" class="type" style="width:auto;height: 35px;">
+            <option value="0" <eq name="type" value="0">selected</eq>>全类型</option>
+            <option value="1" <eq name="type" value="1">selected</eq> >独代</option>
+            <option value="2" <eq name="type" value="2">selected</eq>>联运</option>
+        </select>
+        <input type="submit" class="btn btn-primary" value="搜索" />
+        <if condition="(session('ROLE_ID') neq 4) and (session('ROLE_ID') neq 15)">
+            <button class="btn btn-primary packall" data-type="1" onclick="return false;">一键分包</button>
+        </if>
+        <if condition="session('ADMIN_ID') eq 1">
+        <button class="btn btn-primary packall" data-type="2" onclick="return false;">一键修复</button>
+        </if>
+        <button class="btn btn-primary update" onclick="return false;">一键刷新</button>
+        <span style="margin-left: 10px;font-size: 18px;">已分包数：{$success}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;分包总数：{$total}</span>
+    </form>
+
+ <div class="table-actions" style="margin-top: -1%;">
+<span>{$box_tg_url}</span>
+		</div>
+    <table class="table table-hover table-bordered">
+        <thead>
+        <tr>
+            <!--<th width="15"><label><input type="checkbox" class="js-check-all" data-direction="x" data-checklist="js-check-x"></label></th>-->
+            <!--<th width="50">ID</th>-->
+            <th width="20%">游戏名</th>
+            <th width="8%">接入类型</th>
+            <th width="8%">游戏简写</th>
+            <th width="10%">创建时间</th>
+            <th width="12%">当前版本/最新版本</th>
+            <th width="6%">状态</th>
+            <th width="10%">分包时间</th>
+            <th width="32%">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <foreach name="data" item="vo">
+            <tr>
+                <!--<td><input type="checkbox" class="js-check" data-yid="js-check-y" data-xid="js-check-x" name="id[]" value="{$vo.id}"></td>-->
+                <!--<td>{$vo.id}</td>-->
+                <td class="gids" data-id="{$vo.id}">
+                    {$vo.game_name}
+                    <switch name="vo.type">
+                        <case value="1"><span style="color:#009933">【最新】</span></case>
+                        <case value="2"><span style="color:#0066CC">【推荐】</span></case>
+                        <case value="3"><span style="color:#CC0000">【热门】</span></case>
+                    </switch>
+                    <if condition="$vo.source eq 2"><i class="fa fa-external-link" style="color:#c502e6"></i> <span  style="color:#c502e6">来源BI</span></if>
+                </td>
+                <td>
+                    <eq name="vo.access_type" value="1">
+                        独代
+                        <else/>
+                        联运
+                    </eq>
+                </td>
+                <td>{$vo.tag}</td>
+                <td class="time">{$vo.add_time|date='Y-m-d H:i',###}</td>
+                <td>
+                    <b >
+                        {$vo.pack_version|default=$vo['version']}
+                    </b>/
+                    <b>{$vo.version}</b>
+                </td>
+                <td>
+                    <switch name="vo.status">
+                        <case value="0"><b style="color:#CC0000">未分包</b></case>
+                        <case value="-1"><b style="color:#0066CC">
+                            <if condition="$vo.wait gt 0">
+                                前面{$vo.wait}个等待出包
+                                <else/>
+                                正在出包
+                            </if>
+                        </b></case>
+                        <case value="1"><b style="color:#009933">分包完成</b></case>
+                    </switch>
+                </td>
+                <td>{$vo.create_time|date='Y-m-d H:i',###}</td>
+                <td>
+                <if condition="$vo['source'] eq 1">
+				 <a href="javascript:void(0);" data-url="{$vo.tg_url}" class="btn a view btn-primary">免分包链接</a>
+				 </if>
+                    <if condition="$vo['is_ios_sub'] eq 1">
+                    <in name="vo.status" value="1">
+                        <a href="javascript:void(0);" data-url="{$vo.download_url}" class="btn down a btn-primary">源包</a>
+                        <a href="{$vo.fenfa_url}"  class="btn a btn-primary" target="_Blank">分发</a>
+                        <a href="javascript:void(0);" data-url="源包 : <a href='{$vo.download_url}' >{$vo.download_url}</a>
+                                                                    <br>
+                                                                分发 : <a href='{$vo.fenfa_url}' target='_Blank'>{$vo.fenfa_url}</a>" class="btn a view btn-primary">链接</a>
+                       
+                    </in>
+
+                    <eq name="vo.status" value="0">
+                        <a class="btn a fenbao btn-primary" gid="{$vo.id}" tag="{$vo.tag}" cid="{$vo.cid}" pid="{$vo.pid}" ver="{$vo.version}" pack_ver="{$vo.pack_version}" status="{$vo.status}">分包</a>
+                    </eq>
+                    <!--<eq name="vo.status" value="1">-->
+                    <!--<a class="btn a fenbao" gid="{$vo.id}" tag="{$vo.tag}" cid="{$vo.cid}" pid="{$vo.pid}" ver="{$vo.version}" pack_ver="{$vo.pack_version}" status="{$vo.status}">更新</a>-->
+                    <!--</eq>-->
+                    <eq name="vo.status" value="-1">
+                        <a class="btn a refresh btn-primary" gid="{$vo.id}" tag="{$vo.tag}" cid="{$vo.cid}" pid="{$vo.pid}" ver="{$vo.version}" pack_ver="{$vo.pack_version}" status="{$vo.status}">刷新进度</a>
+                    </eq>
+                    <if condition="($vo['status'] eq 1) and ($vo['ios_repair'] eq 1)">
+                        <a class="btn a retry btn-primary" gid="{$vo.id}" tag="{$vo.tag}" cid="{$vo.cid}" pid="{$vo.pid}" ver="{$vo.version}" pack_ver="{$vo.pack_version}" status="{$vo.status}">修复</a>
+                    </if>
+                        </if>
+
+
+                    <eq name="vo.libao" value="1">
+                        <a href="{:U('package/export_package',array('appid'=>$vo['id'],'cid'=>$cid))}" class="btn a btn-primary">礼包</a>
+                    </eq>
+
+                    <notempty name="vo.material_url"><a class="btn a btn-primary" href="{$vo.material_url}" target="_blank">素材</a></notempty>
+                    <notempty name="vo.vip_url"><a class="btn a btn-primary" href="{$vo.vip_url}" target="_blank">VIP</a></notempty>
+                    <notempty name="vo.abstract_url"><a class="btn a btn-primary" href="{$vo.abstract_url}" target="_blank">简介</a></notempty>
+                </td>
+            </tr>
+        </foreach>
+        </tbody>
+    </table>
+    <div class="pagination">{$page}</div>
+    <!--</form>-->
+</div>
+<script src="__PUBLIC__/js/chosen/chosen.jquery.js" type="text/javascript"></script>
+<script src="__PUBLIC__/js/chosen/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
+<script src="__PUBLIC__/js/common.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script type="text/javascript">
+    var config = {
+        '.chosen-select'           : {},
+        '.chosen-select-deselect'  : {allow_single_deselect:true},
+        '.chosen-select-no-single' : {disable_search_threshold:10},
+        '.chosen-select-no-results': {no_results_text:'没有匹配的结果'},
+        '.chosen-select-width'     : {width:"95%"}
+    }
+    for (var selector in config) {
+        $(selector).chosen(config[selector]);
+    }
+    $(function(){
+        /*单个分包*/
+        $('.fenbao').click(function(){
+            var gid = $(this).attr('gid');
+            var cid = $(this).attr('cid');
+            var pid = $(this).attr('pid');
+            var ver = $(this).attr('ver');
+            var pack_ver = $(this).attr('pack_ver');
+            var status = $(this).attr('status');
+            var tag = $(this).attr('tag');
+            var url = "{:U('subOnePackage')}";
+            var index = layer.load(0, {shade: [0.3,'black']});
+            $.post(url,{gid:gid,cid:cid,ver:ver,pack_ver:pack_ver,pid:pid,tag:tag,status:status},function(res){
+                if(res.status == 1){
+                    layer.msg(res.info,{icon: 1});
+                    layer.close(index);
+                    setTimeout("location.reload()",1500);
+                }else{
+                    layer.msg(res.info,{icon: 2});
+                    layer.close(index);
+                    setTimeout("location.reload()",1000);
+                }
+            })
+        });
+        /*刷新进度*/
+        $('.refresh').click(function(){
+            var cid = $(this).attr('cid');
+            var pid = $(this).attr('pid');
+            var ver = $(this).attr('ver');
+            var tag = $(this).attr('tag');
+            var gid = $(this).attr('gid');
+            var url = "{:U('subProgress')}";
+            var index = layer.load(0, {shade:[0.3,'black']});
+            $.post(url,{gid:gid,cid:cid,pid:pid,ver:ver,tag:tag},function(res){
+                if(res.status == 1){
+                    layer.msg(res.info,{icon: 1});
+                    layer.close(index);
+                    setTimeout("location.reload()",1500);
+                }else{
+                    layer.msg(res.info,{icon: 1});
+                    layer.close(index);
+                setTimeout("location.reload()",1500);
+                }
+            })
+        });
+        /*一键分包*/
+        $('.packall').click(function(){
+            var type = $(this).attr('data-type');
+            var gids = [];
+            var cid = $('.cid').val();
+            var url = "{:U('subAllPackage')}";
+            var access_type = $('.type').val();
+
+            $('.gids').each(function(){
+                gids.push($(this).attr('data-id'));
+            });
+            if(type != 1){
+                layer.confirm('出现IOS游戏无法安装或闪退时，使用修复功能重新分包。是否继续进行修复、重新分包?', {
+                    btn: ['确定','取消'] //按钮
+                }, function(){
+                    url = "{:U('subAllRetry')}";
+                    var index = layer.load(0, {shade: [0.3,'black']});
+                    $.post(url,{gids:gids,cid:cid,type:type,access_type:access_type},function(res){
+                        if(res.status == 1){
+                            layer.msg(res.info,{icon: 1});
+                            layer.close(index);
+                            setTimeout("location.reload()",1500);
+                        }else{
+                            layer.msg(res.info,{icon: 2});
+                            layer.close(index);
+                            setTimeout("location.reload()",1500);
+                        }
+                    });
+                });
+            }else{
+                var index = layer.load(0, {shade: [0.3,'black']});
+                $.post(url,{gids:gids,cid:cid,type:type,access_type:access_type},function(res){
+                    if(res.status == 1){
+                        layer.msg(res.info,{icon: 1});
+                        layer.close(index);
+                        setTimeout("location.reload()",1500);
+                    }else{
+                        layer.msg(res.info,{icon: 2});
+                        layer.close(index);
+                        setTimeout("location.reload()",1500);
+                    }
+                });
+            }
+
+        });
+        /*一键刷新*/
+        $('.update').click(function(){
+            var gids = [];
+            var cid = $('.cid').val();
+            var url = "{:U('subAllProgress')}";
+            $('.gids').each(function(){
+                gids.push($(this).attr('data-id'));
+            });
+            var index = layer.load(0, {shade: [0.3,'black']});
+            $.post(url,{gids:gids,cid:cid},function(res){
+                if(res.status == 1){
+                    layer.msg(res.info,{icon: 1});
+                    layer.close(index);
+                    setTimeout("location.reload()",1500);
+                }else{
+                    layer.msg(res.info,{icon: 2});
+                    layer.close(index);
+                    setTimeout("location.reload()",1500);
+                }
+            });
+        });
+        /* 修复分包 */
+        $('.retry').click(function(){
+            var gid = $(this).attr('gid');
+            var cid = $(this).attr('cid');
+            var pid = $(this).attr('pid');
+            var ver = $(this).attr('ver');
+            var pack_ver = $(this).attr('pack_ver');
+            var status = $(this).attr('status');
+            var tag = $(this).attr('tag');
+            var url = "{:U('reTry')}";
+
+            layer.confirm('出现IOS游戏无法安装或闪退时，使用修复功能重新分包。是否继续进行修复、重新分包?', {
+                btn: ['确定','取消'] //按钮
+            }, function(){
+                var index = layer.load(0, {shade: [0.3,'black']});
+                $.post(url,{gid:gid,cid:cid,ver:ver,pack_ver:pack_ver,pid:pid,tag:tag,status:status},function(res){
+                    if(res.status == 1){
+                        layer.msg(res.info,{icon: 1});
+                        layer.close(index);
+                        setTimeout("location.reload()",1500);
+                    }else{
+                        layer.msg(res.info,{icon: 2});
+                        layer.close(index);
+                        setTimeout("location.reload()",1000);
+                    }
+                })
+            });
+        })
+
+        $('.down').click(function(){
+            var data_url = $(this).attr('data-url');
+            var post_url = "{:U('ajaxCheckUrl')}";
+			var index = layer.load(0, {shade: [0.3,'black']});
+            $.post(post_url,{url:data_url},function(res){
+                if(res.status == 1){
+                    layer.close(index);
+                    location.href = data_url;
+                }else{
+                    layer.close(index);
+                    layer.msg(res.info,{icon: 2});
+                }
+            });
+        })
+
+        $('.view').click(function(){
+            layer.alert($(this).attr('data-url'));
+        })
+    })
+</script>
+</body>
+</html>

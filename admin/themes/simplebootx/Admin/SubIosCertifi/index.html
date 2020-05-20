@@ -1,0 +1,146 @@
+<admintpl file="header" />
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/chosen.css">
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/docsupport/prism.css">
+<style type="text/css" media="all">
+    /* fix rtl for demo */
+    .chosen-rtl .chosen-drop { left: -9000px; }
+    th{width:80px;}
+</style>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="javascript:void(0);">证书列表</a></li>
+        <li><a href="{:U('add')}">新增证书</a></li>
+    </ul>
+    <form class="well form-search" method="post" action="">
+        <select name="appid" class="chosen-select">
+            <option value="0">全部游戏</option>
+            {:get_game_list($appid)}
+        </select>
+        <select name="channel" class="chosen-select">
+            <option value="0">全部渠道</option>
+            {:get_channel_list($cid)}
+        </select>
+        <select name="status">
+            <option value="-1">全部状态</option>
+            <option value="1" <eq name="status" value="1">selected</eq> >请求成功</option>
+            <option value="0" <eq name="status" value="0">selected</eq>>请求失败</option>
+        </select>
+
+        <input type="submit" class="btn btn-primary" value="搜索" />
+    </form>
+    <form class="js-ajax-form" method="post">
+        <!--<div class="table-actions">-->
+            <!--<button class="btn btn-danger btn-small js-ajax-submit" type="submit" data-action="{:U('del')}" data-subcheck="true" data-msg="{:L('DELETE_CONFIRM_MESSAGE')}">批量删除</button>-->
+        <!--</div>-->
+        <table class="table table-hover table-bordered">
+            <thead>
+            <tr>
+                <!--<th width="15"><label><input type="checkbox" class="js-check-all" data-direction="x" data-checklist="js-check-x"></label></th>-->
+                <!--<th width="50">ID</th>-->
+                <th>游戏</th>
+                <th>渠道</th>
+                <th>状态</th>
+                <th>创建时间</th>
+                <th width="120">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <foreach name="data" item="vo">
+                <tr>
+                    <!--<td><input type="checkbox" class="js-check" data-yid="js-check-y" data-xid="js-check-x" name="id[]" value="{$vo.id}"></td>-->
+                    <!--<td>{$vo.id}</td>-->
+                    <td><if condition="$vo.appid eq 0">全部游戏<else/>{$game[$vo['appid']]}</if></td>
+                    <td><if condition="$vo.channel eq 0">全部渠道<else/>{$channel[$vo['channel']]}</if></td>
+                    <td><eq name="vo.status" value="1">请求成功<else/>请求失败</eq></td>
+                    <td>{$vo.create_time|date="Y-m-d H:i",###}</td>
+                    <td>
+                        <a href="javascript:void(0);" data-id="{$vo.id}" class="view">安装详情</a>
+                        <eq name="vo['status']" value="0">
+                            <a href="javascript:void(0);" data-id="{$vo.id}" class="install">重新安装</a>
+                        </eq>
+                        <a href="javascript:void(0);" data-id="{$vo.id}" class="del">删除</a>
+                    </td>
+                </tr>
+            </foreach>
+            </tbody>
+        </table>
+        <div class="pagination">{$page}</div>
+    </form>
+</div>
+<script src="__PUBLIC__/js/common.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script src="__PUBLIC__/js/chosen/chosen.jquery.js" type="text/javascript"></script>
+<script src="__PUBLIC__/js/chosen/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    var config = {
+        '.chosen-select'           : {},
+        '.chosen-select-deselect'  : {allow_single_deselect:true},
+        '.chosen-select-no-single' : {disable_search_threshold:10},
+        '.chosen-select-no-results': {no_results_text:'没有匹配的结果'},
+        '.chosen-select-width'     : {width:"95%"}
+    }
+    for (var selector in config) {
+        $(selector).chosen(config[selector]);
+    }
+    $(function(){
+        /*删除*/
+        $('.del').click(function () {
+            var id = $(this).data('id');
+            layer.confirm('确定删除吗？', {
+                btn: ['确定','取消'] //按钮
+            }, function(index1){
+                layer.close(index1);
+                var index2 = layer.load(1, {shade: [0.3,'black']});
+                $.post("{:U('del')}",{id:id},function (res) {
+                    layer.close(index2);
+                    if(res.status == 1){
+                        location.reload();
+                    }else{
+                        layer.alert(res.info)
+                    }
+                })
+            });
+        });
+
+        /*重新安装*/
+        $('.install').click(function () {
+            var id = $(this).data('id');
+            var index = layer.load(1, {shade: [0.3,'black']});
+            $.post("{:U('reInstall')}",{id:id},function (res) {
+                layer.close(index);
+                if(res.status == 1){
+                    location.reload();
+                }else{
+                    layer.alert(res.info)
+                }
+            })
+        });
+
+        /*查询*/
+        $('.view').click(function(){
+            var id = $(this).data('id');
+            var index = layer.load(1, {shade: [0.3,'black']});
+            $.post("{:U('view')}",{id:id},function (res) {
+                layer.close(index);
+                if(res.status == 1){
+                    layer.open({
+                        type: 1,
+                        skin: 'layui-layer-molv', //加上边框
+                        area: ['700px', '500px'], //宽高
+                        content: res.info,
+                        closeBtn: 1, //不显示关闭按钮
+                        anim: 2,
+                        shadeClose: true //开启遮罩关闭
+                    });
+                }else{
+                    layer.alert(rse.info);
+                }
+            });
+
+        })
+    })
+</script>
+</body>
+</html>

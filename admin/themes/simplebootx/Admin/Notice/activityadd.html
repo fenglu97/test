@@ -1,0 +1,285 @@
+<admintpl file="header"/>
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/chosen.css">
+<link rel="stylesheet" href="__PUBLIC__/js/chosen/docsupport/prism.css">
+<link rel="stylesheet" href="__PUBLIC__/js/switch/bootstrap-switch.css">
+<style>
+    .switch{margin-left:20px}
+</style>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:U('activity')}">活动列表</a></li>
+        <li class="active"><a href="javascript:void(0);"><if condition="$data[id] neq 0">编辑活动<else />新增活动</if></a></li>
+    </ul>
+    <form class="form-horizontal js-ajax-forms" action="" method="post">
+        <fieldset>
+            <div class="control-group">
+                <div class="controls" style="color:#d41e24">Ps：活动请勿过早告知玩家，因玩家需求或研发等原因可能会导致活动临时调整</div>
+            </div>
+
+
+            <div class="control-group">
+                <label class="control-label">标题<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <input type="text" style="width:400px" maxlength="200" name="title" value="{$data.title}" id="title"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">简介<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <textarea name="desc" rows="2" maxlength="50" cols="20" id="desc" class="inputtext" style="height: 100px; width: 500px;">{$data.desc}</textarea>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">内容<b style="color:#ee5f5b">*</b></label>
+                <div class="controls">
+                    <textarea name="content" rows="2" cols="20" id="content" class="inputtext" style="height: 100px; width: 500px;">{$data.content}</textarea>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">备注</label>
+                <div class="controls">
+                    <textarea name="remark" rows="2" cols="20" maxlength="500" id="remark" class="inputtext" style="height: 100px; width: 500px;">{$data.remark}</textarea>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">活动类型</label>
+                <div class="controls">
+                    <select name="level" class="level">
+                        <option value="1" <if condition="$data.level eq 1">selected</if>>平台返利活动</option>
+                        <option value="2" <if condition="$data.level eq 2">selected</if>>游戏线下返利活动</option>
+                        <option value="3" <if condition="$data.level eq 3">selected</if>>免费活动</option>
+                    </select>
+                </div>
+            </div>
+            <div class="control-group game_platform" <if condition="$data['level'] eq 2">style="display:none;"</if>>
+            <label class="control-label">游戏平台</label>
+            <div class="controls">
+                <select name="game_platform" id="game_platform">
+                    <option value="0">请选择平台</option>
+                    <foreach name="game_platform" item="vo">
+                        <option value="{$vo.id}" <if condition="$data['game_platform'] eq $vo['id']">selected</if>>{$vo.name}</option>
+                    </foreach>
+                </select>
+            </div>
+           </div>
+        <div class="control-group">
+            <label class="control-label">游戏</label>
+            <div class="controls">
+                <select name="gids[]" id="select_1"  multiple="multiple"  class="chosen-select" style="width:220px;" tabindex="1">
+                    {$games}
+                </select>
+            </div>
+        </div>
+
+<div class="control-group">
+    <label class="control-label">排序</label>
+    <div class="controls">
+        <input type="text"  maxlength="5" name="sort" value="{$data.sort}" id="sort"/>
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label">开始时间<b style="color:#ee5f5b">*</b></label>
+    <div class="controls">
+        <input type="text" name="add_time" class="js-date date" value="{$data.add_time|date='Y-m-d',###}" style="width: 120px;" autocomplete="off">
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label">结束时间<b style="color:#ee5f5b">*</b></label>
+    <div class="controls">
+        <input type="text" name="end_time" class="js-date date" value="{$data.end_time|date='Y-m-d',###}" style="width: 120px;" autocomplete="off">
+    </div>
+</div>
+</fieldset>
+<div class="form-actions">
+    <button type="submit" class="btn btn-primary js-ajax-submit">提交</button>
+    <a class="btn" href="javascript:history.back(-1);">{:L('BACK')}</a>
+</div>
+<input name="id" value="{$data.id}" type="hidden" />
+</form>
+</div>
+<script src="__PUBLIC__/js/jquery19.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script src="__PUBLIC__/js/common.js"></script>
+<script src="__PUBLIC__/js/chosen/chosen.jquery.js" type="text/javascript"></script>
+<script src="__PUBLIC__/js/chosen/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    $(function(){
+
+        $('.level').change(function(){
+            if($(this).val() == 1)
+            {
+                $('.game_platform').show();
+            }
+            else if($(this).val() == 2)
+            {
+                $('.game_platform').hide();
+            }
+            else
+            {
+                $('.game_platform').show();
+            }
+        })
+
+        $('#game_platform').change(function(){
+            if($(this).val() == 0)
+            {
+                $('#select_1').empty().append("{$games}").trigger("chosen:updated");
+            }
+            else
+            {
+                $('#select_1').empty().append("{$games}").trigger("chosen:updated");
+                var game_platform = $(this).val();
+                $.get('{:U("get_game_list")}',{game_platform:$(this).val()},function(data){
+                    var len = data.length;
+
+                    for(var i=0;i<len;i++){
+
+                        $("#select_1 option[value='"+data[i]+"']").attr("selected","selected");
+
+                    }
+                    $("#select_1").trigger("chosen:updated");
+                },'json')
+
+            }
+
+        })
+
+        var config = {
+            '.chosen-select'           : {},
+            '.chosen-select-deselect'  : {allow_single_deselect:true},
+            '.chosen-select-no-single' : {disable_search_threshold:10},
+            '.chosen-select-no-results': {no_results_text:'没有匹配的结果'},
+            'search_contains':true,
+            '.chosen-select-width'     : {width:"95%"},
+            '.max_selected_options'  :{max_selected_options:10}
+        }
+        for (var selector in config) {
+            $(selector).chosen(config[selector]);
+        }
+
+        var starttime = $(':input[name=add_time]').val();
+        var endtime = $(':input[name=add_time]').val();
+        if(starttime == '1970-01-01 08:00:00' || starttime == ''){
+            $(':input[name=add_time]').val("{:date('Y-m-d H:i',time())}");
+        }
+        if(endtime == '1970-01-01 08:00:00' || endtime == ''){
+            $(':input[name=end_time]').val("{:date('Y-m-d H:i',time()+864000)}");
+        }
+
+        function chose_mult_set_ini(select, values) {
+            var arr = values.split(',');
+            var length = arr.length;
+            var value = '';
+            for (i = 0; i < length; i++) {
+                value = arr[i];
+                $(select + " option[value='" + value + "']").attr('selected', 'selected');
+            }
+            $(select).trigger("liszt:updated");
+        }
+
+        Wind.use('validate', 'ajaxForm', 'artDialog', function () {
+            var form = $('form.js-ajax-forms');
+            //表单验证开始
+            form.validate({
+                //是否在获取焦点时验证
+                onfocusout: false,
+                //是否在敲击键盘时验证
+                onkeyup: false,
+                //当鼠标掉级时验证
+                onclick: false,
+                //验证错误
+                showErrors: function (errorMap, errorArr) {
+                    //errorMap {'name':'错误信息'}
+                    //errorArr [{'message':'错误信息',element:({})}]
+                    try {
+                        $(errorArr[0].element).focus();
+                        art.dialog({
+                            id: 'error',
+                            icon: 'error',
+                            lock: true,
+                            fixed: true,
+                            background: "#CCCCCC",
+                            opacity: 0,
+                            content: errorArr[0].message,
+                            cancelVal: '确定',
+                            cancel: function () {
+                                $(errorArr[0].element).focus();
+                            }
+                        });
+                    } catch (err) {
+
+                    }
+                },
+                //验证规则
+                rules: {
+                    'title': {required: true},
+                    'desc': {required: true},
+                    'content': {required: true},
+                    'add_time': {required: true},
+                    'end_time': {required: true}
+                },
+                //验证未通过提示消息
+                messages: {
+                    'title': {required: '请输入标题'},
+                    'desc': {required: '请输入简介'},
+                    'content': {required: '请输入内容'},
+                    'add_time': {required: '请输入开始时间'},
+                    'end_time': {required: '请输入结束时间'}
+                },
+                //给未通过验证的元素加效果,闪烁等
+                highlight: false,
+                //是否在获取焦点时验证
+                onfocusout: false,
+                //验证通过，提交表单
+                submitHandler: function (forms) {
+                    $(forms).ajaxSubmit({
+                        url: form.attr('action'), //按钮上是否自定义提交地址(多按钮情况)
+                        dataType: 'json',
+                        beforeSubmit: function (arr, $form, options) {
+
+                        },
+                        success: function (data, statusText, xhr, $form) {
+
+                            if (data.status) {
+                                setCookie("refersh_time", 1);
+                                //添加成功
+                                Wind.use("artDialog", function () {
+                                    art.dialog({
+                                        id: "succeed",
+                                        icon: "succeed",
+                                        fixed: true,
+                                        lock: true,
+                                        background: "#CCCCCC",
+                                        opacity: 0,
+                                        content: data.info,
+                                        button: [{
+                                            name: '继续{:isset($info['id'])?'编辑':'添加'}？',
+                                            callback: function () {
+                                                reloadPage(window);
+                                                return true;
+                                            },
+                                            focus: true
+                                        }, {
+                                            name: '返回列表',
+                                            callback: function () {
+                                                location.href = "index.php?g=admin&m=notice&a=activity";
+                                                return true;
+                                            }
+                                        }]
+                                    });
+                                });
+                            } else {
+                                layer.alert(data.info);
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    })
+</script>
+</body>
+</html>
